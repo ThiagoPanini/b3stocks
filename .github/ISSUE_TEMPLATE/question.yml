@@ -1,0 +1,97 @@
+name: Question
+description: Ask a question about usage, implementation, or best practices
+title: "[Question]: "
+labels: ["question", "help-wanted"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? We're here to help! Please provide as much context as possible so we can give you the best answer.
+
+  - type: dropdown
+    id: question-type
+    attributes:
+      label: What type of question is this?
+      description: Select the category that best describes your question
+      options:
+        - Usage/How-to
+        - Best Practices
+        - Implementation
+        - Troubleshooting
+        - Data Processing
+        - Performance
+        - Architecture/Design
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: Please describe your question in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide context about what you're trying to achieve
+      placeholder: |
+        What are you trying to accomplish?
+        What have you tried so far?
+        What resources have you already consulted?
+    validations:
+      required: true
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: Code Example (if applicable)
+      description: Share any relevant code you're working with
+      placeholder: |
+        ```python
+        # Your code here
+        ```
+      render: markdown
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment (if relevant)
+      description: Information about your setup that might be relevant
+      placeholder: |
+        - OS: [e.g. Ubuntu 20.04, Windows 10, macOS 12.0]
+        - Python version: [e.g. 3.9.7]
+        - Relevant packages:
+      render: markdown
+
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: What outcome are you hoping for?
+      description: What would a good answer look like to you?
+      placeholder: I'm hoping to understand how to...
+
+  - type: checkboxes
+    id: research
+    attributes:
+      label: Research Done
+      description: Please confirm you've done some research before asking
+      options:
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: I have consulted the documentation (if available)
+          required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

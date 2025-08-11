@@ -1,0 +1,137 @@
+name: Performance Issue
+description: Report performance problems with data processing or analysis
+title: "[Performance]: "
+labels: ["performance", "optimization"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a performance issue! Performance is crucial for data solutions. Please provide detailed information to help us identify and resolve the bottleneck.
+
+  - type: textarea
+    id: performance-problem
+    attributes:
+      label: Describe the performance issue
+      description: What specific performance problem are you experiencing?
+      placeholder: |
+        - Slow execution time
+        - High memory usage
+        - CPU bottlenecks
+        - I/O issues
+        - Scaling problems
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-behavior
+    attributes:
+      label: Current Performance
+      description: Describe the current performance metrics you're observing
+      placeholder: |
+        - Execution time: 5 minutes for 1GB dataset
+        - Memory usage: 8GB RAM
+        - CPU usage: 90% on all cores
+        - Other metrics...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-performance
+    attributes:
+      label: Expected Performance
+      description: What performance would you expect or need?
+      placeholder: |
+        - Expected execution time: under 1 minute
+        - Expected memory usage: under 2GB
+        - Target throughput: X records/second
+    validations:
+      required: true
+
+  - type: textarea
+    id: data-characteristics
+    attributes:
+      label: Data Characteristics
+      description: Describe the data you're working with
+      placeholder: |
+        - Dataset size: 1GB CSV file
+        - Number of records: 1M rows
+        - Data types: mixed (text, numbers, dates)
+        - File format: CSV, JSON, Parquet, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to reproduce the performance issue
+      description: How can we reproduce this performance problem?
+      placeholder: |
+        1. Load dataset from '...'
+        2. Run processing script '...'
+        3. Observe slow performance at step '...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      description: Technical environment information
+      placeholder: |
+        - OS: [e.g. Ubuntu 20.04, Windows 10, macOS 12.0]
+        - Python version: [e.g. 3.9.7]
+        - Hardware: [CPU cores, RAM, SSD/HDD]
+        - Key packages: pandas, numpy, dask, etc. (with versions)
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: profiling-data
+    attributes:
+      label: Profiling Data (if available)
+      description: Any profiling results, benchmarks, or performance monitoring data
+      placeholder: |
+        - Profiler output
+        - Memory usage graphs
+        - CPU utilization charts
+        - Timing breakdowns
+      render: markdown
+
+  - type: dropdown
+    id: performance-category
+    attributes:
+      label: Performance Category
+      description: What type of performance issue is this?
+      options:
+        - Data Loading/Reading
+        - Data Processing/Transformation
+        - Data Analysis/Computation
+        - Data Writing/Export
+        - Memory Management
+        - CPU Utilization
+        - I/O Operations
+        - Network/Database Operations
+        - Overall Pipeline Performance
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Any other context about the performance issue
+      placeholder: |
+        - Have you tried any optimizations?
+        - Are there specific constraints or requirements?
+        - Any relevant logs or error messages?
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
