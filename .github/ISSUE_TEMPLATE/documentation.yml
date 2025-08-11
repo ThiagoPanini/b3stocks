@@ -1,0 +1,97 @@
+name: Documentation
+description: Request improvements or additions to documentation
+title: "[Docs]: "
+labels: ["documentation"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation! Clear and comprehensive docs make this project more accessible to everyone.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: What type of documentation is needed?
+      description: Select the type of documentation you're requesting
+      options:
+        - New documentation
+        - Update existing documentation
+        - Fix documentation error
+        - Add code examples
+        - Add tutorials/guides
+        - API documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: doc-location
+    attributes:
+      label: Where should this documentation be added/updated?
+      description: Specify the file, section, or location where the documentation should be placed
+      placeholder: |
+        - File: README.md
+        - Section: Getting Started
+        - New file needed: docs/tutorials/data-processing.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: doc-description
+    attributes:
+      label: What documentation is needed?
+      description: Provide a clear description of what should be documented
+      placeholder: Describe what needs to be documented...
+    validations:
+      required: true
+
+  - type: textarea
+    id: target-audience
+    attributes:
+      label: Who is the target audience?
+      description: Who would benefit from this documentation?
+      options:
+        - Beginners
+        - Intermediate users
+        - Advanced users
+        - Contributors/Developers
+        - Data Scientists
+        - All users
+      placeholder: Select or describe the target audience...
+
+  - type: textarea
+    id: current-issue
+    attributes:
+      label: What's missing or unclear in the current documentation?
+      description: If updating existing docs, what specifically is confusing or missing?
+      placeholder: The current documentation lacks...
+
+  - type: textarea
+    id: suggested-content
+    attributes:
+      label: Suggested content or outline
+      description: If you have ideas for the content structure or specific information to include
+      placeholder: |
+        Suggested outline:
+        1. Introduction
+        2. Prerequisites
+        3. Step-by-step guide
+        4. Examples
+        5. Troubleshooting
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Any other context, links, or examples that might help
+      placeholder: Links to related resources, examples, etc...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

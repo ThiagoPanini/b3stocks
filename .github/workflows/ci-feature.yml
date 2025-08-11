@@ -1,0 +1,32 @@
+name: "⚙️ CI Feature Branch"
+
+on:
+  push:
+    branches:
+      - feature/**
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  open-pr-to-main:
+    name: 🔓 open-pr-to-main
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔓 PR to main
+        uses: peter-evans/create-pull-request@v7
+        with:
+          base: main
+          branch: ${{ github.ref }}
+          title: "pr(main): ${{ github.ref }} -> main"
+          body-path: ".github/pull_request_template.md"
+          labels: "github-bot 🤖"
+          commit-message: "bot: automatic PR opening to main branch"
+  

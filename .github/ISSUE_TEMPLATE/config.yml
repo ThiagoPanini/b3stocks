@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/ThiagoPanini/tech-playground/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: General Support
+    url: https://github.com/ThiagoPanini/tech-playground/discussions/categories/q-a
+    about: Get help with using the tech playground
