@@ -1,5 +1,5 @@
 <div align="center">
-    <br><img src="https://github.com/ThiagoPanini/tf-modules-showcase/blob/feature/repo-setup/docs/imgs/logo-b3stocks.png?raw=true" width=200 alt="b3stocks-logo">
+    <br><img src="https://github.com/ThiagoPanini/b3stocks/blob/main/docs/imgs/logo-b3stocks.png?raw=true" width=200 alt="b3stocks-logo">
 </div>
 
 <div align="center">
