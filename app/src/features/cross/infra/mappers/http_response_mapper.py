@@ -1,6 +1,10 @@
 import json
+from dataclasses import asdict, is_dataclass
+from enum import Enum
 from typing import Any, Optional
-from app.src.features.get_b3_stock_tickers.domain.dtos.output_dto import OutputDTO
+
+from app.src.features.cross.domain.dtos.output_dto import OutputDTO
+
 
 class HTTPResponseMapper:
     """
@@ -50,9 +54,38 @@ class HTTPResponseMapper:
         else:
             status_code = 400
 
-        body = json.dumps(output_dto.to_dict())
+        body = json.dumps(output_dto.to_dict(), default=HTTPResponseMapper._json_default)
         return {
             "statusCode": status_code,
             "headers": headers,
             "body": body
         }
+
+    @staticmethod
+    def _json_default(obj: Any) -> Any:
+        """
+        Best-effort conversion of complex objects to JSON-serializable types.
+
+        Rules:
+        - dataclasses -> dict via asdict
+        - Enums -> their value
+        - objects with to_dict -> call it
+        - sets/tuples -> list
+        - bytes -> utf-8 string (fallback to latin-1)
+        """
+        if is_dataclass(obj):
+            return asdict(obj)
+        if isinstance(obj, Enum):
+            return obj.value
+        to_dict = getattr(obj, "to_dict", None)
+        if callable(to_dict):
+            return to_dict()
+        if isinstance(obj, (set, tuple)):
+            return list(obj)
+        if isinstance(obj, (bytes, bytearray)):
+            try:
+                return obj.decode("utf-8")
+            except Exception:
+                return obj.decode("latin-1", errors="replace")
+        # Let json raise a TypeError for anything else
+        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")

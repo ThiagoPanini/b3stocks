@@ -19,6 +19,7 @@ class OutputDTO:
     data: Optional[Any] = None
     error: Optional[str] = None
 
+
     @classmethod
     def ok(cls, data: Any = None) -> "OutputDTO":
         """
@@ -29,6 +30,7 @@ class OutputDTO:
         """
         return cls(success=True, data=data)
 
+
     @classmethod
     def fail(cls, error: str) -> "OutputDTO":
         """
@@ -38,6 +40,7 @@ class OutputDTO:
             error (str): The error message to be returned in the failed response.
         """
         return cls(success=False, error=error)
+
 
     def to_dict(self) -> dict:
         """
