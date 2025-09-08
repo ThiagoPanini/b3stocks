@@ -1,0 +1,28 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CreateCloudWatchLogGroup",
+            "Effect": "Allow",
+            "Action": "logs:CreateLogGroup",
+            "Resource": "arn:aws:logs:${region_name}:${account_id}:*"
+        },
+        {
+            "Sid": "PutCloudWatchLogs",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": [
+                "arn:aws:logs:${region_name}:${account_id}:log-group:/aws/lambda/*"
+            ]
+        },
+        {
+            "Sid": "GetInvestmentPortfolioFromS3",
+            "Effect": "Allow",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::${bucket_name}/${object_key}"
+        }
+    ]
+}
