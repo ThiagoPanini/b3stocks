@@ -11,7 +11,7 @@ class IDatabaseRepository(ABC):
     """
 
     @abstractmethod
-    def put_item(self, item: InvestmentPortfolio) -> None:
+    def save_item(self, item: InvestmentPortfolio) -> None:
         """
         Saves an investment portfolio data to the database repository.
 

@@ -41,7 +41,7 @@ class GetInvestmentPortfolioUseCase:
             investment_portfolio = self.investment_portfolio_adapter.fetch_portfolio()
 
             logger.info("Saving investment portfolio data to the database repository")
-            self.database_repository.put_item(investment_portfolio)
+            self.database_repository.save_item(investment_portfolio)
 
         except Exception as e:
             logger.error(f"Error fetching investment portfolio data: {e}")
