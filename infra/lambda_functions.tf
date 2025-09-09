@@ -34,9 +34,8 @@ module "iam_role_lambda_get_investment_portfolio" {
   }
 }
 
-
 module "lambda_function_get_investment_portfolio" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.3.1"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.4.0"
 
   function_name = "b3stocks-get-investment-portfolio"
   runtime       = "python3.12"
@@ -48,12 +47,12 @@ module "lambda_function_get_investment_portfolio" {
   lambda_handler   = "app.src.features.get_investment_portfolio.presentation.get_investment_portfolio_presentation.handler"
 
   environment_variables = {
-    S3_B3STOCKS_ARTIFACT_BUCKET_NAME   = local.s3_artifacts_bucket_name
+    S3_ARTIFACT_BUCKET_NAME            = local.s3_artifacts_bucket_name
     S3_INVESTMENT_PORTFOLIO_OBJECT_KEY = var.s3_investment_portfolio_object_key
   }
 
-  create_lambda_layers = true
-  layers_map = {
+  /*
+  layers_to_create = {
     pynamodb_6_1_0 = {
       requirements = [
         "pynamodb==6.1.0",
@@ -62,9 +61,10 @@ module "lambda_function_get_investment_portfolio" {
       description = "Dependencies for getting an user's investment portfolio from a given source"
     }
   }
+  */
 
   create_eventbridge_trigger = true
-  cron_expression            = var.lambda_function_cron_expression
+  cron_expression            = "cron(0 21 * * ? *)"
 
   tags = var.tags
 }
