@@ -51,17 +51,7 @@ module "lambda_function_get_investment_portfolio" {
     S3_INVESTMENT_PORTFOLIO_OBJECT_KEY = var.s3_investment_portfolio_object_key
   }
 
-  /*
-  layers_to_create = {
-    pynamodb_6_1_0 = {
-      requirements = [
-        "pynamodb==6.1.0",
-      ]
-      runtime     = "python3.12"
-      description = "Dependencies for getting an user's investment portfolio from a given source"
-    }
-  }
-  */
+  managed_layers_arns = module.aws_lambda_layers.layers_arns
 
   create_eventbridge_trigger = true
   cron_expression            = "cron(0 21 * * ? *)"
