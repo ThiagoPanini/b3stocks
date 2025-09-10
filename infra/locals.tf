@@ -18,6 +18,7 @@ locals {
   account_id  = data.aws_caller_identity.current.account_id
   region_name = data.aws_region.current.name
 
-  # Creating the bucket name
-  s3_artifacts_bucket_name = "${var.s3_artifacts_bucket_name_prefix}-${local.account_id}-${local.region_name}"
+  # Bucket names
+  s3_artifacts_bucket_name        = "b3stocks-artifacts-${local.account_id}-${local.region_name}"
+  s3_analytics_bronze_bucket_name = "b3stocks-analytics-bronze-${local.account_id}-${local.region_name}"
 }

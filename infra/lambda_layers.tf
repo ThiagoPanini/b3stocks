@@ -7,16 +7,18 @@ DESCRIPTION:
 ----------------------------------------------------------------------------- */
 
 module "aws_lambda_layers" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-layer/v0.4.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-layer/v0.5.0"
 
-  layers_map = {
-    pynamodb_6_1_0 = {
+  layers_config = [
+    {
+      name = "pynamodb-and-pyyaml"
       requirements = [
         "pynamodb==6.1.0",
-      ]
-      runtime     = "python3.12"
-      description = "Pynamodb package and its dependencies to interact with DynamoDB from AWS Lambda"
+        "PyYAML==6.0.2",
+      ],
+      runtime     = ["python3.12", "python3.13"]
+      description = "Layer with pynamodb v6.1.0 and PyYAML v6.0.2 packages"
     }
-  }
+  ]
 }
 

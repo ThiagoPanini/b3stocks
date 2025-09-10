@@ -11,17 +11,6 @@
    VARIABLES: S3 Buckets
 -------------------------------------------------------- */
 
-variable "s3_artifacts_bucket_name_prefix" {
-  description = "Name of the S3 bucket to be created for storing B3 stock ticker data. The bucket name will be made of the value of this variable, account_id and region name ({var.s3_bucket_name_prefix}-{account_id}-{region_name})"
-  type        = string
-  default     = "b3stocks-artifacts"
-
-  validation {
-    condition     = !endswith(var.s3_artifacts_bucket_name_prefix, "-")
-    error_message = "S3 bucket name prefix must not end with a dash '-'."
-  }
-}
-
 variable "s3_investment_portfolio_object_key" {
   description = "The S3 object key (path) where the investment portfolio CSV file is stored within the artifacts bucket."
   type        = string

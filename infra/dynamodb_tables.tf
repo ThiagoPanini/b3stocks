@@ -18,10 +18,12 @@ RESOURCES:
 -------------------------------------------------------- */
 
 module "aws_dynamodb_table_tbl_brstocks_investment_portfolio" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/dynamodb-table/v0.1.2"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/dynamodb-table/v0.4.0"
 
-  name     = "tbl_brstocks_investment_portfolio"
-  hash_key = "owner_mail"
+  name             = "tbl_brstocks_investment_portfolio"
+  hash_key         = "owner_mail"
+  stream_enabled   = true
+  stream_view_type = "NEW_AND_OLD_IMAGES"
 
   attributes = [
     {
