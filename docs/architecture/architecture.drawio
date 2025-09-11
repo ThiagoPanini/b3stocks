@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="pKuTH1ICYwYPupLKQnVR" name="built">
-        <mxGraphModel dx="1033" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
+        <mxGraphModel dx="544" dy="475" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -18,7 +18,7 @@
                 <mxCell id="XTuCKv0g9gNxLLCQ7Ozg-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=#232F3E;fontStyle=0;labelBackgroundColor=default;endArrow=classic;" parent="1" source="XTuCKv0g9gNxLLCQ7Ozg-4" target="XTuCKv0g9gNxLLCQ7Ozg-7" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points">
-                            <mxPoint x="330" y="136"/>
+                            <mxPoint x="339" y="136"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -33,7 +33,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2;curved=1;" edge="1" parent="1" source="XTuCKv0g9gNxLLCQ7Ozg-4" target="2">
+                <mxCell id="3" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2;curved=1;" parent="1" source="XTuCKv0g9gNxLLCQ7Ozg-4" target="2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="XTuCKv0g9gNxLLCQ7Ozg-4" value="&lt;font face=&quot;Itau Display&quot;&gt;Lambda&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fontFamily=Helvetica;" parent="1" vertex="1">
@@ -49,7 +49,7 @@
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="360" y="200" as="targetPoint"/>
                         <Array as="points">
-                            <mxPoint x="350" y="110"/>
+                            <mxPoint x="350" y="120"/>
                         </Array>
                     </mxGeometry>
                 </mxCell>
@@ -68,14 +68,14 @@
                 <mxCell id="XTuCKv0g9gNxLLCQ7Ozg-18" value="&lt;font face=&quot;Itau Display&quot;&gt;tbl_dim_&amp;lt;webportal&amp;gt;_active_tickers&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;dashed=0;sketch=0;strokeColor=none;align=center;verticalAlign=top;fontFamily=Helvetica;fontSize=12;fontColor=#232F3E;fontStyle=0;fillColor=light-dark(#FFFFFF,#222222);arcSize=50;" parent="1" vertex="1">
                     <mxGeometry x="399.87" y="30" width="235.25" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="2" value="&lt;font face=&quot;Itau Display&quot;&gt;SNS Topic&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;" vertex="1" parent="1">
+                <mxCell id="2" value="&lt;font face=&quot;Itau Display&quot;&gt;SNS Topic&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;" parent="1" vertex="1">
                     <mxGeometry x="300" y="410" width="78" height="78" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
     <diagram id="RWrHrZze-gxeabXmb29H" name="ideal">
-        <mxGraphModel dx="812" dy="476" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="882" dy="476" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -117,6 +117,135 @@
                 </mxCell>
                 <mxCell id="4T9lWTJIlXZsUh2QOXiw-13" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;fontFamily=Helvetica;labelBackgroundColor=default;" parent="1" vertex="1">
                     <mxGeometry x="440" y="210" width="78" height="78" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="nYgXCQ_IGjsGC3Td55zd" name="Page-3">
+        <mxGraphModel dx="1274" dy="1070" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-27" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" target="sRY_Xw8htGY2SRkkOrzN-24" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="330" y="-40" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="330"/>
+                            <mxPoint x="330"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-23" value="&lt;font face=&quot;Itau Display&quot;&gt;S3 Bucket&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;&lt;i&gt;artifacts/investment-portfolio&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" parent="1" vertex="1">
+                    <mxGeometry x="282" y="-160" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-26" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="sRY_Xw8htGY2SRkkOrzN-24" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="310" y="-40" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="311" y="40"/>
+                            <mxPoint x="311" y="40"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-45" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" target="sRY_Xw8htGY2SRkkOrzN-44" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="321" y="160" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="vme1bkTAqrcpmwDI3SuP-2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2;" parent="1" source="sRY_Xw8htGY2SRkkOrzN-24" target="vme1bkTAqrcpmwDI3SuP-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-24" value="Lambda&lt;div&gt;&lt;i&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;get-invetment-portfolio&lt;/font&gt;&lt;/i&gt;&lt;/div&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fontFamily=Itau Display;" parent="1" vertex="1">
+                    <mxGeometry x="282" y="40" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-29" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" parent="1" source="sRY_Xw8htGY2SRkkOrzN-25" target="sRY_Xw8htGY2SRkkOrzN-24" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-25" value="&lt;font face=&quot;Itau Display&quot;&gt;Eventbridge&lt;/font&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="40" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-5" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="sRY_Xw8htGY2SRkkOrzN-34" target="TBWaEHOtFoX3pfoDL6sy-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-34" value="&lt;font face=&quot;Itau Display&quot;&gt;SQS Queue&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;i&gt;yfinance-intraday-data&lt;/i&gt;&lt;/span&gt;&lt;/div&gt;" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sqs;fontFamily=Helvetica;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="40" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-2" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2;" edge="1" parent="1" source="sRY_Xw8htGY2SRkkOrzN-44" target="xh-GMbxWttO3LTl1tbMa-1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="sRY_Xw8htGY2SRkkOrzN-44" value="&lt;font face=&quot;Itau Display&quot;&gt;DynamoDB Table&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;&lt;i style=&quot;&quot;&gt;tbl_b3stocks_investment_portfolio&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.dynamodb;fontFamily=Helvetica;labelBackgroundColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="282" y="240" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-1" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeWidth=2;" parent="1" source="vme1bkTAqrcpmwDI3SuP-1" target="sRY_Xw8htGY2SRkkOrzN-34" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="vme1bkTAqrcpmwDI3SuP-1" value="&lt;font face=&quot;Itau Display&quot;&gt;SNS Topic&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Helvetica&quot; style=&quot;font-size: 10px;&quot;&gt;&lt;i style=&quot;&quot;&gt;portfolio-stocks&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="sketch=1;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="40" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="TBWaEHOtFoX3pfoDL6sy-2" target="TBWaEHOtFoX3pfoDL6sy-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-2" value="Lambda&lt;div&gt;&lt;i style=&quot;color: rgb(192, 192, 192); scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30); font-family: Helvetica; font-size: 10px;&quot;&gt;yfinance-intraday-data&lt;/i&gt;&lt;/div&gt;" style="sketch=1;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fontFamily=Itau Display;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="40" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-6" value="&lt;font face=&quot;Itau Display&quot;&gt;SNS Topic&lt;/font&gt;&lt;div&gt;&lt;font face=&quot;Helvetica&quot; style=&quot;font-size: 10px;&quot;&gt;&lt;i style=&quot;&quot;&gt;portfolio-stocks&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="sketch=1;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.sns;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="1068" y="-120" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-10" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;sketch=1;curveFitting=1;jiggle=2;" parent="1" source="TBWaEHOtFoX3pfoDL6sy-7" target="TBWaEHOtFoX3pfoDL6sy-9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-7" value="&lt;font face=&quot;Itau Display&quot;&gt;S3 Bucket&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;&lt;i&gt;brstocks-artifacts/investment-portfolio&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="906" y="40" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="TBWaEHOtFoX3pfoDL6sy-9" value="Lambda&lt;div&gt;&lt;i style=&quot;color: rgb(192, 192, 192); scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30); font-family: Helvetica; font-size: 10px;&quot;&gt;yfinance-intraday-data&lt;/i&gt;&lt;/div&gt;" style="sketch=1;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fontFamily=Itau Display;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="1080" y="40" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-6" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" edge="1" parent="1" source="xh-GMbxWttO3LTl1tbMa-1" target="xh-GMbxWttO3LTl1tbMa-5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-9" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" edge="1" parent="1" target="xh-GMbxWttO3LTl1tbMa-7">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="479" y="360" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="479" y="440"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-1" value="Lambda&lt;div&gt;&lt;i&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;stream-dynamodb-data&lt;/font&gt;&lt;/i&gt;&lt;/div&gt;" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#ED7100;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.lambda;fontFamily=Itau Display;" vertex="1" parent="1">
+                    <mxGeometry x="440" y="240" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-3" value="" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#C925D1;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.dynamodb_stream;fontFamily=Helvetica;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="380" y="230" width="40" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-4" value="&lt;i&gt;DynamoDB&lt;/i&gt;&lt;div&gt;&lt;i&gt;Streams&lt;/i&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;fontSize=10;fontColor=default;labelBackgroundColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="363" y="278" width="70" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-8" style="edgeStyle=orthogonalEdgeStyle;shape=link;rounded=1;html=1;strokeColor=default;strokeWidth=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;" edge="1" parent="1" target="xh-GMbxWttO3LTl1tbMa-7">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="640" y="370" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="639" y="400"/>
+                            <mxPoint x="639" y="400"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-5" value="&lt;font face=&quot;Itau Display&quot;&gt;S3 Bucket&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;&lt;i&gt;analytics-raw/cdc/dynamodb/&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;i style=&quot;scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30); font-size: 10px;&quot;&gt;&lt;font style=&quot;color: light-dark(rgb(192, 192, 192), rgb(192, 192, 192));&quot;&gt;tbl_b3stocks_investment_portfolio&lt;/font&gt;&lt;/i&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;&lt;i&gt;&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#7AA116;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.s3;" vertex="1" parent="1">
+                    <mxGeometry x="600" y="240" width="78" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-7" value="&lt;font style=&quot;scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30);&quot; face=&quot;Itau Display&quot;&gt;Glue Data Catalog&lt;/font&gt;&lt;div style=&quot;scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30);&quot;&gt;&lt;font style=&quot;scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30); font-size: 10px;&quot; face=&quot;Helvetica&quot;&gt;&lt;i style=&quot;scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30);&quot;&gt;tbl_cdc_b3stocks_investment_portfolio&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;scrollbar-color: rgb(75, 75, 75) rgb(27, 29, 30);&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="sketch=0;outlineConnect=0;fontColor=light-dark(#232F3E,#C0C0C0);gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.glue_data_catalog;fontFamily=Helvetica;labelBackgroundColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="603" y="400" width="72" height="78" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-10" value="&lt;i&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;PutObject&lt;/font&gt;&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="249" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-11" value="&lt;i&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Update Partition&lt;/font&gt;&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="490" y="410" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-12" value="&lt;i&gt;Put/Update Item&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="272" y="178" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="xh-GMbxWttO3LTl1tbMa-14" value="&lt;i&gt;GetObject&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="282" y="-16" width="70" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
