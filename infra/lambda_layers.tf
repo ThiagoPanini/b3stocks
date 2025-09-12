@@ -11,13 +11,13 @@ module "aws_lambda_layers" {
 
   layers_config = [
     {
-      name = "pynamodb-and-pyyaml"
+      name = "b3stocks-deps"
       requirements = [
         "pynamodb==6.1.0",
         "PyYAML==6.0.2",
       ],
       runtime     = ["python3.12", "python3.13"]
-      description = "Layer with pynamodb v6.1.0 and PyYAML v6.0.2 packages"
+      description = "Dependencies for b3stocks project, including pynamodb v6.1.0 and PyYAML v6.0.2 packages"
     }
   ]
 }

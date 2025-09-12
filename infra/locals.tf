@@ -19,6 +19,6 @@ locals {
   region_name = data.aws_region.current.name
 
   # Bucket names
-  s3_artifacts_bucket_name        = "b3stocks-artifacts-${local.account_id}-${local.region_name}"
-  s3_analytics_bronze_bucket_name = "b3stocks-analytics-bronze-${local.account_id}-${local.region_name}"
+  s3_artifacts_bucket_name     = "${var.s3_artifacts_bucket_name_prefix}-${local.account_id}-${local.region_name}"
+  s3_analytics_cdc_bucket_name = "${var.s3_analytics_cdc_bucket_name_prefix}-${local.account_id}-${local.region_name}"
 }

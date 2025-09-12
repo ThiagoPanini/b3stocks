@@ -22,7 +22,7 @@ module "aws_iam_roles" {
       "s3_artifacts_bucket_name"                 = local.s3_artifacts_bucket_name,
       "s3_investment_portfolio_object_key"       = var.s3_investment_portfolio_object_key
       "dynamodb_investment_portfolio_table_name" = module.aws_dynamodb_table_tbl_brstocks_investment_portfolio.table_name
-      "s3_analytics_bronze_bucket_name"          = local.s3_analytics_bronze_bucket_name
+      "s3_analytics_cdc_bucket_name"             = local.s3_analytics_cdc_bucket_name
     }
   }
 
@@ -36,11 +36,11 @@ module "aws_iam_roles" {
       ]
     },
     {
-      role_name             = "role-b3stocks-lambda-stream-dynamodb-data"
+      role_name             = "role-b3stocks-lambda-stream-cdc-data"
       trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
       policies_arns = [
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
-        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-dynamodb-data",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-cdc-data",
       ]
     }
   ]
