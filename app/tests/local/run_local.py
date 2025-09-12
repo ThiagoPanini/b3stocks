@@ -1,7 +1,7 @@
 from dotenv import find_dotenv, load_dotenv
 
 from app.src.features.get_investment_portfolio.presentation import get_investment_portfolio_presentation
-from app.src.features.stream_dynamodb_data.presentation import stream_dynamodb_data_presentation
+from app.src.features.stream_cdc_data.presentation import stream_cdc_data_presentation
 
 from app.tests.mocks.mocked_input_events import MOCKED_DYNAMODB_STREAM_EVENT
 
@@ -11,7 +11,7 @@ _ = load_dotenv(find_dotenv())
 
 # Building handlers
 get_investment_portfolio_handler = get_investment_portfolio_presentation.handler
-stream_dynamodb_data_handler = stream_dynamodb_data_presentation.handler
+stream_cdc_data_handler = stream_cdc_data_presentation.handler
 
 """
 FEATURE: Get Investment Portfolio
@@ -32,5 +32,5 @@ DESCRIPTION:
     This feature provides functionality to stream data from DynamoDB and process it in real-time.
 """
 
-response = stream_dynamodb_data_handler(event=MOCKED_DYNAMODB_STREAM_EVENT, context=None)
+response = stream_cdc_data_handler(event=MOCKED_DYNAMODB_STREAM_EVENT, context=None)
 print(response)

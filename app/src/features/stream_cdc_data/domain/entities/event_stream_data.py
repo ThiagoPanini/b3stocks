@@ -3,9 +3,12 @@ from typing import Any, Optional
 
 
 @dataclass
-class DynamoDBStreamData:
+class EventStreamData:
     """
-    Represents a DynamoDB stream data in an event record.
+    Represents a stream data in an event record.
+
+    This entity was defined based on DynamoDB streams structure and currently may not represents
+    all CDC use cases.
     """
     keys: dict[str, Any]
     new_image: Optional[dict[str, Any]] = None
@@ -13,3 +16,4 @@ class DynamoDBStreamData:
     sequence_number: Optional[str] = None
     size_bytes: Optional[int] = None
     stream_view_type: Optional[str] = None
+    approx_ts: Optional[Any] = None

@@ -1,8 +1,8 @@
 from typing import Any
 
-from app.src.features.stream_dynamodb_data.infra.mappers.lambda_event_mapper import LambdaEventMapper
-from app.src.features.stream_dynamodb_data.use_case.stream_dynamodb_data_use_case import (
-    StreamDynamoDBDataUseCase
+from app.src.features.stream_cdc_data.infra.mappers.lambda_event_mapper import LambdaEventMapper
+from app.src.features.stream_cdc_data.use_case.stream_cdc_data_use_case import (
+    StreamCDCDataUseCase
 )
 
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
@@ -12,7 +12,7 @@ from app.src.features.cross.infra.mappers.http_response_mapper import HTTPRespon
 event_mapper = LambdaEventMapper()
 
 # Build the use case
-use_case = StreamDynamoDBDataUseCase()
+use_case = StreamCDCDataUseCase()
 
 
 # Defining a handler function for executing the use case in AWS Lambda
@@ -31,5 +31,4 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     input_dto = event_mapper.map_event_to_input_dto(event=event)
     output_dto = use_case.execute(input_dto=input_dto)
 
-    # return HTTPResponseMapper.map(output_dto)
-    return output_dto
+    return HTTPResponseMapper.map(output_dto)
