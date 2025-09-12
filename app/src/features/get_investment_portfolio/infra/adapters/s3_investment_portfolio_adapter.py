@@ -22,9 +22,24 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
     def __init__(self):
         self.logger = setup_logger(name=__name__)
         self.client = boto3.client("s3", region_name=boto3.session.Session().region_name)
-        self.bucket_name = os.getenv("S3_ARTIFACT_BUCKET_NAME")
+        self.bucket_name_prefix = os.getenv("S3_ARTIFACTS_BUCKET_NAME_PREFIX")
         self.object_key = os.getenv("S3_INVESTMENT_PORTFOLIO_OBJECT_KEY")
+        self.bucket_name = self.__build_bucket_name()
+        self.source_url = self.__build_source_url()
 
+    def __build_bucket_name(self) -> str:
+        """
+        Constructs the S3 bucket name using the prefix, account ID and AWS region.
+
+        Returns:
+            The constructed S3 bucket name.
+        """
+        region = boto3.session.Session().region_name
+        account_id = boto3.client("sts").get_caller_identity().get("Account")
+
+        return f"{self.bucket_name_prefix}-{account_id}-{region}"
+
+    
     def __build_source_url(self) -> str:
         """
         Constructs the S3 URL for the investment portfolio object.
@@ -38,22 +53,10 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
     def fetch_portfolio(self) -> InvestmentPortfolio:
         """
         Fetch and parse the investment portfolio YAML stored in S3.
-
-        Expected YAML structure:
-        portfolio:
-          owner: str
-          email: str
-          stocks:
-            - name: str
-              ticker: str
-              notify_on_threshold: bool
-              variation_thresholds:
-                upper_bound: float
-                lower_bound: float
         """
-
         if not self.bucket_name or not self.object_key:
-            raise ValueError("Environment variables S3_ARTIFACT_BUCKET_NAME and S3_INVESTMENT_PORTFOLIO_OBJECT_KEY must be set")
+            raise ValueError("Environment variables S3_ARTIFACTS_BUCKET_NAME_PREFIX and "
+                             "S3_INVESTMENT_PORTFOLIO_OBJECT_KEY must be set")
 
         try:
             response = self.client.get_object(Bucket=self.bucket_name, Key=self.object_key)
@@ -102,7 +105,7 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
                 owner_name=owner_name,
                 owner_mail=owner_mail,
                 stocks=stocks,
-                source_url=self.__build_source_url()
+                source_url=self.source_url
             )
 
             return portfolio
