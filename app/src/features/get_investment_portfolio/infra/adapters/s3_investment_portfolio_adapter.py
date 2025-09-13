@@ -27,6 +27,7 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
         self.bucket_name = self.__build_bucket_name()
         self.source_url = self.__build_source_url()
 
+
     def __build_bucket_name(self) -> str:
         """
         Constructs the S3 bucket name using the prefix, account ID and AWS region.

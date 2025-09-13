@@ -15,6 +15,7 @@ class TableRecord:
     event_name: str
     event_version: str
     event_source: str
+    event_source_service: str
     aws_region: str
     table_keys: dict[str, Any]
     table_new_image: Optional[dict[str, Any]] = None

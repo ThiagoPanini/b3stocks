@@ -3,6 +3,9 @@ from typing import Any
 from datetime import datetime, timezone
 import re
 
+import awswrangler as wr
+import pandas as pd
+
 from app.src.features.cross.utils.log_utils import setup_logger
 from app.src.features.stream_cdc_data.domain.dtos.input_dto import StreamCDCDataInputDTO
 from app.src.features.stream_cdc_data.domain.entities.table_record import TableRecord
@@ -46,10 +49,26 @@ class StreamCDCDataUseCase:
         try:
             # ARN format: arn:aws:<db_service>:region:account-id:table/TableName/stream/timestamp
             match = re.search(r"table\/(.+?)\/stream", source_arn)
-            return match.group(1) if match else "unknown-table"
+            return match.group(1)
 
         except (IndexError, AttributeError):
             return "unknown-table"  # Fallback if parsing fails
+
+
+    def __get_event_source_service(self, event_source: str) -> str:
+        """
+        Extracts the event source service from the event source string.
+
+        Args:
+            event_source (str): The event source string.
+        """
+        try:
+            # Event source format: aws:dynamodb
+            match = re.search(r"^(aws:[^:]+)", event_source)
+            return match.group(1)
+
+        except (IndexError, AttributeError):
+            return event_source.split(":")[-1]  # Fallback if parsing fails
 
 
     def execute(self, input_dto: StreamCDCDataInputDTO) -> OutputDTO:
@@ -74,6 +93,7 @@ class StreamCDCDataUseCase:
                     event_name=record.event_name,
                     event_version=record.event_version,
                     event_source=record.event_source,
+                    event_source_service=self.__get_event_source_service(record.event_source),
                     aws_region=record.aws_region,
                     table_keys=record.event_stream_data.keys,
                     table_new_image=record.event_stream_data.new_image,
@@ -91,8 +111,7 @@ class StreamCDCDataUseCase:
                 logger.exception(f"Error processing record with event ID {record.event_id}")
                 raise
         
-        print(table_records)
-
+        
         return OutputDTO.ok(
             data={
                 "total_table_records": len(table_records)
@@ -103,4 +122,7 @@ class StreamCDCDataUseCase:
 ToDos:
     CDC:
         Adds attributes on entities that represents the database service, output bucket location, and others
+    
+    FEATURE:
+        - [ ] Add catalog sync adapter to the use case and presentation 
 """
