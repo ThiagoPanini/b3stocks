@@ -19,8 +19,9 @@
 -------------------------------------------------------- */
 
 resource "aws_s3_bucket" "artifacts" {
-  bucket = local.s3_artifacts_bucket_name
-  tags   = var.tags
+  bucket        = local.s3_artifacts_bucket_name
+  force_destroy = true
+  tags          = var.tags
 }
 
 resource "aws_s3_bucket_public_access_block" "artifacts_bucket_public_access_block" {
@@ -41,8 +42,9 @@ resource "aws_s3_bucket_public_access_block" "artifacts_bucket_public_access_blo
 -------------------------------------------------------- */
 
 resource "aws_s3_bucket" "analytics_cdc" {
-  bucket = local.s3_analytics_cdc_bucket_name
-  tags   = var.tags
+  bucket        = local.s3_analytics_cdc_bucket_name
+  force_destroy = true
+  tags          = var.tags
 }
 
 resource "aws_s3_bucket_public_access_block" "analytics_cdc_public_access_block" {
