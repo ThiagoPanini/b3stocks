@@ -43,25 +43,44 @@ class AWSWranglerDataCatalogSyncAdapter(IDataCatalogSyncAdapter):
         Args:
             data (list[TableRecord]): List of data to be stored.
         """
-
-        # Converting list of TableRecord to DataFrame
-        df = pd.DataFrame([tr.__dict__ for tr in data])
+        try:
+            # Converting list of TableRecord to DataFrame
+            df = pd.DataFrame([tr.__dict__ for tr in data])
+        except Exception as e:
+            self.logger.error(f"Error converting data to DataFrame: {e}")
+            raise
 
         # Extracting useful information for saving the data
         event_source_service = data[0].event_source_service
         cdc_table_name = f"cdc_{data[0].table_name}"
 
         # Store DataFrame in S3 (JSON format) and sync with Glue Data Catalog
-        wr.s3.to_json(
-            df=df,
-            path=f"s3://{self.bucket_name}/{event_source_service}/{cdc_table_name}",
-            index=False,
-            dataset=True,
-            database=self.data_catalog_database,
-            table_name=cdc_table_name,
-            mode="append",
-            partition_cols=["event_date"],
-            # pandas_kwargs
-            orient="records",
-            lines=True
-        )
+        try:
+            wr.s3.to_json(
+                df=df,
+                path=f"s3://{self.bucket_name}/{event_source_service}/{cdc_table_name}",
+                index=False,
+                dataset=True,
+                database=self.data_catalog_database,
+                table_name=cdc_table_name,
+                mode="append",
+                partition_cols=["event_date"],
+                orient="records",
+                lines=True
+            )
+
+        except wr.exceptions.NoFilesWritten:
+            self.logger.error("No files were written to S3. Please check the input data.")
+            raise
+
+        except wr.exceptions.InvalidDatabase:
+            self.logger.error(f"The specified database '{self.data_catalog_database}' does not exist in Glue Data Catalog.")
+            raise
+
+        except wr.exceptions.InvalidTable:
+            self.logger.error(f"The specified table '{cdc_table_name}' does not exist in Glue Data Catalog.")
+            raise
+
+        except Exception as e:
+            self.logger.error(f"An unexpected error occurred: {e}")
+            raise

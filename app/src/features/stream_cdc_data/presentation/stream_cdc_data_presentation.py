@@ -1,18 +1,23 @@
 from typing import Any
 
 from app.src.features.stream_cdc_data.infra.mappers.lambda_event_mapper import LambdaEventMapper
+from app.src.features.stream_cdc_data.infra.adapters.awswrangler_data_catalog_sync_adapter import (
+    AWSWranglerDataCatalogSyncAdapter
+)
 from app.src.features.stream_cdc_data.use_case.stream_cdc_data_use_case import (
     StreamCDCDataUseCase
 )
-
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
 
 
 # Initialize mappers, adapters and repositories
 event_mapper = LambdaEventMapper()
+data_catalog_sync_adapter = AWSWranglerDataCatalogSyncAdapter()
 
 # Build the use case
-use_case = StreamCDCDataUseCase()
+use_case = StreamCDCDataUseCase(
+    data_catalog_sync_adapter=data_catalog_sync_adapter
+)
 
 
 # Defining a handler function for executing the use case in AWS Lambda

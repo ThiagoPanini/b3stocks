@@ -3,14 +3,16 @@ from typing import Any
 from datetime import datetime, timezone
 import re
 
-import awswrangler as wr
-import pandas as pd
-
-from app.src.features.cross.utils.log_utils import setup_logger
 from app.src.features.stream_cdc_data.domain.dtos.input_dto import StreamCDCDataInputDTO
 from app.src.features.stream_cdc_data.domain.entities.table_record import TableRecord
+from app.src.features.stream_cdc_data.domain.interfaces.data_catalog_sync_adapter_interface import (
+    IDataCatalogSyncAdapter
+)
+from app.src.features.cross.utils.log_utils import setup_logger
 from app.src.features.cross.value_objects import DateFormat
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
+
+
 
 logger = setup_logger(name=__name__)
 
@@ -20,6 +22,9 @@ class StreamCDCDataUseCase:
     """
     Use case for streaming CDC data to a storage repository.
     """
+
+    data_catalog_sync_adapter: IDataCatalogSyncAdapter
+
 
     def __transform_event_date(self, approx_ts: Any) -> str:
         """
@@ -110,8 +115,15 @@ class StreamCDCDataUseCase:
             except Exception:
                 logger.exception(f"Error processing record with event ID {record.event_id}")
                 raise
-        
-        
+
+        try:
+            logger.info(f"Storing and syncing {len(table_records)} table records to the data catalog")
+            self.data_catalog_sync_adapter.store_and_sync_data(data=table_records)
+
+        except Exception as e:
+            logger.exception(f"Error storing and syncing data: {e}")
+            raise
+
         return OutputDTO.ok(
             data={
                 "total_table_records": len(table_records)
