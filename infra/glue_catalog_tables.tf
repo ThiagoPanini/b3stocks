@@ -18,13 +18,13 @@ resource "aws_glue_catalog_database" "b3stocks_analytics_cdc" {
 
 
 /* --------------------------------------------------------
-   GLUE TABLE: cdc_brstocks_investment_portfolio
+   GLUE TABLE: cdc_tbl_brstocks_investment_portfolio
    CDC table for sharing investment portfolio data taken from
    DynamoDB stream and landed in S3.
 -------------------------------------------------------- */
 
-resource "aws_glue_catalog_table" "cdc_brstocks_investment_portfolio" {
-  name          = "cdc_tbl_brstocks_investment_portfolio_v2"
+resource "aws_glue_catalog_table" "cdc_tbl_brstocks_investment_portfolio" {
+  name          = "cdc_tbl_brstocks_investment_portfolio"
   database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
   table_type    = "EXTERNAL_TABLE"
 
@@ -33,7 +33,7 @@ resource "aws_glue_catalog_table" "cdc_brstocks_investment_portfolio" {
   }
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.analytics_cdc.bucket}/dynamodb/cdc_brstocks_investment_portfolio/"
+    location      = "s3://${aws_s3_bucket.analytics_cdc.bucket}/dynamodb/cdc_tbl_brstocks_investment_portfolio/"
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
