@@ -68,8 +68,11 @@ module "aws_lambda_function_stream_cdc_data" {
   role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-cdc-data"]
 
   source_code_path = "../app"
-  # lambda_handler   = "app.src.features.cross.streaming.dynamodb_to_s3.handler.handler"
-  lambda_handler = "app.src.features.stream_cdc_data.presentation.stream_cdc_data_presentation.handler"
+  lambda_handler   = "app.src.features.stream_cdc_data.presentation.stream_cdc_data_presentation.handler"
+
+  layers_arns = [
+    "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:18"
+  ]
 
   tags = var.tags
 
