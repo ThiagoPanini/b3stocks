@@ -69,7 +69,8 @@ class StreamCDCDataUseCase:
         """
         try:
             # Event source format: aws:dynamodb
-            match = re.search(r"^(aws:[^:]+)", event_source)
+            # Output: dynamodb
+            match = re.search(r"^aws:([^:]+)", event_source)
             return match.group(1)
 
         except (IndexError, AttributeError):
