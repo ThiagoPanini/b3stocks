@@ -17,12 +17,14 @@ module "aws_iam_roles" {
   policies_template_config = {
     templates_source_dir = "${path.module}/assets/iam/policy_templates"
     templates_vars = {
-      "region_name"                              = local.region_name,
-      "account_id"                               = local.account_id,
-      "s3_artifacts_bucket_name"                 = local.s3_artifacts_bucket_name,
-      "s3_investment_portfolio_object_key"       = var.s3_investment_portfolio_object_key
-      "dynamodb_investment_portfolio_table_name" = module.aws_dynamodb_table_tbl_brstocks_investment_portfolio.table_name
-      "s3_analytics_cdc_bucket_name"             = local.s3_analytics_cdc_bucket_name
+      "region_name"                                  = local.region_name
+      "account_id"                                   = local.account_id
+      "s3_artifacts_bucket_name"                     = local.s3_artifacts_bucket_name
+      "s3_analytics_cdc_bucket_name"                 = local.s3_analytics_cdc_bucket_name
+      "s3_investment_portfolio_object_key"           = var.s3_investment_portfolio_object_key
+      "dynamodb_investment_portfolio_table_name"     = module.aws_dynamodb_table_tbl_brstocks_investment_portfolio.table_name
+      "dynamodb_investment_portfolio_cdc_table_name" = "cdc_${module.aws_dynamodb_table_tbl_brstocks_investment_portfolio.table_name}"
+      "data_catalog_cdc_database_name"               = aws_glue_catalog_database.b3stocks_analytics_cdc.name
     }
   }
 
