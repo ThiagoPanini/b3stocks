@@ -58,24 +58,16 @@ class AWSWranglerDataCatalogSyncAdapter(IDataCatalogSyncAdapter):
         try:
             wr.s3.to_json(
                 df=df,
-                path=f"s3://{self.bucket_name}/{event_source_service}/{cdc_table_name}",
+                path=f"s3://{self.bucket_name}/{event_source_service}/{cdc_table_name}/",
                 index=False,
                 dataset=True,
                 database=self.data_catalog_database,
-                table_name=cdc_table_name,
+                table=cdc_table_name,
                 mode="append",
                 partition_cols=["event_date"],
                 orient="records",
                 lines=True
             )
-
-        except wr.exceptions.NoFilesWritten:
-            self.logger.error("No files were written to S3. Please check the input data.")
-            raise
-
-        except wr.exceptions.InvalidDatabase:
-            self.logger.error(f"The specified database '{self.data_catalog_database}' does not exist in Glue Data Catalog.")
-            raise
 
         except wr.exceptions.InvalidTable:
             self.logger.error(f"The specified table '{cdc_table_name}' does not exist in Glue Data Catalog.")
