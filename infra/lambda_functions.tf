@@ -70,6 +70,11 @@ module "aws_lambda_function_stream_cdc_data" {
   source_code_path = "../app"
   lambda_handler   = "app.src.features.stream_cdc_data.presentation.stream_cdc_data_presentation.handler"
 
+  environment_variables = {
+    S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_artifacts_bucket_name_prefix
+    DATA_CATALOG_CDC_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_cdc.name
+  }
+
   layers_arns = [
     "arn:aws:lambda:us-east-1:336392948345:layer:AWSSDKPandas-Python312:18"
   ]
