@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 import re
 
 from app.src.features.stream_cdc_data.domain.dtos.input_dto import StreamCDCDataInputDTO
@@ -26,22 +26,31 @@ class StreamCDCDataUseCase:
     data_catalog_sync_adapter: IDataCatalogSyncAdapter
 
 
-    def __transform_event_date(self, approx_ts: Any) -> str:
+    def __get_event_timestamp(self, approx_ts: int | float) -> datetime:
         """
-        Transforms the ApproximateCreationDateTime from a database stream record to ISO 8601 string.
+        Transforms the ApproximateCreationDateTime from a database stream record to a datetime format.
 
         Args:
-            approx_ts (Any): The ApproximateCreationDateTime value from a database stream record.
+            approx_ts (int | float): The ApproximateCreationDateTime value from a database stream record.
 
         Returns:
-            str: The event date in ISO 8601 format.
+            datetime: The event timestamp in datetime format.
         """
-        if isinstance(approx_ts, (int, float)):
-            event_date = datetime.fromtimestamp(approx_ts, tz=timezone.utc)
-        else:
-            event_date = datetime.now(tz=timezone.utc)
+        return datetime.fromtimestamp(approx_ts, tz=UTC)
 
-        return event_date.strftime(DateFormat.DATE.value)
+
+    def __get_event_date(self, approx_ts: int | float) -> str:
+        """
+        Transforms the ApproximateCreationDateTime from a database stream record to a string date format.
+
+        Args:
+            approx_ts (int | float): The ApproximateCreationDateTime value from a database stream record.
+
+        Returns:
+            str: The event date in str format.
+        """
+        event_timestamp = self.__get_event_timestamp(approx_ts=approx_ts)
+        return event_timestamp.strftime(DateFormat.DATE.value)
 
 
     def __get_table_name_from_source_arn(self, source_arn: str) -> str:
@@ -108,7 +117,8 @@ class StreamCDCDataUseCase:
                     size_bytes=record.event_stream_data.size_bytes,
                     stream_view_type=record.event_stream_data.stream_view_type,
                     event_source_arn=record.event_source_arn,
-                    event_date=self.__transform_event_date(approx_ts=record.event_stream_data.approx_ts)
+                    event_timestamp=self.__get_event_timestamp(record.event_stream_data.approx_ts),
+                    event_date=self.__get_event_date(record.event_stream_data.approx_ts)
                 )
 
                 table_records.append(table_record)

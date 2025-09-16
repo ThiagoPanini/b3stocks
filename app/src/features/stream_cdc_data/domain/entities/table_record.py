@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any, Optional
+from datetime import datetime
 
 
 @dataclass
@@ -18,10 +19,11 @@ class TableRecord:
     event_source_service: str
     aws_region: str
     table_keys: dict[str, Any]
-    table_new_image: Optional[dict[str, Any]] = None
-    table_old_image: Optional[dict[str, Any]] = None
-    sequence_number: Optional[str] = None
-    size_bytes: Optional[int] = None
-    stream_view_type: Optional[str] = None
-    event_source_arn: str = None
-    event_date: str = None
+    table_new_image: Optional[dict[str, Any]]
+    table_old_image: Optional[dict[str, Any]]
+    sequence_number: Optional[str]
+    size_bytes: Optional[int]
+    stream_view_type: Optional[str]
+    event_source_arn: str
+    event_timestamp: datetime
+    event_date: str
