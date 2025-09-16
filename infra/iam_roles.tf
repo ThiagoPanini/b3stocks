@@ -22,8 +22,10 @@ module "aws_iam_roles" {
       "s3_artifacts_bucket_name"                     = local.s3_artifacts_bucket_name
       "s3_analytics_cdc_bucket_name"                 = local.s3_analytics_cdc_bucket_name
       "s3_investment_portfolios_key_prefix"          = var.s3_investment_portfolios_key_prefix
-      "dynamodb_investment_portfolio_table_name"     = module.aws_dynamodb_table_tbl_brstocks_investment_portfolio.table_name
-      "dynamodb_investment_portfolio_cdc_table_name" = "cdc_${module.aws_dynamodb_table_tbl_brstocks_investment_portfolio.table_name}"
+      "dynamodb_investment_portfolio_table_name"     = module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio.table_name
+      "dynamodb_investment_portfolio_cdc_table_name" = "cdc_${module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio.table_name}"
+      "dynamodb_active_stocks_table_name"            = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.table_name
+      "dynamodb_active_stocks_cdc_table_name"        = "cdc_${module.aws_dynamodb_table_tbl_b3stocks_active_stocks.table_name}"
       "data_catalog_cdc_database_name"               = aws_glue_catalog_database.b3stocks_analytics_cdc.name
     }
   }
@@ -35,6 +37,14 @@ module "aws_iam_roles" {
       policies_arns = [
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-get-investment-portfolios",
+      ]
+    },
+    {
+      role_name             = "role-b3stocks-lambda-get-active-stocks"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-get-active-stocks",
       ]
     },
     {

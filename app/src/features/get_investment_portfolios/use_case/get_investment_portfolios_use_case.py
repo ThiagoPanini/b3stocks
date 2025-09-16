@@ -20,7 +20,7 @@ class GetInvestmentPortfolioUseCase:
     """
     Use case for fetching investment portfolio data.
 
-    Attributes:
+    Args:
         investment_portfolio_request_adapter (IInvestmentPortfolioAdapter):
             Adapter for fetching investment portfolio data.
     """
@@ -33,7 +33,7 @@ class GetInvestmentPortfolioUseCase:
         Executes the use case to fetch investment portfolio data.
 
         Returns:
-            B3InvestmentPortfolioRequest: An instance of B3InvestmentPortfolioRequest containing the portfolio data.
+            OutputDTO: An instance of OutputDTO containing the result of the operation.
         """
 
         try:
@@ -43,9 +43,9 @@ class GetInvestmentPortfolioUseCase:
             logger.info("Saving investment portfolios to the database repository")
             self.database_repository.save_items(investment_portfolios)
 
-        except Exception as e:
-            logger.error(f"Error fetching investment portfolios data: {e}")
-            raise e
+        except Exception:
+            logger.error(f"Error fetching investment portfolio data")
+            raise
 
         return OutputDTO.ok(
             data={

@@ -2,6 +2,7 @@ import json
 from dataclasses import asdict, is_dataclass
 from enum import Enum
 from typing import Any, Optional
+from datetime import datetime
 
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
 
@@ -72,6 +73,7 @@ class HTTPResponseMapper:
         - objects with to_dict -> call it
         - sets/tuples -> list
         - bytes -> utf-8 string (fallback to latin-1)
+        - datetime -> ISO 8601 string
         """
         if is_dataclass(obj):
             return asdict(obj)
@@ -87,5 +89,7 @@ class HTTPResponseMapper:
                 return obj.decode("utf-8")
             except Exception:
                 return obj.decode("latin-1", errors="replace")
+        if isinstance(obj, datetime):
+            return obj.isoformat()
         # Let json raise a TypeError for anything else
         raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")

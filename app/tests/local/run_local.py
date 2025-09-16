@@ -2,6 +2,7 @@ from dotenv import find_dotenv, load_dotenv
 
 from app.src.features.get_investment_portfolios.presentation import get_investment_portfolios_presentation
 from app.src.features.stream_cdc_data.presentation import stream_cdc_data_presentation
+from app.src.features.get_active_stocks.presentation import get_active_stocks_presentation
 
 from app.tests.mocks.mocked_input_events import MOCKED_DYNAMODB_STREAM_EVENT
 
@@ -12,17 +13,17 @@ _ = load_dotenv(find_dotenv())
 # Building handlers
 get_investment_portfolios_handler = get_investment_portfolios_presentation.handler
 stream_cdc_data_handler = stream_cdc_data_presentation.handler
+get_active_stocks_handler = get_active_stocks_presentation.handler
 
 """
 FEATURE: Get Investment Portfolio
 
 DESCRIPTION:
-    This feature provides functionality to scrape and retrieve investment portfolio data from
+    This feature provides functionality retrieve investment portfolio data from
     a given source defined by users through a adapter (e.g., S3, Google Drive, APIs).
 """
-
 response = get_investment_portfolios_handler(event=None, context=None)
-print(response)
+# print(response)
 
 
 """
@@ -31,6 +32,16 @@ FEATURE: Stream DynamoDB Data
 DESCRIPTION:
     This feature provides functionality to stream data from DynamoDB and process it in real-time.
 """
-
 response = stream_cdc_data_handler(event=MOCKED_DYNAMODB_STREAM_EVENT, context=None)
+# print(response)
+
+
+"""
+FEATURE: Get Active Stocks
+
+DESCRIPTION:
+    This feature provides functionality to scrape and retrieve active stock data from
+    a web site (e.g., Fundamentus) and process it for further use.
+"""
+response = get_active_stocks_handler(event=None, context=None)
 print(response)

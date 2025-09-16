@@ -58,7 +58,7 @@ MOCKED_DYNAMODB_STREAM_EVENT = {
                 "SizeBytes": 1238,
                 "StreamViewType": "NEW_AND_OLD_IMAGES"
             },
-            "eventSourceARN": "arn:aws:dynamodb:us-east-1:259068869404:table/tbl_brstocks_investment_portfolio/stream/2025-09-10T17:33:14.049"
+            "eventSourceARN": "arn:aws:dynamodb:us-east-1:259068869404:table/tbl_b3stocks_investment_portfolio/stream/2025-09-10T17:33:14.049"
         }
     ]
 }
