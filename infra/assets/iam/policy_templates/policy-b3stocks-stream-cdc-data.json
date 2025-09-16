@@ -11,7 +11,7 @@
         "dynamodb:ListStreams"
       ],
       "Resource": [
-        "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_investment_portfolio_cdc_table_name}/stream/*"
+        "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_investment_portfolio_table_name}/stream/*"
       ]
     },
     {
@@ -26,19 +26,12 @@
       ]
     },
     {
-      "Sid": "ListCDCBucketPrefix",
+      "Sid": "ListCDCBucket",
       "Effect": "Allow",
       "Action": [
         "s3:ListBucket"
       ],
-      "Resource": "arn:aws:s3:::${s3_analytics_cdc_bucket_name}",
-      "Condition": {
-        "StringLike": {
-          "s3:prefix": [
-            "dynamodb/${dynamodb_investment_portfolio_cdc_table_name}/*"
-          ]
-        }
-      }
+      "Resource": "arn:aws:s3:::${s3_analytics_cdc_bucket_name}"
     },
     {
       "Sid": "GlueDataCatalogAccess",
