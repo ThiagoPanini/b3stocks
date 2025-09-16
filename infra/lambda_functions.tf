@@ -71,7 +71,7 @@ module "aws_lambda_function_stream_cdc_data" {
   lambda_handler   = "app.src.features.stream_cdc_data.presentation.stream_cdc_data_presentation.handler"
 
   environment_variables = {
-    S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_artifacts_bucket_name_prefix
+    S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_analytics_cdc_bucket_name_prefix
     DATA_CATALOG_CDC_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_cdc.name
   }
 
@@ -92,7 +92,7 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_brstocks_investm
   function_name          = module.aws_lambda_function_stream_cdc_data.function_name
   starting_position      = "LATEST"
   batch_size             = 100
-  maximum_retry_attempts = 2
+  maximum_retry_attempts = 1
 
   depends_on = [
     module.aws_lambda_function_stream_cdc_data,
