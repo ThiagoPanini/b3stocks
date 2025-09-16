@@ -21,4 +21,7 @@ locals {
   # Bucket names
   s3_artifacts_bucket_name     = "${var.s3_artifacts_bucket_name_prefix}-${local.account_id}-${local.region_name}"
   s3_analytics_cdc_bucket_name = "${var.s3_analytics_cdc_bucket_name_prefix}-${local.account_id}-${local.region_name}"
+
+  # Portfolios local files
+  portfolios_files = fileset("${path.module}/assets/investment_portfolios", "*.yaml")
 }
