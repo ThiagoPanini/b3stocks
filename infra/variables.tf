@@ -33,11 +33,15 @@ variable "s3_analytics_cdc_bucket_name_prefix" {
   }
 }
 
-variable "s3_investment_portfolio_object_key" {
+variable "s3_investment_portfolios_key_prefix" {
   description = "The S3 object key (path) where the investment portfolio CSV file is stored within the artifacts bucket."
   type        = string
-  default     = "investment_portfolio/b3_investment_portfolio.yaml"
+  default     = "investment_portfolios"
 
+  validation {
+    condition     = !endswith(var.s3_investment_portfolios_key_prefix, "/")
+    error_message = "The prefix key must not end with a slash ('/') as the internal Terraform code adds it to the string."
+  }
 }
 
 

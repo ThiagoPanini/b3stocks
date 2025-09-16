@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from typing import Optional
 import re
 
-from app.src.features.get_investment_portfolio.domain.entities import StockVariationControl
+from app.src.features.get_investment_portfolios.domain.entities import StockVariationControl
 
 
 @dataclass

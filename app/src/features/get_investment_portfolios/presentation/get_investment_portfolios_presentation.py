@@ -1,12 +1,12 @@
 from typing import Any
 
-from app.src.features.get_investment_portfolio.infra.adapters.s3_investment_portfolio_adapter import (
+from app.src.features.get_investment_portfolios.infra.adapters.s3_investment_portfolios_adapter import (
     S3InvestmentPortfolioAdapter
 )
-from app.src.features.get_investment_portfolio.infra.repository.dynamodb_database_repository import (
+from app.src.features.get_investment_portfolios.infra.repository.dynamodb_database_repository import (
     DynamoDBDatabaseRepository
 )
-from app.src.features.get_investment_portfolio.use_case.get_investment_portfolio_use_case import (
+from app.src.features.get_investment_portfolios.use_case.get_investment_portfolios_use_case import (
     GetInvestmentPortfolioUseCase
 )
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper

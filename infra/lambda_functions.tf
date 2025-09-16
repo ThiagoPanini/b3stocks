@@ -22,18 +22,18 @@ RESOURCES:
 module "aws_lambda_function_get_investment_portfolio" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.5.0"
 
-  function_name = "b3stocks-get-investment-portfolio"
+  function_name = "b3stocks-get-investment-portfolios"
   runtime       = "python3.12"
   timeout       = 180
 
-  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-get-investment-portfolio"]
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-get-investment-portfolios"]
 
   source_code_path = "../app"
-  lambda_handler   = "app.src.features.get_investment_portfolio.presentation.get_investment_portfolio_presentation.handler"
+  lambda_handler   = "app.src.features.get_investment_portfolios.presentation.get_investment_portfolios_presentation.handler"
 
   environment_variables = {
     S3_ARTIFACTS_BUCKET_NAME_PREFIX          = var.s3_artifacts_bucket_name_prefix
-    S3_INVESTMENT_PORTFOLIO_OBJECT_KEY       = var.s3_investment_portfolio_object_key
+    S3_INVESTMENT_PORTFOLIOS_KEY_PREFIX      = var.s3_investment_portfolios_key_prefix
     DYNAMODB_INVESTMENT_PORTFOLIO_TABLE_NAME = module.aws_dynamodb_table_tbl_brstocks_investment_portfolio.table_name
   }
 
