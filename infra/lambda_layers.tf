@@ -7,7 +7,7 @@ DESCRIPTION:
 ----------------------------------------------------------------------------- */
 
 module "aws_lambda_layers" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-layer/v0.5.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-layer/v0.6.0"
 
   layers_config = [
     {
@@ -20,7 +20,7 @@ module "aws_lambda_layers" {
         "lxml==5.3.1"
       ],
       runtime     = ["python3.12", "python3.13"]
-      description = "Dependencies for b3stocks project, including pynamodb v6.1.0 and PyYAML v6.0.2 packages"
+      description = "Dependencies for b3stocks project, including useful packages to extract investment data and interact with AWS services"
     }
   ]
 }

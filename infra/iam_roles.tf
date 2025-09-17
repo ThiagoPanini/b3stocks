@@ -48,12 +48,20 @@ module "aws_iam_roles" {
       ]
     },
     {
-      role_name             = "role-b3stocks-lambda-stream-cdc-data"
+      role_name             = "role-b3stocks-lambda-stream-investment-portfolios"
       trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
       policies_arns = [
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
-        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-cdc-data",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-investment-portfolios",
       ]
-    }
+    },
+    {
+      role_name             = "role-b3stocks-lambda-stream-active-stocks"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-active-stocks",
+      ]
+    },
   ]
 }
