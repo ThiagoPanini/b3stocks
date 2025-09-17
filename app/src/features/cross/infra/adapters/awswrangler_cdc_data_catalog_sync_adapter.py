@@ -5,15 +5,18 @@ import awswrangler as wr
 import pandas as pd
 
 from app.src.features.cross.utils.log_utils import setup_logger
-from app.src.features.stream_cdc_data.domain.interfaces.data_catalog_sync_adapter_interface import (
-    IDataCatalogSyncAdapter
+from app.src.features.cross.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
+    ICDCDataCatalogSyncAdapter
 )
-from app.src.features.stream_cdc_data.domain.entities.table_record import TableRecord
+from app.src.features.cross.domain.entities.dynamodb_streams_output_data import (
+    DynamoDBStreamsOutputData
+)
 
 
-class AWSWranglerDataCatalogSyncAdapter(IDataCatalogSyncAdapter):
+class AWSWranglerCDCDataCatalogSyncAdapter(ICDCDataCatalogSyncAdapter):
     """
-    Implementation of IDataCatalogSyncAdapter to store data and sync with a catalog using AWS Wrangler.
+    Implementation of ICDCDataCatalogSyncAdapter to store and sync from a database streams source
+    with a catalog using AWS Wrangler.
     """
 
     def __init__(self):
@@ -36,15 +39,15 @@ class AWSWranglerDataCatalogSyncAdapter(IDataCatalogSyncAdapter):
         return f"{self.bucket_name_prefix}-{account_id}-{region}"
 
 
-    def store_and_sync_data(self, data: list[TableRecord]) -> None:
+    def store_and_sync_cdc_data(self, data: list[DynamoDBStreamsOutputData]) -> None:
         """
         Adapter to store data in S3 and sync with AWS Glue Data Catalog using AWS Wrangler.
 
         Args:
-            data (list[TableRecord]): List of data to be stored.
+            data (list[DynamoDBStreamsOutputData]): List of data to be stored and synchronized.
         """
         try:
-            # Converting list of TableRecord to DataFrame
+            # Converting list of DynamoDBStreamsOutputData to DataFrame
             df = pd.DataFrame([tr.__dict__ for tr in data])
         except Exception as e:
             self.logger.error(f"Error converting data to DataFrame: {e}")
@@ -70,9 +73,11 @@ class AWSWranglerDataCatalogSyncAdapter(IDataCatalogSyncAdapter):
             )
 
         except wr.exceptions.InvalidTable:
-            self.logger.error(f"The specified table '{cdc_table_name}' does not exist in Glue Data Catalog.")
+            self.logger.exception(f"The specified table '{cdc_table_name}' is invalid or does not "
+                                  "exist in Glue Data Catalog.")
             raise
 
-        except Exception as e:
-            self.logger.error(f"An unexpected error occurred: {e}")
+        except Exception:
+            self.logger.exception(f"An unexpected error occurred while storing and syncing data to "
+                                  f"S3 and Glue Data Catalog on table '{cdc_table_name}'.")
             raise

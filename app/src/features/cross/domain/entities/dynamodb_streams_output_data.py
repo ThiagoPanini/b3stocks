@@ -4,12 +4,12 @@ from datetime import datetime
 
 
 @dataclass
-class TableRecord:
+class DynamoDBStreamsOutputData:
     """
-    Represents a table record streamed from a database through CDC.
+    Represents the output data that will be sent to the target system as part of the stream process.
 
-    This entity was defined based on DynamoDB streams structure and currently may not represents
-    all CDC use cases.
+    The attributes defined in this entity class will match the output schema required by the target
+    system (e.g. a table in the Glue Data Catalog).
     """
     table_name: str
     event_id: str

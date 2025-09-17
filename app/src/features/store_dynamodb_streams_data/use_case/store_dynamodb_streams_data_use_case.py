@@ -1,29 +1,27 @@
 from dataclasses import dataclass
-from typing import Any
 from datetime import datetime, UTC
 import re
 
-from app.src.features.stream_cdc_data.domain.dtos.input_dto import StreamCDCDataInputDTO
-from app.src.features.stream_cdc_data.domain.entities.table_record import TableRecord
-from app.src.features.stream_cdc_data.domain.interfaces.data_catalog_sync_adapter_interface import (
-    IDataCatalogSyncAdapter
+from app.src.features.cross.domain.dtos.dynamodb_streams_input_dto import DynamoDBStreamsInputDTO
+from app.src.features.cross.domain.entities.dynamodb_streams_output_data import DynamoDBStreamsOutputData
+from app.src.features.cross.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
+    ICDCDataCatalogSyncAdapter
 )
-from app.src.features.cross.utils.log_utils import setup_logger
 from app.src.features.cross.value_objects import DateFormat
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
-
+from app.src.features.cross.utils.log_utils import setup_logger
 
 
 logger = setup_logger(name=__name__)
 
 
 @dataclass(frozen=True)
-class StreamCDCDataUseCase:
+class StoreDynamoDBStreamsDataUseCase:
     """
     Use case for streaming CDC data to a storage repository.
     """
 
-    data_catalog_sync_adapter: IDataCatalogSyncAdapter
+    cdc_data_catalog_sync_adapter: ICDCDataCatalogSyncAdapter
 
 
     def __get_event_timestamp(self, approx_ts: int | float) -> datetime:
@@ -77,8 +75,7 @@ class StreamCDCDataUseCase:
             event_source (str): The event source string.
         """
         try:
-            # Event source format: aws:dynamodb
-            # Output: dynamodb
+            # Event source format: aws:dynamodb / Output: dynamodb
             match = re.search(r"^aws:([^:]+)", event_source)
             return match.group(1)
 
@@ -86,23 +83,23 @@ class StreamCDCDataUseCase:
             return event_source.split(":")[-1]  # Fallback if parsing fails
 
 
-    def execute(self, input_dto: StreamCDCDataInputDTO) -> OutputDTO:
+    def execute(self, input_dto: DynamoDBStreamsInputDTO) -> OutputDTO:
         """
         Executes the use case to map the AWS Lambda event to InputDTO.
 
         Args:
-            input_dto (StreamCDCDataInputDTO): The input DTO containing event records.
+            input_dto (DynamoDBStreamsInputDTO): The input DTO containing event records.
         
         Returns:
             OutputDTO: The output DTO containing the list of table records.
         """
 
-        # Build table records for each event record
-        table_records: list[TableRecord] = []
+        # Build the output data for each record in the event stream
+        streams_output_data: list[DynamoDBStreamsOutputData] = []
 
         for record in input_dto.records:
             try:
-                table_record = TableRecord(
+                table_record = DynamoDBStreamsOutputData(
                     table_name=self.__get_table_name_from_source_arn(record.event_source_arn),
                     event_id=record.event_id,
                     event_name=record.event_name,
@@ -110,42 +107,40 @@ class StreamCDCDataUseCase:
                     event_source=record.event_source,
                     event_source_service=self.__get_event_source_service(record.event_source),
                     aws_region=record.aws_region,
-                    table_keys=record.event_stream_data.keys,
-                    table_new_image=record.event_stream_data.new_image,
-                    table_old_image=record.event_stream_data.old_image,
-                    sequence_number=record.event_stream_data.sequence_number,
-                    size_bytes=record.event_stream_data.size_bytes,
-                    stream_view_type=record.event_stream_data.stream_view_type,
+                    table_keys=record.record_data.keys,
+                    table_new_image=record.record_data.new_image,
+                    table_old_image=record.record_data.old_image,
+                    sequence_number=record.record_data.sequence_number,
+                    size_bytes=record.record_data.size_bytes,
+                    stream_view_type=record.record_data.stream_view_type,
                     event_source_arn=record.event_source_arn,
-                    event_timestamp=self.__get_event_timestamp(record.event_stream_data.approx_ts),
-                    event_date=self.__get_event_date(record.event_stream_data.approx_ts)
+                    event_timestamp=self.__get_event_timestamp(record.record_data.approx_ts),
+                    event_date=self.__get_event_date(record.record_data.approx_ts)
                 )
 
-                table_records.append(table_record)
+                streams_output_data.append(table_record)
             
             except Exception:
-                logger.exception(f"Error processing record with event ID {record.event_id}")
+                logger.exception(f"Error processing record with event ID {record.event_id} to target "
+                                 f"table {table_record.table_name}")
                 raise
 
         try:
-            logger.info(f"Storing and syncing {len(table_records)} table records to the data catalog")
-            self.data_catalog_sync_adapter.store_and_sync_data(data=table_records)
+            logger.info(
+                f"Storing and syncing {len(streams_output_data)} records from DynamoDB Streams."
+            )
+            self.cdc_data_catalog_sync_adapter.store_and_sync_cdc_data(data=streams_output_data)
 
-        except Exception as e:
-            logger.exception(f"Error storing and syncing data: {e}")
+        except Exception:
+            logger.exception(f"Error storing and syncing data")
             raise
+
+        logger.info(
+            f"Successfully stored {len(streams_output_data)} records from DynamoDB Streams."
+        )
 
         return OutputDTO.ok(
             data={
-                "total_table_records": len(table_records)
+                "total_table_records": len(streams_output_data)
             }
         )
-
-"""
-ToDos:
-    CDC:
-        Adds attributes on entities that represents the database service, output bucket location, and others
-    
-    FEATURE:
-        - [ ] Add catalog sync adapter to the use case and presentation 
-"""

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import is_dataclass, asdict
 from datetime import datetime
+from decimal import Decimal
 from enum import Enum
 from typing import Any
 
@@ -17,6 +18,7 @@ def json_serialize(value: Any) -> Any:
     - dict -> dict with string keys preserved, values serialized
     - other primitives returned as-is
     """
+
     # Dataclass (but avoid treating plain strings etc.)
     if is_dataclass(value):
         return {k: json_serialize(v) for k, v in asdict(value).items()}
@@ -29,6 +31,13 @@ def json_serialize(value: Any) -> Any:
     if isinstance(value, datetime):
         return value.isoformat()
 
+    # Decimal (DynamoDB compatibility)
+    if isinstance(value, Decimal):
+        # Attempt int if no fractional part else float
+        if value % 1 == 0:
+            return int(value)
+        return float(value)
+
     # Collections
     if isinstance(value, (list, tuple, set)):
         return [json_serialize(v) for v in value]
@@ -38,23 +47,3 @@ def json_serialize(value: Any) -> Any:
 
     # Primitive (str, int, float, bool, None)
     return value
-
-
-def serialize_entity(entity: Any, include_none: bool = False) -> dict[str, Any]:
-    """
-    Convert a domain entity (possibly dataclass) into a dict for persistence.
-
-    Args:
-        entity: The domain entity instance.
-        include_none: Whether to include keys whose serialized value is None.
-    """
-    
-    data = json_serialize(entity)
-
-    if not isinstance(data, dict):  # Fallback: wrap non-dict dataclass (rare)
-        return {"value": data}
-
-    if not include_none:
-        return {k: v for k, v in data.items() if v is not None}
-
-    return data

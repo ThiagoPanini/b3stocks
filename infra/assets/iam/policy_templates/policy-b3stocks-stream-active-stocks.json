@@ -11,7 +11,6 @@
         "dynamodb:ListStreams"
       ],
       "Resource": [
-        "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_investment_portfolio_table_name}/stream/*",
         "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_active_stocks_table_name}/stream/*"
       ]
     },
@@ -23,7 +22,6 @@
         "s3:AbortMultipartUpload"
       ],
       "Resource": [
-        "arn:aws:s3:::${s3_analytics_cdc_bucket_name}/dynamodb/${dynamodb_investment_portfolio_cdc_table_name}/*",
         "arn:aws:s3:::${s3_analytics_cdc_bucket_name}/dynamodb/${dynamodb_active_stocks_cdc_table_name}/*"
       ]
     },
@@ -53,7 +51,6 @@
       "Resource": [
         "arn:aws:glue:${region_name}:${account_id}:catalog",
         "arn:aws:glue:${region_name}:${account_id}:database/${data_catalog_cdc_database_name}",
-        "arn:aws:glue:${region_name}:${account_id}:table/${data_catalog_cdc_database_name}/${dynamodb_investment_portfolio_cdc_table_name}",
         "arn:aws:glue:${region_name}:${account_id}:table/${data_catalog_cdc_database_name}/${dynamodb_active_stocks_cdc_table_name}"
       ]
     }
