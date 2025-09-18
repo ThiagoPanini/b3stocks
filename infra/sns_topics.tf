@@ -10,16 +10,16 @@
 ----------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------
-   SNS TOPIC: portfolio-stocks
+   SNS TOPIC: active-stocks
    Defines the AWS SNS Topic for the user's investment
    portfolio in a pub/sub architecture
 -------------------------------------------------------- */
-/*
-module "sns_topic_portfolio_stocks" {
+
+module "sns_topic_active_stocks" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/sns-topic/v0.0.1"
 
-  name         = "b3stocks-portfolio-stocks"
-  display_name = "User's Investment Portfolio Stocks"
+  name         = "b3stocks-active-stocks"
+  display_name = "B3 Active Stocks"
 
   kms_master_key_id = data.aws_kms_key.sns.id
 
@@ -44,7 +44,7 @@ module "sns_topic_portfolio_stocks" {
             "SNS:ListSubscriptionsByTopic",
             "SNS:Publish"
           ],
-          "Resource" : "arn:aws:sns:${local.region_name}:${local.account_id}:b3stocks-portfolio-stocks",
+          "Resource" : "arn:aws:sns:${local.region_name}:${local.account_id}:b3stocks-active-stocks",
           "Condition" : {
             "StringEquals" : {
               "AWS:SourceOwner" : "${local.account_id}"
@@ -54,8 +54,17 @@ module "sns_topic_portfolio_stocks" {
       ]
     }
   )
+
+  subscriptions = [
+    {
+      protocol               = "sqs"
+      endpoint               = "arn:aws:sqs:${local.region_name}:${local.account_id}:b3stocks-fundamentus-stock-metrics"
+      endpoint_auto_confirms = true
+      raw_message_delivery   = false
+    }
+  ]
 }
-*/
+
 /*
 ToDo:
   - Refine topic policy to restrict access to specific AWS accounts or services, such as:

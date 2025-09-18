@@ -9,6 +9,7 @@ from app.src.features.get_active_stocks.infra.adapters.fundamentus_html_parser_a
 from app.src.features.get_active_stocks.infra.repositories.dynamodb_database_repository import (
     DynamoDBDatabaseRepository
 )
+from app.src.features.get_active_stocks.infra.adapters.sns_topic_adapter import SNSTopicAdapter
 from app.src.features.get_active_stocks.use_case.get_active_stocks_use_case import (
     GetActiveStocksUseCase
 )
@@ -19,12 +20,14 @@ from app.src.features.cross.infra.mappers.http_response_mapper import HTTPRespon
 http_client_adapter = RequestsHTTPClientAdapter()
 html_parser_adapter = FundamentusHTMLParserAdapter()
 database_repository = DynamoDBDatabaseRepository()
+topic_adapter = SNSTopicAdapter()
 
 # Initializing the use case
 use_case = GetActiveStocksUseCase(
     http_client_adapter=http_client_adapter,
     html_parser_adapter=html_parser_adapter,
-    database_repository=database_repository
+    database_repository=database_repository,
+    topic_adapter=topic_adapter
 )
 
 

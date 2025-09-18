@@ -10,7 +10,6 @@ from pynamodb.exceptions import DoesNotExist
 
 from app.src.features.cross.utils.log_utils import setup_logger, log_loop_status
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization_utils import entity_to_storage_dict
 from app.src.features.cross.utils.serialization import json_serialize
 
 from app.src.features.get_active_stocks.domain.interfaces.database_repository_interface import (

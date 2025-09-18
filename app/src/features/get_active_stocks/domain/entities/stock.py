@@ -4,7 +4,7 @@ from datetime import datetime, UTC
 from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
 
 
-@dataclass()
+@dataclass
 class Stock:
     """
     Represents a B3 stock with basic information.

@@ -1,18 +1,22 @@
 from dataclasses import dataclass
 
-from app.src.features.cross.utils.log_utils import setup_logger
-from app.src.features.cross.domain.interfaces.http_client_adapter import IHTTPClientAdapter
 from app.src.features.get_active_stocks.domain.interfaces.html_parser_adapter_interface import (
     IHTMLParserAdapter
 )
 from app.src.features.get_active_stocks.domain.interfaces.database_repository_interface import (
     IDatabaseRepository
 )
+from app.src.features.get_active_stocks.domain.interfaces.topic_adapter_interface import ITopicAdapter
+
 from app.src.features.get_active_stocks.domain.entities.stock import Stock
+from app.src.features.get_active_stocks.domain.entities.stock_message import StockMessage
+
+from app.src.features.cross.domain.interfaces.http_client_adapter import IHTTPClientAdapter
 from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
 from app.src.features.cross.domain.entities.http_client_retry_config import HTTPClientRetryConfig
 from app.src.features.cross.domain.entities.http_client_response import HTTPClientResponse
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
+from app.src.features.cross.utils.log_utils import setup_logger
 
 
 logger = setup_logger(__name__)
@@ -31,6 +35,7 @@ class GetActiveStocksUseCase:
     http_client_adapter: IHTTPClientAdapter
     html_parser_adapter: IHTMLParserAdapter
     database_repository: IDatabaseRepository
+    topic_adapter: ITopicAdapter
 
 
     def execute(self) -> OutputDTO:
@@ -70,12 +75,18 @@ class GetActiveStocksUseCase:
             logger.info(f"Saving {len(stocks)} active stocks data to the database repository")
             self.database_repository.batch_insert_items(items=stocks)
 
+            logger.info(f"Publishing {len(stocks)} active stocks data to a topic service")
+            messages = [StockMessage(code=stock.code) for stock in stocks]
+            self.topic_adapter.batch_publish_messages(messages=messages)
+
         except Exception:
             logger.exception(f"Error fetching and saving active stocks data")
             raise
 
         return OutputDTO.ok(
             data={
-                "stocks": stocks[:2]
+                "total_active_stocks": len(stocks),
+                "active_stocks_table_name": "XPTO",
+                "active_stocks_topic_name": "XPTO"
             }
         )
