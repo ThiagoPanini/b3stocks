@@ -58,3 +58,27 @@ resource "aws_s3_bucket_public_access_block" "analytics_cdc_public_access_block"
     aws_s3_bucket.analytics_cdc
   ]
 }
+
+
+/* --------------------------------------------------------
+   S3 BUCKET: Analytics SoR data
+   A S3 bucket for storing SoR data on b3stocks project.
+-------------------------------------------------------- */
+
+resource "aws_s3_bucket" "analytics_sor" {
+  bucket        = local.s3_analytics_sor_bucket_name
+  force_destroy = true
+  tags          = var.tags
+}
+
+resource "aws_s3_bucket_public_access_block" "analytics_sor_bucket_public_access_block" {
+  bucket                  = aws_s3_bucket.analytics_sor.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  depends_on = [
+    aws_s3_bucket.analytics_sor
+  ]
+}

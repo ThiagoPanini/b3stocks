@@ -15,23 +15,27 @@
       ]
     },
     {
-      "Sid": "WriteObjectsToCDCBucket",
+      "Sid": "WriteObjectsToCDCAndSoRBuckets",
       "Effect": "Allow",
       "Action": [
         "s3:PutObject",
         "s3:AbortMultipartUpload"
       ],
       "Resource": [
-        "arn:aws:s3:::${s3_analytics_cdc_bucket_name}/dynamodb/${dynamodb_investment_portfolio_cdc_table_name}/*"
+        "arn:aws:s3:::${s3_analytics_cdc_bucket_name}/dynamodb/cdc_${dynamodb_investment_portfolio_table_name}/*",
+        "arn:aws:s3:::${s3_analytics_sor_bucket_name}/sor_${dynamodb_investment_portfolio_table_name}/*"
       ]
     },
     {
-      "Sid": "ListCDCBucket",
+      "Sid": "ListCDCAndSoRBuckets",
       "Effect": "Allow",
       "Action": [
         "s3:ListBucket"
       ],
-      "Resource": "arn:aws:s3:::${s3_analytics_cdc_bucket_name}"
+      "Resource": [
+        "arn:aws:s3:::${s3_analytics_cdc_bucket_name}",
+        "arn:aws:s3:::${s3_analytics_sor_bucket_name}"
+      ]
     },
     {
       "Sid": "GlueDataCatalogAccess",
@@ -51,7 +55,9 @@
       "Resource": [
         "arn:aws:glue:${region_name}:${account_id}:catalog",
         "arn:aws:glue:${region_name}:${account_id}:database/${data_catalog_cdc_database_name}",
-        "arn:aws:glue:${region_name}:${account_id}:table/${data_catalog_cdc_database_name}/${dynamodb_investment_portfolio_cdc_table_name}"
+        "arn:aws:glue:${region_name}:${account_id}:database/${data_catalog_sor_database_name}",
+        "arn:aws:glue:${region_name}:${account_id}:table/${data_catalog_cdc_database_name}/cdc_${dynamodb_investment_portfolio_table_name}",
+        "arn:aws:glue:${region_name}:${account_id}:table/${data_catalog_sor_database_name}/sor_${dynamodb_investment_portfolio_table_name}"
       ]
     }
   ]

@@ -6,16 +6,6 @@
     CDC data landed in S3.
 ----------------------------------------------------------------------------- */
 
-/* --------------------------------------------------------
-   GLUE DATABASES
-   Defining databases for analytics use cases.
--------------------------------------------------------- */
-
-resource "aws_glue_catalog_database" "b3stocks_analytics_cdc" {
-  name        = "db_b3stocks_analytics_cdc"
-  description = "Database for CDC datasets on b3stocks project"
-}
-
 
 /* --------------------------------------------------------
    GLUE TABLE: cdc_tbl_b3stocks_investment_portfolio
@@ -79,12 +69,14 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
 
     columns {
       name = "table_new_image"
-      type = "struct<owner_name:string,updated_at:string,owner_mail:string,created_at:string,source_url:string,stocks:string>"
+      # type = "struct<owner_name:string,updated_at:string,owner_mail:string,created_at:string,source_url:string,stocks:string>"
+      type = "string"
     }
 
     columns {
       name = "table_old_image"
-      type = "struct<owner_name:string,updated_at:string,owner_mail:string,created_at:string,source_url:string,stocks:string>"
+      # type = "struct<owner_name:string,updated_at:string,owner_mail:string,created_at:string,source_url:string,stocks:string>"
+      type = "string"
     }
 
     columns {
@@ -172,12 +164,14 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
 
     columns {
       name = "table_new_image"
-      type = "struct<code:string,company_name:string,request_config:string,created_at:string,updated_at:string>"
+      # type = "struct<code:string,company_name:string,request_config:string,created_at:string,updated_at:string>"
+      type = "string"
     }
 
     columns {
       name = "table_old_image"
-      type = "struct<code:string,company_name:string,request_config:string,created_at:string,updated_at:string>"
+      # type = "struct<code:string,company_name:string,request_config:string,created_at:string,updated_at:string>"
+      type = "string"
     }
 
     columns {

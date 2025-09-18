@@ -33,6 +33,17 @@ variable "s3_analytics_cdc_bucket_name_prefix" {
   }
 }
 
+variable "s3_analytics_sor_bucket_name_prefix" {
+  description = "The prefix for the S3 bucket name where analytics SoR data is stored."
+  type        = string
+  default     = "b3stocks-analytics-sor"
+
+  validation {
+    condition     = !endswith(var.s3_analytics_sor_bucket_name_prefix, "-")
+    error_message = "The prefix must not end with a hyphen ('-') as the complete bucket name adds it on local values."
+  }
+}
+
 variable "s3_investment_portfolios_key_prefix" {
   description = "The S3 object key (path) where the investment portfolio CSV file is stored within the artifacts bucket."
   type        = string

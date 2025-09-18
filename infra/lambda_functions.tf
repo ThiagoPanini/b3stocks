@@ -73,7 +73,9 @@ module "aws_lambda_function_stream_investment_portfolios" {
 
   environment_variables = {
     S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_analytics_cdc_bucket_name_prefix
+    S3_ANALYTICS_SOR_BUCKET_NAME_PREFIX = var.s3_analytics_sor_bucket_name_prefix
     DATA_CATALOG_CDC_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_cdc.name
+    DATA_CATALOG_SOR_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_sor.name
   }
 
   layers_arns = [
@@ -151,7 +153,7 @@ module "aws_lambda_function_stream_active_stocks" {
 
   function_name = "b3stocks-stream-active-stocks"
   runtime       = var.lambda_function_common_runtime
-  timeout       = 60
+  timeout       = 300
 
   role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-active-stocks"]
 
@@ -160,7 +162,9 @@ module "aws_lambda_function_stream_active_stocks" {
 
   environment_variables = {
     S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_analytics_cdc_bucket_name_prefix
+    S3_ANALYTICS_SOR_BUCKET_NAME_PREFIX = var.s3_analytics_sor_bucket_name_prefix
     DATA_CATALOG_CDC_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_cdc.name
+    DATA_CATALOG_SOR_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_sor.name
   }
 
   layers_arns = [

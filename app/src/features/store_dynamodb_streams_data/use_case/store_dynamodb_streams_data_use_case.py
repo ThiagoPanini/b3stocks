@@ -121,26 +121,27 @@ class StoreDynamoDBStreamsDataUseCase:
                 streams_output_data.append(table_record)
             
             except Exception:
-                logger.exception(f"Error processing record with event ID {record.event_id} to target "
+                logger.exception(f"Error processing record with event ID {record.event_id} to source "
                                  f"table {table_record.table_name}")
                 raise
 
         try:
-            logger.info(
-                f"Storing and syncing {len(streams_output_data)} records from DynamoDB Streams."
-            )
+            logger.info("Storing and syncing CDC data from DynamoDB Streams to a CDC table in the data catalog.")
             self.cdc_data_catalog_sync_adapter.store_and_sync_cdc_data(data=streams_output_data)
 
+            logger.info("Storing and syncing SoR data from DynamoDB Streams to a SoR table in the data catalog.")
+            self.cdc_data_catalog_sync_adapter.store_and_sync_sor_data(data=streams_output_data)
+
         except Exception:
-            logger.exception(f"Error storing and syncing data")
+            logger.exception(f"Error storing and syncing CDC and SoR data to the data catalog.")
             raise
 
-        logger.info(
-            f"Successfully stored {len(streams_output_data)} records from DynamoDB Streams."
-        )
+        logger.info(f"Successfully stored {len(streams_output_data)} records from DynamoDB Streams.")
 
         return OutputDTO.ok(
             data={
-                "total_table_records": len(streams_output_data)
+                "total_table_records": len(streams_output_data),
+                "cdc_table_name": f"cdc_{streams_output_data[0].table_name}",
+                "sor_table_name": f"sor_{streams_output_data[0].table_name}"
             }
         )
