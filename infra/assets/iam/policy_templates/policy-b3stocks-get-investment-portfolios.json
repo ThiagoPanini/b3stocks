@@ -1,0 +1,28 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "GetInvestmentPortfolioFromS3",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket",
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${s3_artifacts_bucket_name}",
+                "arn:aws:s3:::${s3_artifacts_bucket_name}/${s3_investment_portfolios_key_prefix}/*"
+            ]
+        },
+        {
+            "Sid": "DynamoDBTableAccess",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:DescribeTable",
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem"
+            ],
+            "Resource": "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_investment_portfolio_table_name}"
+        }
+    ]
+}

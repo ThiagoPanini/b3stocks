@@ -14,7 +14,7 @@
    Defines the AWS SNS Topic for the user's investment
    portfolio in a pub/sub architecture
 -------------------------------------------------------- */
-
+/*
 module "sns_topic_portfolio_stocks" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/sns-topic/v0.0.1"
 
@@ -55,7 +55,7 @@ module "sns_topic_portfolio_stocks" {
     }
   )
 }
-
+*/
 /*
 ToDo:
   - Refine topic policy to restrict access to specific AWS accounts or services, such as:

@@ -1,0 +1,64 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DynamoDBStreamRead",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:DescribeStream",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:ListStreams"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_investment_portfolio_table_name}/stream/*"
+      ]
+    },
+    {
+      "Sid": "WriteObjectsToCDCAndSoRBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:AbortMultipartUpload"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${s3_analytics_cdc_bucket_name}/dynamodb/cdc_${dynamodb_investment_portfolio_table_name}/*",
+        "arn:aws:s3:::${s3_analytics_sor_bucket_name}/sor_${dynamodb_investment_portfolio_table_name}/*"
+      ]
+    },
+    {
+      "Sid": "ListCDCAndSoRBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${s3_analytics_cdc_bucket_name}",
+        "arn:aws:s3:::${s3_analytics_sor_bucket_name}"
+      ]
+    },
+    {
+      "Sid": "GlueDataCatalogAccess",
+      "Effect": "Allow",
+      "Action": [
+        "glue:GetTable",
+        "glue:GetTables",
+        "glue:GetDatabase",
+        "glue:GetDatabases",
+        "glue:CreateTable",
+        "glue:UpdateTable",
+        "glue:BatchCreatePartition",
+        "glue:BatchDeletePartition",
+        "glue:GetPartition",
+        "glue:GetPartitions"
+      ],
+      "Resource": [
+        "arn:aws:glue:${region_name}:${account_id}:catalog",
+        "arn:aws:glue:${region_name}:${account_id}:database/${data_catalog_cdc_database_name}",
+        "arn:aws:glue:${region_name}:${account_id}:database/${data_catalog_sor_database_name}",
+        "arn:aws:glue:${region_name}:${account_id}:table/${data_catalog_cdc_database_name}/cdc_${dynamodb_investment_portfolio_table_name}",
+        "arn:aws:glue:${region_name}:${account_id}:table/${data_catalog_sor_database_name}/sor_${dynamodb_investment_portfolio_table_name}"
+      ]
+    }
+  ]
+}

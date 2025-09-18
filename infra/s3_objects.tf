@@ -20,11 +20,13 @@
    data to the artifacts S3 bucket.
 -------------------------------------------------------- */
 
-resource "aws_s3_object" "investment_portfolio" {
-  bucket = aws_s3_bucket.artifacts.id
-  key    = var.s3_investment_portfolio_object_key
-  source = "${path.module}/assets/investment_portfolio/b3_investment_portfolio.yaml"
-  etag   = filemd5("${path.module}/assets/investment_portfolio/b3_investment_portfolio.yaml")
+# Uploading all local portfolio files to S3
+resource "aws_s3_object" "investment_portfolios" {
+  for_each = toset(local.portfolios_files)
+  bucket   = aws_s3_bucket.artifacts.id
+  key      = "investment_portfolios/${each.value}"
+  source   = "${path.module}/assets/investment_portfolios/${each.value}"
+  etag     = filemd5("${path.module}/assets/investment_portfolios/${each.value}")
 
   content_type = "application/yaml"
 

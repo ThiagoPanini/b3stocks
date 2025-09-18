@@ -19,8 +19,9 @@
 -------------------------------------------------------- */
 
 resource "aws_s3_bucket" "artifacts" {
-  bucket = local.s3_artifacts_bucket_name
-  tags   = var.tags
+  bucket        = local.s3_artifacts_bucket_name
+  force_destroy = true
+  tags          = var.tags
 }
 
 resource "aws_s3_bucket_public_access_block" "artifacts_bucket_public_access_block" {
@@ -36,23 +37,48 @@ resource "aws_s3_bucket_public_access_block" "artifacts_bucket_public_access_blo
 }
 
 /* --------------------------------------------------------
-   S3 BUCKET: Analytics Bronze
-   Stores bronze data got by any source.
+   S3 BUCKET: CDC Data
+   Stores data streamed from CDC sources
 -------------------------------------------------------- */
 
-resource "aws_s3_bucket" "analytics_bronze" {
-  bucket = local.s3_analytics_bronze_bucket_name
-  tags   = var.tags
+resource "aws_s3_bucket" "analytics_cdc" {
+  bucket        = local.s3_analytics_cdc_bucket_name
+  force_destroy = true
+  tags          = var.tags
 }
 
-resource "aws_s3_bucket_public_access_block" "analytics_bronze_public_access_block" {
-  bucket                  = aws_s3_bucket.analytics_bronze.id
+resource "aws_s3_bucket_public_access_block" "analytics_cdc_public_access_block" {
+  bucket                  = aws_s3_bucket.analytics_cdc.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
 
   depends_on = [
-    aws_s3_bucket.analytics_bronze
+    aws_s3_bucket.analytics_cdc
+  ]
+}
+
+
+/* --------------------------------------------------------
+   S3 BUCKET: Analytics SoR data
+   A S3 bucket for storing SoR data on b3stocks project.
+-------------------------------------------------------- */
+
+resource "aws_s3_bucket" "analytics_sor" {
+  bucket        = local.s3_analytics_sor_bucket_name
+  force_destroy = true
+  tags          = var.tags
+}
+
+resource "aws_s3_bucket_public_access_block" "analytics_sor_bucket_public_access_block" {
+  bucket                  = aws_s3_bucket.analytics_sor.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+
+  depends_on = [
+    aws_s3_bucket.analytics_sor
   ]
 }

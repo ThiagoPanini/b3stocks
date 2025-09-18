@@ -1,0 +1,31 @@
+portfolio:
+  owner: "Thiago Panini"
+  email: "panini.multi@gmail.com"
+
+  stocks:
+    - name: "Itaú Unibanco"
+      ticker: "ITUB4"
+      notify_on_threshold: true
+      variation_thresholds:
+        upper_bound: 0.02
+        lower_bound: 0.02
+
+    - name: "Itausa SA Preference Shares"
+      ticker: "ITSA4"
+      notify_on_threshold: true
+      variation_thresholds:
+        upper_bound: 0.02
+        lower_bound: 0.02
+
+notification_schedules:
+  - name: "Lunch Time"
+    cron: "0 12 * * 1-5"  # Every weekday at 12:00 PM
+    timezone: "America/Sao_Paulo"
+  
+  - name: "Market Close"
+    cron: "0 17 * * 1-5"  # Every weekday at 5:00 PM
+    timezone: "America/Sao_Paulo"
+  
+  - name: "Salary Day"
+    cron: "0 9 27 * *"  # 27th of every month at 9:00 AM
+    timezone: "America/Sao_Paulo"
