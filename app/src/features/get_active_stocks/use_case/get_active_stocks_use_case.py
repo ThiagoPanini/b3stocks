@@ -9,7 +9,7 @@ from app.src.features.get_active_stocks.domain.interfaces.database_repository_in
 from app.src.features.get_active_stocks.domain.interfaces.topic_adapter_interface import ITopicAdapter
 
 from app.src.features.get_active_stocks.domain.entities.stock import Stock
-from app.src.features.get_active_stocks.domain.entities.stock_message import StockMessage
+from app.src.features.cross.domain.entities.stock_message import StockMessage
 
 from app.src.features.cross.domain.interfaces.http_client_adapter import IHTTPClientAdapter
 from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig

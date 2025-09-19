@@ -5,7 +5,7 @@ from uuid import uuid4
 import boto3
 
 from app.src.features.get_active_stocks.domain.interfaces.topic_adapter_interface import ITopicAdapter
-from app.src.features.get_active_stocks.domain.entities.stock_message import StockMessage
+from app.src.features.cross.domain.entities.stock_message import StockMessage
 from app.src.features.cross.utils.decorators import timing_decorator
 from app.src.features.cross.utils.log_utils import setup_logger, log_loop_status
 from app.src.features.cross.utils.serialization import json_serialize

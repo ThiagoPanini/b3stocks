@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from app.src.features.get_active_stocks.domain.entities.stock_message import StockMessage
+from app.src.features.cross.domain.entities.stock_message import StockMessage
 
 
 class ITopicAdapter(ABC):
