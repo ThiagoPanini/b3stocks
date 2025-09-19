@@ -12,6 +12,15 @@
                 "dynamodb:BatchWriteItem"
             ],
             "Resource": "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_active_stocks_table_name}"
+        },
+        {
+            "Sid": "SNSTopicAccess",
+            "Effect": "Allow",
+            "Action": [
+                "sns:ListTopics",
+                "sns:Publish"
+            ],
+            "Resource": "arn:aws:sns:${region_name}:${account_id}:${sns_active_stocks_topic_name}"
         }
     ]
 }
