@@ -6,7 +6,6 @@ from pynamodb.attributes import (
     UnicodeAttribute,
     MapAttribute
 )
-from pynamodb.exceptions import DoesNotExist
 
 from app.src.features.cross.utils.log_utils import setup_logger, log_loop_status
 from app.src.features.cross.utils.decorators import timing_decorator
@@ -56,18 +55,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
         try:
             with StockModel.batch_write() as batch:
                 for idx, stock in enumerate(items):
-                    """
-                    model = StockModel(
-                        code=stock.code,
-                        company_name=stock.company_name,
-                        request_config=stock.request_config.to_dict(),
-                        created_at=stock.created_at,
-                        updated_at=stock.updated_at
-                    )
-                    """
-
                     model = (StockModel(**json_serialize(stock)))
-
                     batch.save(model)
 
                     # Logging the status of the loop

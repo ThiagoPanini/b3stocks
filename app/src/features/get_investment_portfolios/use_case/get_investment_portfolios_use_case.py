@@ -28,6 +28,7 @@ class GetInvestmentPortfolioUseCase:
     investment_portfolio_adapter: IInvestmentPortfolioAdapter
     database_repository: IDatabaseRepository
 
+
     def execute(self) -> Any:
         """
         Executes the use case to fetch investment portfolio data.
