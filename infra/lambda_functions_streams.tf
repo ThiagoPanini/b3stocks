@@ -1,24 +1,27 @@
 /* -----------------------------------------------------------------------------
-FILE: lambda.tf
+FILE: lambda_functions_streams.tf
+PROJECT: b3stocks
 
 DESCRIPTION:
-  This Terraform configuration uses a remote module to provision an AWS Lambda
-  function for processing B3 active tickers. The function's name, runtime,
-  handler, and environment variables are parameterized via input variables for
-  flexible deployments.
+  This Terraform configuration defines AWS Lambda functions for processing
+  DynamoDB Streams data in the b3stocks project. These functions handle
+  Change Data Capture (CDC) events from DynamoDB tables and store them
+  in S3 for analytics purposes.
 
-RESOURCES:
-  - module.aws_lambda_function:
-    Deploys a Lambda function using the tfbox module with configurable properties
-    such as name, runtime, handler, and environment variables.
+FUNCTIONS:
+  - b3stocks-stream-investment-portfolios: Processes investment portfolio CDC events
+  - b3stocks-stream-active-stocks: Processes active stocks CDC events
+
+EVENT SOURCE MAPPINGS:
+  - DynamoDB Stream triggers for real-time CDC processing
 ----------------------------------------------------------------------------- */
 
 
 /* --------------------------------------------------------
    LAMBDA FUNCTION: stream-investment-portfolios
-   Processes CDC stream batches and lands JSON lines
-   in S3 partitioned by event_date for lambda function
-   get-investment-portfolio
+   Processes Change Data Capture events from investment
+   portfolio DynamoDB table and stores JSON records in S3
+   partitioned by event_date for analytics processing.
 -------------------------------------------------------- */
 
 module "aws_lambda_function_stream_investment_portfolios" {
@@ -68,9 +71,9 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_investm
 
 /* --------------------------------------------------------
    LAMBDA FUNCTION: stream-active-stocks
-   Processes CDC stream batches and lands JSON lines
-   in S3 partitioned by event_date for lambda function
-   get-active-stocks
+   Processes Change Data Capture events from active stocks
+   DynamoDB table and stores JSON records in S3 partitioned
+   by event_date for analytics processing.
 -------------------------------------------------------- */
 
 module "aws_lambda_function_stream_active_stocks" {

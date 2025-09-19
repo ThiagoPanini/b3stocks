@@ -1,18 +1,21 @@
 /* -----------------------------------------------------------------------------
   FILE: sns_topics.tf
+  PROJECT: b3stocks
 
   DESCRIPTION:
-    This Terraform file centralizes all SNS topic configurations for the project
-    utilizing a remote module from a Git repository.
+    This Terraform file defines SNS topics for the b3stocks project messaging
+    architecture. Topics enable decoupled communication between services using
+    a publish-subscribe pattern with proper encryption and access controls.
 
-  RESOURCES:
-    
+  TOPICS:
+    - b3stocks-active-stocks: Publishes active stock events to downstream subscribers
 ----------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------
-   SNS TOPIC: active-stocks
-   Defines the AWS SNS Topic for the user's investment
-   portfolio in a pub/sub architecture
+   SNS TOPIC: b3stocks-active-stocks
+   Publishes active stock events to enable downstream processing.
+   Configured with AWS managed KMS encryption and subscribes
+   to SQS queue for Fundamentus stock metrics processing.
 -------------------------------------------------------- */
 
 module "sns_topic_active_stocks" {
@@ -58,7 +61,7 @@ module "sns_topic_active_stocks" {
   subscriptions = [
     {
       protocol               = "sqs"
-      endpoint               = "arn:aws:sqs:${local.region_name}:${local.account_id}:b3stocks-fundamentus-stock-metrics"
+      endpoint               = "arn:aws:sqs:${local.region_name}:${local.account_id}:b3stocks-fundamentus-eod-stock-metrics"
       endpoint_auto_confirms = true
       raw_message_delivery   = false
     }

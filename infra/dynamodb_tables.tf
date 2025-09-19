@@ -1,15 +1,23 @@
 /* -----------------------------------------------------------------------------
 FILE: dynamodb_tables.tf
+PROJECT: b3stocks
 
 DESCRIPTION:
-  This Terraform handlers the definition of all DynamoDB tables required by
-  all app features on b3stocks project.
+  This Terraform file defines all DynamoDB tables required by the b3stocks
+  project features. Each table is configured with appropriate attributes,
+  streaming capabilities, and partition keys to support the application's
+  data storage and CDC (Change Data Capture) requirements.
+
+TABLES:
+  - tbl_b3stocks_investment_portfolio: Stores user investment portfolio data
+  - tbl_b3stocks_active_stocks: Stores active B3 stock information
 ----------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------
    DYNAMODB TABLE: tbl_b3stocks_investment_portfolio
-   Defines DynamoDB tables for storing data related to the
-   feature of getting data from an user's investment portfolio
+   Stores user investment portfolio data with owner email
+   as partition key. Enables DynamoDB Streams for CDC
+   processing to capture portfolio changes and updates.
 -------------------------------------------------------- */
 
 module "aws_dynamodb_table_tbl_b3stocks_investment_portfolio" {
@@ -31,8 +39,9 @@ module "aws_dynamodb_table_tbl_b3stocks_investment_portfolio" {
 
 /* --------------------------------------------------------
    DYNAMODB TABLE: tbl_b3stocks_active_stocks
-   Defines DynamoDB tables for storing data related to
-   active stocks scrapped from a source website or API.
+   Stores active stock data scraped from B3 sources with
+   stock code as partition key. Enables DynamoDB Streams
+   for CDC processing to track stock data changes.
 -------------------------------------------------------- */
 
 module "aws_dynamodb_table_tbl_b3stocks_active_stocks" {

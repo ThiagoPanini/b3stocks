@@ -1,14 +1,23 @@
 /* -----------------------------------------------------------------------------
   FILE: variables.tf
-  MODULE: aws/get-investment-portfolio
+  PROJECT: b3stocks
 
   DESCRIPTION:
-    Variables for configuring all infrastructure resources related to the process
-    of getting investment portfolio data from an user given source.
+    Variable definitions for configuring the b3stocks infrastructure deployment.
+    These variables enable customization of resource names, Lambda function
+    settings, and tagging while maintaining validation rules to ensure
+    proper configuration.
+
+  VARIABLE GROUPS:
+    - S3 Bucket Configuration: Bucket name prefixes and key paths
+    - Lambda Function Settings: Runtime, architecture, and timeout configurations
+    - Resource Tagging: Default tags applied to all resources
 ----------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------
-   VARIABLES: S3 Buckets
+   VARIABLES: S3 Bucket Configuration
+   Configurable bucket name prefixes and key paths for
+   organizing data across different storage purposes.
 -------------------------------------------------------- */
 
 variable "s3_artifacts_bucket_name_prefix" {
@@ -57,9 +66,9 @@ variable "s3_investment_portfolios_key_prefix" {
 
 
 /* --------------------------------------------------------
-   VARIABLES: Lambda Function
-   Common settings that can be applied to all Lambda
-   functions in this project.
+   VARIABLES: Lambda Function Configuration
+   Common settings applied across all Lambda functions
+   including runtime environment, architecture, and timeouts.
 -------------------------------------------------------- */
 
 variable "lambda_function_common_runtime" {
@@ -87,8 +96,9 @@ variable "lambda_function_common_timeout_seconds" {
 
 
 /* --------------------------------------------------------
-   VARIABLES: Tags
-   Tags to apply to all resources
+   VARIABLES: Resource Tagging
+   Default tags applied to all infrastructure resources
+   for consistent labeling and cost tracking.
 -------------------------------------------------------- */
 
 variable "tags" {

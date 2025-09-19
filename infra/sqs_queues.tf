@@ -1,25 +1,29 @@
 /* -----------------------------------------------------------------------------
   FILE: sqs_queues.tf
+  PROJECT: b3stocks
 
   DESCRIPTION:
-    This Terraform file centralizes all SQS queue configurations for the project
-    utilizing a remote module from a Git repository.
+    This Terraform file defines SQS queues for the b3stocks project messaging
+    infrastructure. Queues provide reliable message delivery and buffering
+    between services with appropriate access policies and dead letter queues
+    for error handling.
 
-  RESOURCES:
-
+  QUEUES:
+    - b3stocks-fundamentus-eod-stock-metrics: Receives messages from SNS topic for processing
 ----------------------------------------------------------------------------- */
 
 
 /* --------------------------------------------------------
-   SQS QUEUE: fundamentus-stock-metrics
-   Defines the AWS SQS Queue for the user's investment
-   portfolio in a pub/sub architecture
+   SQS QUEUE: b3stocks-fundamentus-eod-stock-metrics
+   Receives messages from active stocks SNS topic to trigger
+   Fundamentus stock metrics collection. Configured with
+   appropriate timeouts and dead letter queue for error handling.
 -------------------------------------------------------- */
 
-module "sqs_queue_fundamentus_stock_metrics" {
+module "sqs_queue_fundamentus_eod_stock_metrics" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/sqs-queue/v0.2.0"
 
-  name                              = "b3stocks-fundamentus-stock-metrics"
+  name                              = "b3stocks-fundamentus-eod-stock-metrics"
   visibility_timeout_seconds        = 1080
   message_retention_seconds         = 3600
   delay_seconds                     = 0
@@ -42,7 +46,7 @@ module "sqs_queue_fundamentus_stock_metrics" {
             "Service" : "sns.amazonaws.com"
           },
           "Action" : "SQS:SendMessage",
-          "Resource" : "arn:aws:sqs:${local.region_name}:${local.account_id}:b3stocks-fundamentus-stock-metrics",
+          "Resource" : "arn:aws:sqs:${local.region_name}:${local.account_id}:b3stocks-fundamentus-eod-stock-metrics",
           "Condition" : {
             "ArnEquals" : {
               "aws:SourceArn" : "arn:aws:sns:${local.region_name}:${local.account_id}:b3stocks-active-stocks"
