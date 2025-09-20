@@ -221,7 +221,7 @@ resource "aws_glue_catalog_table" "sor_tbl_fundamentus_eod_stock_metrics" {
 
     columns {
       name    = "vlr_cot"
-      type    = "string"
+      type    = "double"
       comment = "Current stock price"
     }
 
@@ -233,31 +233,31 @@ resource "aws_glue_catalog_table" "sor_tbl_fundamentus_eod_stock_metrics" {
 
     columns {
       name    = "vlr_cot_min_52_sem"
-      type    = "string"
+      type    = "double"
       comment = "52-week low price"
     }
 
     columns {
       name    = "vlr_cot_max_52_sem"
-      type    = "string"
+      type    = "double"
       comment = "52-week high price"
     }
 
     columns {
       name    = "vol_med_neg_2m"
-      type    = "string"
+      type    = "double"
       comment = "Average trading volume in last 2 months"
     }
 
     columns {
       name    = "vlr_mercado"
-      type    = "string"
+      type    = "double"
       comment = "Market value of the company"
     }
 
     columns {
       name    = "vlr_firma"
-      type    = "string"
+      type    = "double"
       comment = "Enterprise value (market value + net debt)"
     }
 
@@ -269,271 +269,271 @@ resource "aws_glue_catalog_table" "sor_tbl_fundamentus_eod_stock_metrics" {
 
     columns {
       name    = "num_acoes"
-      type    = "string"
+      type    = "double"
       comment = "Total number of shares"
     }
 
     columns {
       name    = "pct_var_dia"
-      type    = "string"
+      type    = "double"
       comment = "Daily price variation percentage"
     }
 
     columns {
       name    = "pct_var_mes"
-      type    = "string"
+      type    = "double"
       comment = "Monthly price variation percentage"
     }
 
     columns {
       name    = "pct_var_30d"
-      type    = "string"
+      type    = "double"
       comment = "30-day price variation percentage"
     }
 
     columns {
       name    = "pct_var_12m"
-      type    = "string"
+      type    = "double"
       comment = "12-month price variation percentage"
     }
 
     columns {
       name    = "pct_var_ano_a0"
-      type    = "string"
+      type    = "double"
       comment = "Current year price variation percentage"
     }
 
     columns {
       name    = "pct_var_ano_a1"
-      type    = "string"
+      type    = "double"
       comment = "Previous year price variation percentage"
     }
 
     columns {
       name    = "pct_var_ano_a2"
-      type    = "string"
+      type    = "double"
       comment = "Two years ago price variation percentage"
     }
 
     columns {
       name    = "pct_var_ano_a3"
-      type    = "string"
+      type    = "double"
       comment = "Three years ago price variation percentage"
     }
 
     columns {
       name    = "pct_var_ano_a4"
-      type    = "string"
+      type    = "double"
       comment = "Four years ago price variation percentage"
     }
 
     columns {
       name    = "pct_var_ano_a5"
-      type    = "string"
+      type    = "double"
       comment = "Five years ago price variation percentage"
     }
 
     columns {
       name    = "vlr_p_sobre_l"
-      type    = "string"
+      type    = "double"
       comment = "Price-to-Earnings ratio (P/E)"
     }
 
     columns {
       name    = "vlr_p_sobre_vp"
-      type    = "string"
+      type    = "double"
       comment = "Price-to-Book ratio (P/B)"
     }
 
     columns {
       name    = "vlr_p_sobre_ebit"
-      type    = "string"
+      type    = "double"
       comment = "Price-to-EBIT ratio"
     }
 
     columns {
       name    = "vlr_psr"
-      type    = "string"
+      type    = "double"
       comment = "Price-to-Sales ratio (PSR)"
     }
 
     columns {
       name    = "vlr_p_sobre_ativ"
-      type    = "string"
+      type    = "double"
       comment = "Price-to-Assets ratio"
     }
 
     columns {
       name    = "vlr_p_sobre_cap_giro"
-      type    = "string"
+      type    = "double"
       comment = "Price-to-Working Capital ratio"
     }
 
     columns {
       name    = "vlr_p_sobre_ativ_circ_liq"
-      type    = "string"
+      type    = "double"
       comment = "Price-to-Net Current Assets ratio"
     }
 
     columns {
       name    = "vlr_div_yield"
-      type    = "string"
+      type    = "double"
       comment = "Dividend yield percentage"
     }
 
     columns {
       name    = "vlr_ev_sobre_ebitda"
-      type    = "string"
+      type    = "double"
       comment = "Enterprise Value to EBITDA ratio"
     }
 
     columns {
       name    = "vlr_ev_sobre_ebit"
-      type    = "string"
+      type    = "double"
       comment = "Enterprise Value to EBIT ratio"
     }
 
     columns {
       name    = "pct_cresc_rec_liq_ult_5a"
-      type    = "string"
+      type    = "double"
       comment = "5-year net revenue growth percentage"
     }
 
     columns {
       name    = "vlr_lpa"
-      type    = "string"
+      type    = "double"
       comment = "Earnings per share (EPS)"
     }
 
     columns {
       name    = "vlr_vpa"
-      type    = "string"
+      type    = "double"
       comment = "Book value per share"
     }
 
     columns {
       name    = "vlr_margem_bruta"
-      type    = "string"
+      type    = "double"
       comment = "Gross margin percentage"
     }
 
     columns {
       name    = "vlr_margem_ebit"
-      type    = "string"
+      type    = "double"
       comment = "EBIT margin percentage"
     }
 
     columns {
       name    = "vlr_margem_liq"
-      type    = "string"
+      type    = "double"
       comment = "Net margin percentage"
     }
 
     columns {
       name    = "vlr_ebit_sobre_ativo"
-      type    = "string"
+      type    = "double"
       comment = "EBIT over assets ratio"
     }
 
     columns {
       name    = "vlr_roic"
-      type    = "string"
+      type    = "double"
       comment = "Return on invested capital (ROIC)"
     }
 
     columns {
       name    = "vlr_roe"
-      type    = "string"
+      type    = "double"
       comment = "Return on equity (ROE)"
     }
 
     columns {
       name    = "vlr_liquidez_corr"
-      type    = "string"
+      type    = "double"
       comment = "Current liquidity ratio"
     }
 
     columns {
       name    = "vlr_divida_bruta_sobre_patrim"
-      type    = "string"
+      type    = "double"
       comment = "Gross debt to equity ratio"
     }
 
     columns {
       name    = "vlr_giro_ativos"
-      type    = "string"
+      type    = "double"
       comment = "Asset turnover ratio"
     }
 
     columns {
       name    = "vlr_ativo"
-      type    = "string"
+      type    = "double"
       comment = "Total assets value"
     }
 
     columns {
       name    = "vlr_disponibilidades"
-      type    = "string"
+      type    = "double"
       comment = "Cash and cash equivalents"
     }
 
     columns {
       name    = "vlr_ativ_circulante"
-      type    = "string"
+      type    = "double"
       comment = "Current assets value"
     }
 
     columns {
       name    = "vlr_divida_bruta"
-      type    = "string"
+      type    = "double"
       comment = "Gross debt value"
     }
 
     columns {
       name    = "vlr_divida_liq"
-      type    = "string"
+      type    = "double"
       comment = "Net debt value"
     }
 
     columns {
       name    = "vlr_patrim_liq"
-      type    = "string"
+      type    = "double"
       comment = "Shareholders' equity value"
     }
 
     columns {
       name    = "vlr_receita_liq_ult_12m"
-      type    = "string"
+      type    = "double"
       comment = "Net revenue in last 12 months"
     }
 
     columns {
       name    = "vlr_ebit_ult_12m"
-      type    = "string"
+      type    = "double"
       comment = "EBIT in last 12 months"
     }
 
     columns {
       name    = "vlr_lucro_liq_ult_12m"
-      type    = "string"
+      type    = "double"
       comment = "Net income in last 12 months"
     }
 
     columns {
       name    = "vlr_receita_liq_ult_3m"
-      type    = "string"
+      type    = "double"
       comment = "Net revenue in last 3 months"
     }
 
     columns {
       name    = "vlr_ebit_ult_3m"
-      type    = "string"
+      type    = "double"
       comment = "EBIT in last 3 months"
     }
 
     columns {
       name    = "vlr_lucro_liq_ult_3m"
-      type    = "string"
+      type    = "double"
       comment = "Net income in last 3 months"
     }
   }
