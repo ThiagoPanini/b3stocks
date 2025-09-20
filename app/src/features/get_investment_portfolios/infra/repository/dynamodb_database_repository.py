@@ -18,7 +18,6 @@ from app.src.features.get_investment_portfolios.domain.entities.investment_portf
 
 from app.src.features.cross.utils.log_utils import setup_logger
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization_utils import entity_to_storage_dict
 from app.src.features.cross.utils.serialization import json_serialize
 
 
@@ -49,26 +48,6 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
 
     def __init__(self):
         self.logger = setup_logger(__name__)
-
-    
-    def __serialize_item(self, item: InvestmentPortfolio) -> dict[str, Any]:
-        """
-        Serializes an InvestmentPortfolio entity to a dictionary suitable for storage.
-
-        Args:
-            item (InvestmentPortfolio): The investment portfolio to update.
-
-        Returns:
-            dict: The serialized investment portfolio data.
-        """
-
-        try:
-            data = entity_to_storage_dict(item)
-            return data
-
-        except Exception:
-            self.logger.exception("Failed to serialize investment portfolio data to JSON")
-            raise
 
 
     @timing_decorator(enabled=True)
