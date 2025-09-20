@@ -60,3 +60,32 @@ module "aws_dynamodb_table_tbl_b3stocks_active_stocks" {
   ]
 }
 
+
+/* --------------------------------------------------------
+   DYNAMODB TABLE: tbl_b3stocks_fundamentus_eod_stock_metrics
+   Stores end-of-day stock metrics fetched from Fundamentus
+   with stock code and date as composite key for historical
+   tracking.
+-------------------------------------------------------- */
+
+module "aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/dynamodb-table/v0.4.0"
+
+  name             = "tbl_b3stocks_fundamentus_eod_stock_metrics"
+  hash_key         = "nome_papel"
+  range_key        = "execution_date"
+  stream_enabled   = true
+  stream_view_type = "NEW_AND_OLD_IMAGES"
+
+  attributes = [
+    {
+      name = "nome_papel"
+      type = "S"
+    },
+    {
+      name = "execution_date"
+      type = "S"
+    }
+  ]
+}
+
