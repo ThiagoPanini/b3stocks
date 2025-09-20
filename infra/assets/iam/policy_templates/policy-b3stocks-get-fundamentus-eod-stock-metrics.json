@@ -10,6 +10,16 @@
                 "sqs:GetQueueAttributes"
             ],
             "Resource": "arn:aws:sqs:${region_name}:${account_id}:${sqs_fundamentus_eod_stock_metrics_queue_name}"
+        },
+        {
+            "Sid": "DynamoDBTableAccess",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:DescribeTable",
+                "dynamodb:PutItem",
+                "dynamodb:BatchWriteItem"
+            ],
+            "Resource": "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_fundamentus_eod_stock_metrics_table_name}"
         }
     ]
 }
