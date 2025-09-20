@@ -26,7 +26,7 @@ class StockModel(Model):
         region = boto3.session.Session().region_name
 
     code = UnicodeAttribute(hash_key=True)
-    company_name = UnicodeAttribute()
+    company_name = UnicodeAttribute(null=True)
     request_config = MapAttribute()
     created_at = UnicodeAttribute()
     updated_at = UnicodeAttribute()
@@ -52,6 +52,11 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
         Args:
             items (list[Stock]): The list of stocks to insert.
         """
+        # Getting company name with None to debugging purposes
+        for item in items:
+            if item.company_name is None:
+                self.logger.warning(f"Company name is None for stock code {item.code}")
+
         try:
             with StockModel.batch_write() as batch:
                 for idx, stock in enumerate(items):
@@ -69,7 +74,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
 
         except Exception:
             self.logger.exception("Error saving batch of stocks data on table "
-                                  f"{StockModel.Meta.table_name}")
+                                  f"{StockModel.Meta.table_name} on stock {stock}")
             raise
         else:
             self.logger.info("Successfully inserted items to DynamoDB table "
