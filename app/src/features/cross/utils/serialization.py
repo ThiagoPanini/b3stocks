@@ -4,6 +4,7 @@ from datetime import datetime
 from decimal import Decimal
 from enum import Enum
 from typing import Any
+import math
 
 
 def json_serialize(value: Any) -> Any:
@@ -14,10 +15,19 @@ def json_serialize(value: Any) -> Any:
     - dataclass -> dict (recursively serialized)
     - Enum -> its value
     - datetime -> ISO 8601 string
+    - float NaN -> None (for DynamoDB compatibility)
     - list/tuple/set -> list of serialized items
     - dict -> dict with string keys preserved, values serialized
     - other primitives returned as-is
     """
+
+    # Handle NaN values (convert to None for DynamoDB)
+    if isinstance(value, float) and math.isnan(value):
+        return None
+    
+    # Handle string representations of NaN
+    if isinstance(value, str) and value.lower().strip() in ('nan', 'n/a', 'null', ''):
+        return None
 
     # Dataclass (but avoid treating plain strings etc.)
     if is_dataclass(value):
