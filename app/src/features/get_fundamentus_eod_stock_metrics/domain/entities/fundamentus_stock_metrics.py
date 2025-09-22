@@ -2,6 +2,10 @@ from dataclasses import dataclass, field
 from datetime import datetime, UTC
 from typing import Optional
 
+from app.src.features.cross.value_objects import DateFormat
+from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
+from app.src.features.cross.value_objects import Timezone
+
 
 @dataclass
 class FundamentusStockMetrics:
@@ -71,6 +75,7 @@ class FundamentusStockMetrics:
         vlr_receita_liq_ult_3m (Optional[float]): Net revenue in last 3 months
         vlr_ebit_ult_3m (Optional[float]): EBIT in last 3 months
         vlr_lucro_liq_ult_3m (Optional[float]): Net income in last 3 months
+        execution_timestamp (timestamp): Date and time reference for data extraction
         execution_date (str): Date reference for data extraction
     """
 
@@ -132,7 +137,15 @@ class FundamentusStockMetrics:
     vlr_receita_liq_ult_3m: Optional[float]
     vlr_ebit_ult_3m: Optional[float]
     vlr_lucro_liq_ult_3m: Optional[float]
-    execution_date: str
+    execution_timestamp: datetime = field(
+        default_factory=lambda: DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+    )
+    execution_date: str = field(
+        default_factory=lambda: DateAndTimeUtils.datetime_now_str(
+            timezone=Timezone.SAO_PAULO,
+            format=DateFormat.DATE
+        )
+    )
 
     def __post_init__(self):
         # Normalize required string fields
