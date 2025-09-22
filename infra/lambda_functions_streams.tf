@@ -133,7 +133,7 @@ module "aws_lambda_function_stream_fundamentus_eod_stock_metrics" {
 
   function_name = "b3stocks-stream-fundamentus-eod-stock-metrics"
   runtime       = var.lambda_function_common_runtime
-  timeout       = 300
+  timeout       = 600
 
   role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-fundamentus-eod-stock-metrics"]
 
