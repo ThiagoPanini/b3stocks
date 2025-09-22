@@ -7,9 +7,9 @@ from pynamodb.attributes import (
     MapAttribute
 )
 
-from app.src.features.cross.utils.log_utils import setup_logger, log_loop_status
+from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization import json_serialize
+from app.src.features.cross.utils.serialization import SerializationUtils
 
 from app.src.features.get_active_stocks.domain.interfaces.database_repository_interface import (
     IDatabaseRepository
@@ -41,7 +41,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
     Implementation of the B3 stock tickers repository using DynamoDB.
     """
     def __init__(self):
-        self.logger = setup_logger(__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
 
 
     @timing_decorator
@@ -60,11 +60,11 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
         try:
             with StockModel.batch_write() as batch:
                 for idx, stock in enumerate(items):
-                    model = (StockModel(**json_serialize(stock)))
+                    model = (StockModel(**SerializationUtils.json_serialize(stock)))
                     batch.save(model)
 
                     # Logging the status of the loop
-                    log_loop_status(
+                    LogUtils.log_loop_status(
                         logger=self.logger,
                         loop_idx=idx,
                         total_elements=len(items),

@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.domain.interfaces.http_client_adapter import IHTTPClientAdapter
 from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
 from app.src.features.cross.domain.entities.http_client_response import HTTPClientResponse
@@ -13,7 +13,7 @@ class RequestsHTTPClientAdapter(IHTTPClientAdapter):
     Implementation of IHTTPClientAdapter that uses the requests library to make HTTP requests.
     """
 
-    def __init__(self, logger: logging.Logger = setup_logger(__name__)):
+    def __init__(self, logger: logging.Logger = LogUtils.setup_logger(name=__name__)):
         self.logger = logger
 
 

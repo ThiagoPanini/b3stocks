@@ -5,16 +5,16 @@ import boto3
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, NumberAttribute
 
-from app.src.features.cross.utils.log_utils import setup_logger, log_loop_status
-from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization import json_serialize
-
 from app.src.features.get_fundamentus_eod_stock_metrics.domain.interfaces.database_repository_interface import (
     IDatabaseRepository
 )
 from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.fundamentus_stock_metrics import (
     FundamentusStockMetrics
 )
+
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.serialization import SerializationUtils
+from app.src.features.cross.utils.decorators import timing_decorator
 
 
 class FundamentusStockMetricsModel(Model):
@@ -30,13 +30,16 @@ class FundamentusStockMetricsModel(Model):
     
     # Sort key: execution date for versioning
     execution_date = UnicodeAttribute(range_key=True)
+
+    # Execution timestamp for record creation
+    execution_timestamp = UnicodeAttribute()
     
-    # Basic stock information (required fields)
-    tipo_papel = UnicodeAttribute()
-    nome_empresa = UnicodeAttribute()
-    nome_setor = UnicodeAttribute()
-    nome_subsetor = UnicodeAttribute()
-    
+    # Basic stock information (nullable)
+    tipo_papel = UnicodeAttribute(null=True)
+    nome_empresa = UnicodeAttribute(null=True)
+    nome_setor = UnicodeAttribute(null=True)
+    nome_subsetor = UnicodeAttribute(null=True)
+
     # Price and trading information (nullable)
     vlr_cot = NumberAttribute(null=True)
     dt_ult_cot = UnicodeAttribute(null=True)
@@ -120,7 +123,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
     Implementation of the Fundamentus stock metrics repository using DynamoDB.
     """
     def __init__(self):
-        self.logger = setup_logger(__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
 
 
     @timing_decorator
@@ -134,7 +137,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
         try:
             with FundamentusStockMetricsModel.batch_write() as batch:
                 for _, item in enumerate(items):
-                    model = FundamentusStockMetricsModel(**json_serialize(item))
+                    model = FundamentusStockMetricsModel(**SerializationUtils.json_serialize(item))
                     batch.save(model)
                     
             self.logger.info(f"Successfully batch saved {len(items)} stock metrics "

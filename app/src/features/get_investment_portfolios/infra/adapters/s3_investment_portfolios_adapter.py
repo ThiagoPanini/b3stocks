@@ -11,7 +11,7 @@ from app.src.features.get_investment_portfolios.domain.entities import (
     StockVariationControl,
     VariationThreshold
 )
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
 
 
 class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
@@ -20,7 +20,7 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
     """
 
     def __init__(self):
-        self.logger = setup_logger(name=__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
         self.client = boto3.client("s3", region_name=boto3.session.Session().region_name)
         self.bucket_name_prefix = os.getenv("S3_ARTIFACTS_BUCKET_NAME_PREFIX")
         self.portfolios_key_prefix = os.getenv("S3_INVESTMENT_PORTFOLIOS_KEY_PREFIX")

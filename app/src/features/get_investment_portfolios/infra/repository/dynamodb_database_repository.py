@@ -16,9 +16,9 @@ from app.src.features.get_investment_portfolios.domain.entities.investment_portf
     InvestmentPortfolio
 )
 
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.serialization import SerializationUtils
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization import json_serialize
 
 
 class InvestmentPortfolioModel(Model):
@@ -47,7 +47,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
     """
 
     def __init__(self):
-        self.logger = setup_logger(__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
 
 
     @timing_decorator(enabled=True)
@@ -61,7 +61,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
 
         for item in items:
             # Tries to update the item if it already exists (based on the hash key)
-            serialized_item = json_serialize(item)
+            serialized_item = SerializationUtils.json_serialize(item)
 
             try:
                 # Getting item if already exists and preserve created_at

@@ -7,12 +7,14 @@ from app.src.features.cross.domain.entities.dynamodb_streams_output_data import 
 from app.src.features.cross.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
     ICDCDataCatalogSyncAdapter
 )
-from app.src.features.cross.value_objects import DateFormat
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
+from app.src.features.cross.value_objects import Timezone
+from app.src.features.cross.value_objects import DateFormat
 
 
-logger = setup_logger(name=__name__)
+logger = LogUtils.setup_logger(name=__name__)
 
 
 @dataclass(frozen=True)
@@ -27,28 +29,35 @@ class StoreDynamoDBStreamsDataUseCase:
     def __get_event_timestamp(self, approx_ts: int | float) -> datetime:
         """
         Transforms the ApproximateCreationDateTime from a database stream record to a datetime format.
+        Returns the timestamp in São Paulo timezone.
 
         Args:
             approx_ts (int | float): The ApproximateCreationDateTime value from a database stream record.
 
         Returns:
-            datetime: The event timestamp in datetime format.
+            datetime: The event timestamp in São Paulo timezone.
         """
-        return datetime.fromtimestamp(approx_ts, tz=UTC)
+        event_timestamp: datetime = DateAndTimeUtils.from_timestamp(
+            unix_ts=approx_ts,
+            timezone=Timezone.SAO_PAULO
+        )
+        return event_timestamp
 
 
     def __get_event_date(self, approx_ts: int | float) -> str:
         """
-        Transforms the ApproximateCreationDateTime from a database stream record to a string date format.
+        Transforms the ApproximateCreationDateTime from a database stream record to a string date format
+        in São Paulo timezone.
 
         Args:
             approx_ts (int | float): The ApproximateCreationDateTime value from a database stream record.
 
         Returns:
-            str: The event date in str format.
+            str: The event date in São Paulo timezone formatted as string.
         """
-        event_timestamp = self.__get_event_timestamp(approx_ts=approx_ts)
-        return event_timestamp.strftime(DateFormat.DATE.value)
+        event_timestamp: datetime = self.__get_event_timestamp(approx_ts=approx_ts)
+        event_date: str = DateAndTimeUtils.datetime_to_str(dt=event_timestamp, format=DateFormat.DATE)
+        return event_date
 
 
     def __get_table_name_from_source_arn(self, source_arn: str) -> str:
@@ -121,8 +130,9 @@ class StoreDynamoDBStreamsDataUseCase:
                 streams_output_data.append(table_record)
             
             except Exception:
-                logger.exception(f"Error processing record with event ID {record.event_id} to source "
-                                 f"table {table_record.table_name}")
+                table_name = self.__get_table_name_from_source_arn(record.event_source_arn)
+                logger.exception(f"Error processing record with event ID {record.event_id} of source "
+                                 f"table {table_name}")
                 raise
 
         try:
@@ -133,7 +143,8 @@ class StoreDynamoDBStreamsDataUseCase:
             self.cdc_data_catalog_sync_adapter.store_and_sync_sor_data(data=streams_output_data)
 
         except Exception:
-            logger.exception(f"Error storing and syncing CDC and SoR data to the data catalog.")
+            logger.exception("Error storing and syncing CDC and SoR data to the data catalog.")
+            logger.exception(f"Event: {input_dto}")
             raise
 
         logger.info(f"Successfully stored {len(streams_output_data)} records from DynamoDB Streams.")

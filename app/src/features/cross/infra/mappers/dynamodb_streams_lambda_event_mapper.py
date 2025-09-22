@@ -5,7 +5,7 @@ from boto3.dynamodb.types import TypeDeserializer
 from app.src.features.cross.domain.entities.dynamodb_streams_record_data import DynamoDBStreamsRecordData
 from app.src.features.cross.domain.entities.dynamodb_streams_event_record import DynamoDBStreamsEventRecord
 from app.src.features.cross.domain.dtos.dynamodb_streams_input_dto import DynamoDBStreamsInputDTO
-from app.src.features.cross.utils.serialization import json_serialize
+from app.src.features.cross.utils.serialization import SerializationUtils
 
 
 class DynamoDBStreamsLambdaEventMapper:
@@ -31,7 +31,7 @@ class DynamoDBStreamsLambdaEventMapper:
             k: self.__deserializer.deserialize(v) for k, v in stream_record.items()
         }
 
-        return json_serialize(deserialized_stream_record)
+        return SerializationUtils.json_serialize(deserialized_stream_record)
 
 
     def map_event_to_input_dto(self, event: dict[str, Any]) -> DynamoDBStreamsInputDTO:

@@ -16,10 +16,10 @@ from app.src.features.cross.domain.entities.http_client_request_config import HT
 from app.src.features.cross.domain.entities.http_client_retry_config import HTTPClientRetryConfig
 from app.src.features.cross.domain.entities.http_client_response import HTTPClientResponse
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
 
 
-logger = setup_logger(__name__)
+logger = LogUtils.setup_logger(name=__name__)
 
 
 @dataclass(frozen=True)

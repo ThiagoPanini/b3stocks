@@ -12,7 +12,7 @@ from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.fundamen
     FundamentusStockMetrics
 )
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.value_objects import DateFormat
 
 
@@ -92,7 +92,7 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
     """
 
     def __init__(self):
-        self.logger = setup_logger(__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
         self.variation_headings = VARIATION_HEADINGS
         self.stock_metrics_mapping = STOCK_METRICS_MAPPING
 

@@ -5,10 +5,11 @@ from uuid import uuid4
 import boto3
 
 from app.src.features.get_active_stocks.domain.interfaces.topic_adapter_interface import ITopicAdapter
+
 from app.src.features.cross.domain.entities.stock_message import StockMessage
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.serialization import SerializationUtils
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.log_utils import setup_logger, log_loop_status
-from app.src.features.cross.utils.serialization import json_serialize
 
 
 class SNSTopicAdapter(ITopicAdapter):
@@ -17,7 +18,7 @@ class SNSTopicAdapter(ITopicAdapter):
     """
 
     def __init__(self):
-        self.logger = setup_logger(__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
         self.client = boto3.client("sns", region_name=boto3.session.Session().region_name)
         self.topic_name = os.environ.get("SNS_ACTIVE_STOCKS_TOPIC_NAME")
         self.topic_arn = self.__get_topic_arn()
@@ -51,7 +52,7 @@ class SNSTopicAdapter(ITopicAdapter):
             entries = [
                 {
                     "Id": str(uuid4()),
-                    "Message": json.dumps(json_serialize(message))
+                    "Message": json.dumps(SerializationUtils.json_serialize(message))
                 }
                 for message in messages
             ]
@@ -70,7 +71,7 @@ class SNSTopicAdapter(ITopicAdapter):
                 )
 
                 # Logging the loop status
-                log_loop_status(
+                LogUtils.log_loop_status(
                     logger=self.logger,
                     loop_idx=i // 10,
                     total_elements=len(messages) // 10,

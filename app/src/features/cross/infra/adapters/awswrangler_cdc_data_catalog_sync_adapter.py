@@ -5,14 +5,19 @@ import boto3
 import awswrangler as wr
 import pandas as pd
 
-from app.src.features.cross.utils.log_utils import setup_logger
 from app.src.features.cross.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
     ICDCDataCatalogSyncAdapter
 )
 from app.src.features.cross.domain.entities.dynamodb_streams_output_data import (
     DynamoDBStreamsOutputData
 )
-from app.src.features.cross.value_objects import DateFormat
+
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
+from app.src.features.cross.value_objects import (
+    Timezone,
+    DateFormat
+)
 
 
 class AWSWranglerCDCDataCatalogSyncAdapter(ICDCDataCatalogSyncAdapter):
@@ -22,12 +27,12 @@ class AWSWranglerCDCDataCatalogSyncAdapter(ICDCDataCatalogSyncAdapter):
     """
 
     def __init__(self):
-        self.logger = setup_logger(name=__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
         self.cdc_bucket_name_prefix = os.getenv("S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX")
         self.sor_bucket_name_prefix = os.getenv("S3_ANALYTICS_SOR_BUCKET_NAME_PREFIX")
-        self.bucket_names = self.__build_bucket_names()
         self.cdc_data_catalog_database = os.getenv("DATA_CATALOG_CDC_DATABASE_NAME")
         self.sor_data_catalog_database = os.getenv("DATA_CATALOG_SOR_DATABASE_NAME")
+        self.bucket_names = self.__build_bucket_names()
 
 
     def __build_bucket_names(self) -> dict:
@@ -98,11 +103,19 @@ class AWSWranglerCDCDataCatalogSyncAdapter(ICDCDataCatalogSyncAdapter):
         Args:
             data (list[DynamoDBStreamsOutputData]): List of data to be stored and synchronized.
         """
-
         try:
             # Taken the new image (updated raw data) from each record and converting to DataFrame
             df = pd.DataFrame([tr.table_new_image for tr in data])
-            df["event_date"] = datetime.now(UTC).strftime(DateFormat.DATE.value)
+
+            # Adding execution timestamp and date columns for 
+            df["execution_timestamp"] = DateAndTimeUtils.datetime_now(
+                timezone=Timezone.SAO_PAULO
+            )
+            df["execution_date"] = DateAndTimeUtils.datetime_now_str(
+                timezone=Timezone.SAO_PAULO,
+                format=DateFormat.DATE
+            )
+
         except Exception:
             self.logger.exception(f"Error converting new image data to DataFrame")
             raise
@@ -120,7 +133,7 @@ class AWSWranglerCDCDataCatalogSyncAdapter(ICDCDataCatalogSyncAdapter):
                 table=sor_table_name,
                 mode="append",
                 compression="snappy",
-                partition_cols=["event_date"]
+                partition_cols=["execution_date"]
             )
 
         except wr.exceptions.InvalidTable:
