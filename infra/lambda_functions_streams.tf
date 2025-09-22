@@ -29,7 +29,7 @@ module "aws_lambda_function_stream_investment_portfolios" {
 
   function_name = "b3stocks-stream-investment-portfolios"
   runtime       = var.lambda_function_common_runtime
-  timeout       = 60
+  timeout       = 300
 
   role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-investment-portfolios"]
 

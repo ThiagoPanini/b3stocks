@@ -25,7 +25,9 @@
 resource "aws_glue_catalog_table" "sor_tbl_b3stocks_investment_portfolio" {
   name          = "sor_tbl_b3stocks_investment_portfolio"
   database_name = aws_glue_catalog_database.b3stocks_analytics_sor.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "System of Record table for user's investment portfolio data"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "parquet"
@@ -60,7 +62,7 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_investment_portfolio" {
     columns {
       name    = "stocks"
       type    = "string"
-      comment = "JSON string containing the list of stocks in the portfolio"
+      comment = "JSON string representation of stocks in the portfolio"
     }
 
     columns {
@@ -80,10 +82,16 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_investment_portfolio" {
       type    = "string"
       comment = "Timestamp when the portfolio record was last updated"
     }
+
+    columns {
+      name    = "execution_timestamp"
+      type    = "timestamp"
+      comment = "Execution timestamp when the data was extracted and processed"
+    }
   }
 
   partition_keys {
-    name    = "event_date"
+    name    = "execution_date"
     type    = "string"
     comment = "Date partition in YYYY-MM-DD format for efficient querying"
   }
@@ -100,7 +108,9 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_investment_portfolio" {
 resource "aws_glue_catalog_table" "sor_tbl_b3stocks_active_stocks" {
   name          = "sor_tbl_b3stocks_active_stocks"
   database_name = aws_glue_catalog_database.b3stocks_analytics_sor.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "System of Record table for active B3 stocks data"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "parquet"
@@ -149,10 +159,16 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_active_stocks" {
       type    = "string"
       comment = "Timestamp when the stock record was last updated"
     }
+
+    columns {
+      name    = "execution_timestamp"
+      type    = "timestamp"
+      comment = "Execution timestamp when the data was extracted and processed"
+    }
   }
 
   partition_keys {
-    name    = "event_date"
+    name    = "execution_date"
     type    = "string"
     comment = "Date partition in YYYY-MM-DD format for efficient querying"
   }
@@ -160,23 +176,25 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_active_stocks" {
 
 
 /* --------------------------------------------------------
-   GLUE TABLE: sor_tbl_fundamentus_eod_stock_metrics
+   GLUE TABLE: sor_tbl_b3stocks_fundamentus_eod_stock_metrics
    System of Record table for Fundamentus end-of-day stock
    metrics data stored in Parquet format. Contains comprehensive
    financial metrics for B3 stocks. Partitioned by event_date.
 -------------------------------------------------------- */
 
-resource "aws_glue_catalog_table" "sor_tbl_fundamentus_eod_stock_metrics" {
-  name          = "sor_tbl_fundamentus_eod_stock_metrics"
+resource "aws_glue_catalog_table" "sor_tbl_b3stocks_fundamentus_eod_stock_metrics" {
+  name          = "sor_tbl_b3stocks_fundamentus_eod_stock_metrics"
   database_name = aws_glue_catalog_database.b3stocks_analytics_sor.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "System of Record table for Fundamentus end-of-day stock metrics data"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "parquet"
   }
 
   storage_descriptor {
-    location      = "s3://${aws_s3_bucket.analytics_sor.bucket}/sor_tbl_fundamentus_eod_stock_metrics/"
+    location      = "s3://${aws_s3_bucket.analytics_sor.bucket}/sor_tbl_b3stocks_fundamentus_eod_stock_metrics/"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
@@ -536,11 +554,17 @@ resource "aws_glue_catalog_table" "sor_tbl_fundamentus_eod_stock_metrics" {
       type    = "double"
       comment = "Net income in last 3 months"
     }
+
+    columns {
+      name    = "execution_timestamp"
+      type    = "timestamp"
+      comment = "Execution timestamp when the data was extracted and processed"
+    }
   }
 
   partition_keys {
     name    = "execution_date"
     type    = "string"
-    comment = "Date reference for data extraction"
+    comment = "Date partition in YYYY-MM-DD format for efficient querying"
   }
 }

@@ -113,13 +113,12 @@ module "aws_lambda_function_get_fundamentus_eod_stock_metrics" {
   lambda_handler   = "app.src.features.get_fundamentus_eod_stock_metrics.presentation.get_fundamentus_eod_stock_metrics_presentation.handler"
 
   environment_variables = {
-    # Change
-    DYNAMODB_ACTIVE_STOCKS_TABLE_NAME = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.table_name
-    SNS_ACTIVE_STOCKS_TOPIC_NAME      = module.sns_topic_active_stocks.topic_name
+    DYNAMODB_FUNDAMENTUS_EOD_STOCK_METRICS_TABLE_NAME = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.table_name
   }
 
   layers_arns = [
-    module.aws_lambda_layers.layers_arns["b3stocks-deps"]
+    module.aws_lambda_layers.layers_arns["b3stocks-deps"],
+    "arn:aws:lambda:${local.region_name}:336392948345:layer:AWSSDKPandas-Python312:18"
   ]
 
   tags = var.tags

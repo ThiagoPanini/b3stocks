@@ -24,7 +24,9 @@
 resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
   name          = "cdc_tbl_b3stocks_investment_portfolio"
   database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "CDC table for tbl_b3stocks_investment_portfolio DynamoDB table"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "json"
@@ -78,8 +80,8 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
 
     columns {
       name    = "table_keys"
-      type    = "struct<owner_mail:string>"
-      comment = "Primary key values of the affected investment portfolio record"
+      type    = "string"
+      comment = "Primary key values of the affected source table record"
     }
 
     columns {
@@ -111,12 +113,18 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
       type    = "string"
       comment = "ARN of the DynamoDB stream that generated the event"
     }
+
+    columns {
+      name    = "event_timestamp"
+      type    = "timestamp"
+      comment = "Timestamp of the DynamoDB stream event"
+    }
   }
 
   partition_keys {
     name    = "event_date"
     type    = "string"
-    comment = "Date partition in YYYYMMDD format for efficient querying"
+    comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }
 
@@ -131,7 +139,9 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
 resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
   name          = "cdc_tbl_b3stocks_active_stocks"
   database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "CDC table for tbl_b3stocks_active_stocks DynamoDB table"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "json"
@@ -185,8 +195,8 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
 
     columns {
       name    = "table_keys"
-      type    = "struct<code:string>"
-      comment = "Primary key values of the affected active stock record"
+      type    = "string"
+      comment = "Primary key values of the affected source table record"
     }
 
     columns {
@@ -218,12 +228,18 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
       type    = "string"
       comment = "ARN of the DynamoDB stream that generated the event"
     }
+
+    columns {
+      name    = "event_timestamp"
+      type    = "timestamp"
+      comment = "Timestamp of the DynamoDB stream event"
+    }
   }
 
   partition_keys {
     name    = "event_date"
     type    = "string"
-    comment = "Date partition in YYYYMMDD format for efficient querying"
+    comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }
 
@@ -238,7 +254,9 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
 resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_fundamentus_eod_stock_metrics" {
   name          = "cdc_tbl_b3stocks_fundamentus_eod_stock_metrics"
   database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "CDC table for tbl_b3stocks_fundamentus_eod_stock_metrics DynamoDB table"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "json"
@@ -292,8 +310,8 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_fundamentus_eod_stock_metric
 
     columns {
       name    = "table_keys"
-      type    = "struct<nome_papel:string,execution_date:string>"
-      comment = "Primary key values of the affected record"
+      type    = "string"
+      comment = "Primary key values of the affected source table record"
     }
 
     columns {
@@ -325,11 +343,17 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_fundamentus_eod_stock_metric
       type    = "string"
       comment = "ARN of the DynamoDB stream that generated the event"
     }
+
+    columns {
+      name    = "event_timestamp"
+      type    = "timestamp"
+      comment = "Timestamp of the DynamoDB stream event"
+    }
   }
 
   partition_keys {
     name    = "event_date"
     type    = "string"
-    comment = "Date partition in YYYYMMDD format for efficient querying"
+    comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }
