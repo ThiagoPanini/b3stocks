@@ -616,13 +616,13 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_batch_process_control" {
 
     columns {
       name    = "total_items"
-      type    = "integer"
+      type    = "int"
       comment = "The total number of items that should be processed across all batches"
     }
 
     columns {
       name    = "processed_items"
-      type    = "integer"
+      type    = "int"
       comment = "The total number of items that have been processed across all batches"
     }
 
