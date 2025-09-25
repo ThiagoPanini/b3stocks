@@ -102,7 +102,7 @@ module "aws_dynamodb_table_tbl_b3stocks_batch_process_control" {
   name             = "tbl_b3stocks_batch_process_control"
   hash_key         = "process_name"
   range_key        = "execution_date"
-  stream_enabled   = false
+  stream_enabled   = true
   stream_view_type = "NEW_AND_OLD_IMAGES"
 
   attributes = [
