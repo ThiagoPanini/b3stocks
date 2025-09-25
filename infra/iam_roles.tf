@@ -9,11 +9,12 @@ DESCRIPTION:
   including DynamoDB, S3, SNS, SQS, and CloudWatch.
 
 ROLES:
-  - role-b3stocks-lambda-get-investment-portfolios: Lambda role for portfolio processing
   - role-b3stocks-lambda-get-active-stocks: Lambda role for stock data collection
   - role-b3stocks-lambda-get-fundamentus-eod-stock-metrics: Lambda role for metrics collection
-  - role-b3stocks-lambda-stream-investment-portfolios: Lambda role for portfolio CDC processing
   - role-b3stocks-lambda-stream-active-stocks: Lambda role for stocks CDC processing
+  - role-b3stocks-lambda-stream-fundamentus-eod-stock-metrics: Lambda role for metrics CDC processing
+  - role-b3stocks-lambda-stream-batch-process-control: Lambda role for batch process control CDC
+  - role-b3stocks-lambda-check-batch-processes-completion: Lambda role for checking batch process completion
 ----------------------------------------------------------------------------- */
 
 module "aws_iam_roles" {
@@ -40,6 +41,7 @@ module "aws_iam_roles" {
   }
 
   roles_config = [
+    /*
     {
       role_name             = "role-b3stocks-lambda-get-investment-portfolios"
       trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
@@ -48,28 +50,13 @@ module "aws_iam_roles" {
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-get-investment-portfolios",
       ]
     },
+    */
     {
       role_name             = "role-b3stocks-lambda-get-active-stocks"
       trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
       policies_arns = [
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-get-active-stocks",
-      ]
-    },
-    {
-      role_name             = "role-b3stocks-lambda-get-fundamentus-eod-stock-metrics"
-      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
-      policies_arns = [
-        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
-        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-get-fundamentus-eod-stock-metrics",
-      ]
-    },
-    {
-      role_name             = "role-b3stocks-lambda-stream-investment-portfolios"
-      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
-      policies_arns = [
-        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
-        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-investment-portfolios",
       ]
     },
     {
@@ -81,6 +68,14 @@ module "aws_iam_roles" {
       ]
     },
     {
+      role_name             = "role-b3stocks-lambda-get-fundamentus-eod-stock-metrics"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-get-fundamentus-eod-stock-metrics",
+      ]
+    },
+    {
       role_name             = "role-b3stocks-lambda-stream-fundamentus-eod-stock-metrics"
       trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
       policies_arns = [
@@ -88,12 +83,30 @@ module "aws_iam_roles" {
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-fundamentus-eod-stock-metrics",
       ]
     },
+    /*
+    {
+      role_name             = "role-b3stocks-lambda-stream-investment-portfolios"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-investment-portfolios",
+      ]
+    },
+    */
     {
       role_name             = "role-b3stocks-lambda-stream-batch-process-control"
       trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
       policies_arns = [
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-batch-process-control",
+      ]
+    },
+    {
+      role_name             = "role-b3stocks-lambda-check-batch-processes-completion"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-check-batch-processes-completion",
       ]
     }
   ]
