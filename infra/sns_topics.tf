@@ -74,3 +74,52 @@ ToDo:
     - Only allow publishing from the Lambda function's role.
     - Only allow subscriptions from specific SQS queues.
 */
+
+
+/* --------------------------------------------------------
+   SNS TOPIC: b3stocks-active-stocks
+   Publishes active stock events to enable downstream processing.
+   Configured with AWS managed KMS encryption and subscribes
+   to SQS queue for Fundamentus stock metrics processing.
+-------------------------------------------------------- */
+
+module "sns_topic_batch_completion_processes" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/sns-topic/v0.0.1"
+
+  name         = "b3stocks-batch-completion-processes"
+  display_name = "Stocks Metrics Batch Completion Processes"
+
+  kms_master_key_id = data.aws_kms_key.sns.id
+
+  create_topic_policy = true
+  topic_policy = jsonencode(
+    {
+      "Version" : "2008-10-17",
+      "Statement" : [
+        {
+          "Sid" : "SNSTopicPolicy",
+          "Effect" : "Allow",
+          "Principal" : {
+            "AWS" : "*"
+          },
+          "Action" : [
+            "SNS:GetTopicAttributes",
+            "SNS:SetTopicAttributes",
+            "SNS:AddPermission",
+            "SNS:RemovePermission",
+            "SNS:DeleteTopic",
+            "SNS:Subscribe",
+            "SNS:ListSubscriptionsByTopic",
+            "SNS:Publish"
+          ],
+          "Resource" : "arn:aws:sns:${local.region_name}:${local.account_id}:b3stocks-batch-completion-processes",
+          "Condition" : {
+            "StringEquals" : {
+              "AWS:SourceOwner" : "${local.account_id}"
+            }
+          }
+        }
+      ]
+    }
+  )
+}

@@ -21,7 +21,7 @@
    stored in Parquet format. Partitioned by event_date
    for optimized query performance.
 -------------------------------------------------------- */
-
+/*
 resource "aws_glue_catalog_table" "sor_tbl_b3stocks_investment_portfolio" {
   name          = "sor_tbl_b3stocks_investment_portfolio"
   database_name = aws_glue_catalog_database.b3stocks_analytics_sor.name
@@ -96,7 +96,7 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_investment_portfolio" {
     comment = "Date partition in YYYY-MM-DD format for efficient querying"
   }
 }
-
+*/
 
 /* --------------------------------------------------------
    GLUE TABLE: sor_tbl_b3stocks_active_stocks

@@ -150,3 +150,47 @@ resource "aws_lambda_event_source_mapping" "queue-fundamentus-eod-stock-metrics"
     module.sqs_queue_fundamentus_eod_stock_metrics
   ]
 }
+
+
+/* --------------------------------------------------------
+   LAMBDA FUNCTION: check-batch-processes-completion
+   Checks the completion status of the batch processes
+   in the batch process control table
+-------------------------------------------------------- */
+
+module "aws_lambda_function_check_batch_processes_completion" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
+
+  function_name = "b3stocks-check-batch-processes-completion"
+  description   = "Checks the completion status of the batch processes"
+  runtime       = "python3.12"
+  timeout       = 180
+
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-check-batch-processes-completion"]
+
+  source_code_path = "../app"
+  lambda_handler   = "app.src.features.check_batch_processes_completion.presentation.check_batch_processes_completion_presentation.handler"
+
+  layers_arns = [
+    module.aws_lambda_layers.layers_arns["b3stocks-deps"]
+  ]
+
+  tags = var.tags
+
+  depends_on = [
+    module.aws_iam_roles
+  ]
+}
+
+resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processes_completion" {
+  event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.stream_arn
+  function_name          = module.aws_lambda_function_check_batch_processes_completion.function_name
+  starting_position      = "LATEST"
+  batch_size             = 5
+  maximum_retry_attempts = 1
+
+  depends_on = [
+    module.aws_lambda_function_check_batch_processes_completion,
+    module.aws_dynamodb_table_tbl_b3stocks_active_stocks
+  ]
+}
