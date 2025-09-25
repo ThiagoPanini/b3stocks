@@ -1,9 +1,16 @@
 /* -----------------------------------------------------------------------------
 FILE: lambda_layers.tf
+PROJECT: b3stocks
 
 DESCRIPTION:
-  This Terraform file centralizes the definition of all AWS Lambda layers used
-  along the b3stocks project.
+  This Terraform file defines AWS Lambda layers for the b3stocks project.
+  Layers provide shared dependencies and libraries that can be reused across
+  multiple Lambda functions, reducing deployment package sizes and enabling
+  consistent dependency management.
+
+LAYERS:
+  - b3stocks-deps: Core dependencies including PynamoDB, PyYAML, requests,
+    BeautifulSoup4, and lxml for AWS service interaction and web scraping
 ----------------------------------------------------------------------------- */
 
 module "aws_lambda_layers" {

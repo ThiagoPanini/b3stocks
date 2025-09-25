@@ -6,17 +6,15 @@ from pynamodb.attributes import (
     UnicodeAttribute,
     MapAttribute
 )
-from pynamodb.exceptions import DoesNotExist
-
-from app.src.features.cross.utils.log_utils import setup_logger, log_loop_status
-from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization_utils import entity_to_storage_dict
-from app.src.features.cross.utils.serialization import json_serialize
 
 from app.src.features.get_active_stocks.domain.interfaces.database_repository_interface import (
     IDatabaseRepository
 )
 from app.src.features.get_active_stocks.domain.entities.stock import Stock
+
+from app.src.features.cross.utils.decorators import timing_decorator
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.serialization import SerializationUtils
 
 
 class StockModel(Model):
@@ -28,7 +26,7 @@ class StockModel(Model):
         region = boto3.session.Session().region_name
 
     code = UnicodeAttribute(hash_key=True)
-    company_name = UnicodeAttribute()
+    company_name = UnicodeAttribute(null=True)
     request_config = MapAttribute()
     created_at = UnicodeAttribute()
     updated_at = UnicodeAttribute()
@@ -43,7 +41,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
     Implementation of the B3 stock tickers repository using DynamoDB.
     """
     def __init__(self):
-        self.logger = setup_logger(__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
 
 
     @timing_decorator
@@ -54,25 +52,19 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
         Args:
             items (list[Stock]): The list of stocks to insert.
         """
+        # Getting company name with None to debugging purposes
+        for item in items:
+            if item.company_name is None:
+                self.logger.warning(f"Company name is None for stock code {item.code}")
+
         try:
             with StockModel.batch_write() as batch:
                 for idx, stock in enumerate(items):
-                    """
-                    model = StockModel(
-                        code=stock.code,
-                        company_name=stock.company_name,
-                        request_config=stock.request_config.to_dict(),
-                        created_at=stock.created_at,
-                        updated_at=stock.updated_at
-                    )
-                    """
-
-                    model = (StockModel(**json_serialize(stock)))
-
+                    model = (StockModel(**SerializationUtils.json_serialize(stock)))
                     batch.save(model)
 
                     # Logging the status of the loop
-                    log_loop_status(
+                    LogUtils.log_loop_status(
                         logger=self.logger,
                         loop_idx=idx,
                         total_elements=len(items),
@@ -82,7 +74,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
 
         except Exception:
             self.logger.exception("Error saving batch of stocks data on table "
-                                  f"{StockModel.Meta.table_name}")
+                                  f"{StockModel.Meta.table_name} on stock {stock}")
             raise
         else:
             self.logger.info("Successfully inserted items to DynamoDB table "

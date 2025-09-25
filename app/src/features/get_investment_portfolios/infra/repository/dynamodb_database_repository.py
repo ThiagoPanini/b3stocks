@@ -16,9 +16,9 @@ from app.src.features.get_investment_portfolios.domain.entities.investment_portf
     InvestmentPortfolio
 )
 
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.serialization import SerializationUtils
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization_utils import entity_to_storage_dict
 
 
 class InvestmentPortfolioModel(Model):
@@ -47,27 +47,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
     """
 
     def __init__(self):
-        self.logger = setup_logger(__name__)
-
-    
-    def __serialize_item(self, item: InvestmentPortfolio) -> dict[str, Any]:
-        """
-        Serializes an InvestmentPortfolio entity to a dictionary suitable for storage.
-
-        Args:
-            item (InvestmentPortfolio): The investment portfolio to update.
-
-        Returns:
-            dict: The serialized investment portfolio data.
-        """
-
-        try:
-            data = entity_to_storage_dict(item)
-            return data
-
-        except Exception:
-            self.logger.exception("Failed to serialize investment portfolio data to JSON")
-            raise
+        self.logger = LogUtils.setup_logger(name=__name__)
 
 
     @timing_decorator(enabled=True)
@@ -81,28 +61,28 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
 
         for item in items:
             # Tries to update the item if it already exists (based on the hash key)
-            data = self.__serialize_item(item)
+            serialized_item = SerializationUtils.json_serialize(item)
 
             try:
                 # Getting item if already exists and preserve created_at
-                existing_item = InvestmentPortfolioModel.get(data["owner_mail"])
+                existing_item = InvestmentPortfolioModel.get(serialized_item["owner_mail"])
 
                 # Update only mutable fields
                 existing_item.update(
                     actions=[
-                        InvestmentPortfolioModel.owner_name.set(data["owner_name"]),
-                        InvestmentPortfolioModel.stocks.set(data["stocks"]),
-                        InvestmentPortfolioModel.source_url.set(data["source_url"]),
-                        InvestmentPortfolioModel.updated_at.set(data["updated_at"])
+                        InvestmentPortfolioModel.owner_name.set(serialized_item["owner_name"]),
+                        InvestmentPortfolioModel.stocks.set(serialized_item["stocks"]),
+                        InvestmentPortfolioModel.source_url.set(serialized_item["source_url"]),
+                        InvestmentPortfolioModel.updated_at.set(serialized_item["updated_at"])
                     ]
                 )
 
             except DoesNotExist:
                 # If item does not exist, create a new one    
                 try:
-                    InvestmentPortfolioModel(**data).save()
+                    InvestmentPortfolioModel(**serialized_item).save()
 
                 except Exception:
                     self.logger.exception("Failed to save investment portfolio to DynamoDB for "
-                                          f"hash_key={data['owner_mail']}")
+                                          f"hash_key={serialized_item['owner_mail']}")
                     raise

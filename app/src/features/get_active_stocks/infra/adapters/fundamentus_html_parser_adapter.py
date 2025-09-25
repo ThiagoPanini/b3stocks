@@ -6,7 +6,7 @@ from app.src.features.get_active_stocks.domain.interfaces.html_parser_adapter_in
 )
 from app.src.features.get_active_stocks.domain.entities.stock import Stock
 from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
 
 
 class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
@@ -15,7 +15,7 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
     """
 
     def __init__(self):
-        self.logger = setup_logger(__name__)
+        self.logger = LogUtils.setup_logger(name=__name__)
 
 
     @timing_decorator

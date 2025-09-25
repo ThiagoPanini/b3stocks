@@ -1,22 +1,32 @@
 /* -----------------------------------------------------------------------------
-  FILE: glue_catalog_tables.tf
+  FILE: glue_catalog_tables_cdc.tf
+  PROJECT: b3stocks
 
   DESCRIPTION:
-    Defines Glue Data Catalog database and table for DynamoDB investment portfolio
-    CDC data landed in S3.
+    Defines AWS Glue Data Catalog tables for Change Data Capture (CDC) datasets
+    in the b3stocks project. These tables provide a structured view of data
+    streamed from DynamoDB tables and landed in S3, enabling analytics and
+    monitoring of data changes over time.
+
+  TABLES:
+    - cdc_tbl_b3stocks_investment_portfolio: CDC data for investment portfolios
+    - cdc_tbl_b3stocks_active_stocks: CDC data for active B3 stocks
 ----------------------------------------------------------------------------- */
 
 
 /* --------------------------------------------------------
    GLUE TABLE: cdc_tbl_b3stocks_investment_portfolio
-   CDC table for sharing investment portfolio data taken from
-   DynamoDB stream and landed in S3.
+   CDC table containing investment portfolio change events
+   captured from DynamoDB Streams and stored in S3 as JSON.
+   Partitioned by event_date for efficient querying.
 -------------------------------------------------------- */
 
 resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
   name          = "cdc_tbl_b3stocks_investment_portfolio"
   database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "CDC table for tbl_b3stocks_investment_portfolio DynamoDB table"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "json"
@@ -33,85 +43,105 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
     }
 
     columns {
-      name = "table_name"
-      type = "string"
+      name    = "table_name"
+      type    = "string"
+      comment = "Source DynamoDB table name that generated the CDC event"
     }
 
     columns {
-      name = "event_id"
-      type = "string"
+      name    = "event_id"
+      type    = "string"
+      comment = "Unique identifier for the DynamoDB stream event"
     }
 
     columns {
-      name = "event_name"
-      type = "string"
+      name    = "event_name"
+      type    = "string"
+      comment = "Type of DynamoDB operation (INSERT, MODIFY, REMOVE)"
     }
 
     columns {
-      name = "event_version"
-      type = "string"
+      name    = "event_version"
+      type    = "string"
+      comment = "DynamoDB Streams event version number"
     }
 
     columns {
-      name = "event_source"
-      type = "string"
+      name    = "event_source"
+      type    = "string"
+      comment = "Source service that generated the event (aws:dynamodb)"
     }
 
     columns {
-      name = "aws_region"
-      type = "string"
+      name    = "aws_region"
+      type    = "string"
+      comment = "AWS region where the DynamoDB table is located"
     }
 
     columns {
-      name = "table_keys"
-      type = "struct<owner_mail:string>"
+      name    = "table_keys"
+      type    = "string"
+      comment = "Primary key values of the affected source table record"
     }
 
     columns {
-      name = "table_new_image"
-      # type = "struct<owner_name:string,updated_at:string,owner_mail:string,created_at:string,source_url:string,stocks:string>"
-      type = "string"
+      name    = "table_new_image"
+      type    = "string"
+      comment = "JSON representation of the item after modification"
     }
 
     columns {
-      name = "table_old_image"
-      # type = "struct<owner_name:string,updated_at:string,owner_mail:string,created_at:string,source_url:string,stocks:string>"
-      type = "string"
+      name    = "table_old_image"
+      type    = "string"
+      comment = "JSON representation of the item before modification"
     }
 
     columns {
-      name = "size_bytes"
-      type = "bigint"
+      name    = "size_bytes"
+      type    = "bigint"
+      comment = "Size of the DynamoDB stream record in bytes"
     }
 
     columns {
-      name = "stream_view_type"
-      type = "string"
+      name    = "stream_view_type"
+      type    = "string"
+      comment = "DynamoDB stream view type (NEW_AND_OLD_IMAGES, KEYS_ONLY, etc.)"
     }
 
     columns {
-      name = "event_source_arn"
-      type = "string"
+      name    = "event_source_arn"
+      type    = "string"
+      comment = "ARN of the DynamoDB stream that generated the event"
+    }
+
+    columns {
+      name    = "event_timestamp"
+      type    = "timestamp"
+      comment = "Timestamp of the DynamoDB stream event"
     }
   }
 
   partition_keys {
-    name = "event_date"
-    type = "string"
+    name    = "event_date"
+    type    = "string"
+    comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }
 
 
 /* --------------------------------------------------------
    GLUE TABLE: cdc_tbl_b3stocks_active_stocks
-   CDC table for sharing active stocks data taken from
-   DynamoDB stream and landed in S3.
+   CDC table containing active stocks change events captured
+   from DynamoDB Streams and stored in S3 as JSON.
+   Partitioned by event_date for efficient querying.
 -------------------------------------------------------- */
 
 resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
   name          = "cdc_tbl_b3stocks_active_stocks"
   database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
-  table_type    = "EXTERNAL_TABLE"
+  description   = "CDC table for tbl_b3stocks_active_stocks DynamoDB table"
+
+  table_type = "EXTERNAL_TABLE"
 
   parameters = {
     classification = "json"
@@ -128,70 +158,317 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
     }
 
     columns {
-      name = "table_name"
-      type = "string"
+      name    = "table_name"
+      type    = "string"
+      comment = "Source DynamoDB table name that generated the CDC event"
     }
 
     columns {
-      name = "event_id"
-      type = "string"
+      name    = "event_id"
+      type    = "string"
+      comment = "Unique identifier for the DynamoDB stream event"
     }
 
     columns {
-      name = "event_name"
-      type = "string"
+      name    = "event_name"
+      type    = "string"
+      comment = "Type of DynamoDB operation (INSERT, MODIFY, REMOVE)"
     }
 
     columns {
-      name = "event_version"
-      type = "string"
+      name    = "event_version"
+      type    = "string"
+      comment = "DynamoDB Streams event version number"
     }
 
     columns {
-      name = "event_source"
-      type = "string"
+      name    = "event_source"
+      type    = "string"
+      comment = "Source service that generated the event (aws:dynamodb)"
     }
 
     columns {
-      name = "aws_region"
-      type = "string"
+      name    = "aws_region"
+      type    = "string"
+      comment = "AWS region where the DynamoDB table is located"
     }
 
     columns {
-      name = "table_keys"
-      type = "struct<code:string>"
+      name    = "table_keys"
+      type    = "string"
+      comment = "Primary key values of the affected source table record"
     }
 
     columns {
-      name = "table_new_image"
-      # type = "struct<code:string,company_name:string,request_config:string,created_at:string,updated_at:string>"
-      type = "string"
+      name    = "table_new_image"
+      type    = "string"
+      comment = "JSON representation of the stock item after modification"
     }
 
     columns {
-      name = "table_old_image"
-      # type = "struct<code:string,company_name:string,request_config:string,created_at:string,updated_at:string>"
-      type = "string"
+      name    = "table_old_image"
+      type    = "string"
+      comment = "JSON representation of the stock item before modification"
     }
 
     columns {
-      name = "size_bytes"
-      type = "bigint"
+      name    = "size_bytes"
+      type    = "bigint"
+      comment = "Size of the DynamoDB stream record in bytes"
     }
 
     columns {
-      name = "stream_view_type"
-      type = "string"
+      name    = "stream_view_type"
+      type    = "string"
+      comment = "DynamoDB stream view type (NEW_AND_OLD_IMAGES, KEYS_ONLY, etc.)"
     }
 
     columns {
-      name = "event_source_arn"
-      type = "string"
+      name    = "event_source_arn"
+      type    = "string"
+      comment = "ARN of the DynamoDB stream that generated the event"
+    }
+
+    columns {
+      name    = "event_timestamp"
+      type    = "timestamp"
+      comment = "Timestamp of the DynamoDB stream event"
     }
   }
 
   partition_keys {
-    name = "event_date"
-    type = "string"
+    name    = "event_date"
+    type    = "string"
+    comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
+  }
+}
+
+
+/* --------------------------------------------------------
+   GLUE TABLE: cdc_tbl_b3stocks_fundamentus_eod_stock_metrics
+   CDC table containing eod stock metrics data captured from
+   DynamoDB Streams and stored in S3 as JSON.
+   Partitioned by event_date for efficient querying.
+-------------------------------------------------------- */
+
+resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_fundamentus_eod_stock_metrics" {
+  name          = "cdc_tbl_b3stocks_fundamentus_eod_stock_metrics"
+  database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
+  description   = "CDC table for tbl_b3stocks_fundamentus_eod_stock_metrics DynamoDB table"
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    classification = "json"
+  }
+
+  storage_descriptor {
+    location      = "s3://${aws_s3_bucket.analytics_cdc.bucket}/dynamodb/cdc_tbl_b3stocks_fundamentus_eod_stock_metrics/"
+    input_format  = "org.apache.hadoop.mapred.TextInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+
+    ser_de_info {
+      name                  = "json"
+      serialization_library = "org.openx.data.jsonserde.JsonSerDe"
+    }
+
+    columns {
+      name    = "table_name"
+      type    = "string"
+      comment = "Source DynamoDB table name that generated the CDC event"
+    }
+
+    columns {
+      name    = "event_id"
+      type    = "string"
+      comment = "Unique identifier for the DynamoDB stream event"
+    }
+
+    columns {
+      name    = "event_name"
+      type    = "string"
+      comment = "Type of DynamoDB operation (INSERT, MODIFY, REMOVE)"
+    }
+
+    columns {
+      name    = "event_version"
+      type    = "string"
+      comment = "DynamoDB Streams event version number"
+    }
+
+    columns {
+      name    = "event_source"
+      type    = "string"
+      comment = "Source service that generated the event (aws:dynamodb)"
+    }
+
+    columns {
+      name    = "aws_region"
+      type    = "string"
+      comment = "AWS region where the DynamoDB table is located"
+    }
+
+    columns {
+      name    = "table_keys"
+      type    = "string"
+      comment = "Primary key values of the affected source table record"
+    }
+
+    columns {
+      name    = "table_new_image"
+      type    = "string"
+      comment = "JSON representation of the item after modification"
+    }
+
+    columns {
+      name    = "table_old_image"
+      type    = "string"
+      comment = "JSON representation of the item before modification"
+    }
+
+    columns {
+      name    = "size_bytes"
+      type    = "bigint"
+      comment = "Size of the DynamoDB stream record in bytes"
+    }
+
+    columns {
+      name    = "stream_view_type"
+      type    = "string"
+      comment = "DynamoDB stream view type (NEW_AND_OLD_IMAGES, KEYS_ONLY, etc.)"
+    }
+
+    columns {
+      name    = "event_source_arn"
+      type    = "string"
+      comment = "ARN of the DynamoDB stream that generated the event"
+    }
+
+    columns {
+      name    = "event_timestamp"
+      type    = "timestamp"
+      comment = "Timestamp of the DynamoDB stream event"
+    }
+  }
+
+  partition_keys {
+    name    = "event_date"
+    type    = "string"
+    comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
+  }
+}
+
+
+/* --------------------------------------------------------
+   GLUE TABLE: cdc_tbl_b3stocks_batch_process_control
+   CDC table containing batch process control data captured
+   from DynamoDB Streams and stored in S3 as JSON.
+   Partitioned by event_date for efficient querying.
+-------------------------------------------------------- */
+
+resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_batch_process_control" {
+  name          = "cdc_tbl_b3stocks_batch_process_control"
+  database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
+  description   = "CDC table for tbl_b3stocks_batch_process_control DynamoDB table"
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    classification = "json"
+  }
+
+  storage_descriptor {
+    location      = "s3://${aws_s3_bucket.analytics_cdc.bucket}/dynamodb/cdc_tbl_b3stocks_batch_process_control/"
+    input_format  = "org.apache.hadoop.mapred.TextInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
+
+    ser_de_info {
+      name                  = "json"
+      serialization_library = "org.openx.data.jsonserde.JsonSerDe"
+    }
+
+    columns {
+      name    = "table_name"
+      type    = "string"
+      comment = "Source DynamoDB table name that generated the CDC event"
+    }
+
+    columns {
+      name    = "event_id"
+      type    = "string"
+      comment = "Unique identifier for the DynamoDB stream event"
+    }
+
+    columns {
+      name    = "event_name"
+      type    = "string"
+      comment = "Type of DynamoDB operation (INSERT, MODIFY, REMOVE)"
+    }
+
+    columns {
+      name    = "event_version"
+      type    = "string"
+      comment = "DynamoDB Streams event version number"
+    }
+
+    columns {
+      name    = "event_source"
+      type    = "string"
+      comment = "Source service that generated the event (aws:dynamodb)"
+    }
+
+    columns {
+      name    = "aws_region"
+      type    = "string"
+      comment = "AWS region where the DynamoDB table is located"
+    }
+
+    columns {
+      name    = "table_keys"
+      type    = "string"
+      comment = "Primary key values of the affected source table record"
+    }
+
+    columns {
+      name    = "table_new_image"
+      type    = "string"
+      comment = "JSON representation of the item after modification"
+    }
+
+    columns {
+      name    = "table_old_image"
+      type    = "string"
+      comment = "JSON representation of the item before modification"
+    }
+
+    columns {
+      name    = "size_bytes"
+      type    = "bigint"
+      comment = "Size of the DynamoDB stream record in bytes"
+    }
+
+    columns {
+      name    = "stream_view_type"
+      type    = "string"
+      comment = "DynamoDB stream view type (NEW_AND_OLD_IMAGES, KEYS_ONLY, etc.)"
+    }
+
+    columns {
+      name    = "event_source_arn"
+      type    = "string"
+      comment = "ARN of the DynamoDB stream that generated the event"
+    }
+
+    columns {
+      name    = "event_timestamp"
+      type    = "timestamp"
+      comment = "Timestamp of the DynamoDB stream event"
+    }
+  }
+
+  partition_keys {
+    name    = "event_date"
+    type    = "string"
+    comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }

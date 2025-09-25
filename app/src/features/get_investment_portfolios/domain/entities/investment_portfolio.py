@@ -4,6 +4,8 @@ from typing import Optional
 import re
 
 from app.src.features.get_investment_portfolios.domain.entities import StockVariationControl
+from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
+from app.src.features.cross.value_objects import Timezone
 
 
 @dataclass
@@ -24,8 +26,12 @@ class InvestmentPortfolio:
     owner_mail: str
     stocks: list[StockVariationControl]
     source_url: Optional[str] = None
-    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    created_at: datetime = field(
+        default_factory=lambda: DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+    )
+    updated_at: datetime = field(
+        default_factory=lambda: DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+    )
 
     def __post_init__(self):
         # Basic normalization

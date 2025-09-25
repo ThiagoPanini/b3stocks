@@ -2,10 +2,10 @@ import os
 import time
 from functools import wraps
 
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
 
 
-logger = setup_logger(__name__)
+logger = LogUtils.setup_logger(name=__name__)
 
 
 def timing_decorator(method=None, *, enabled=True):

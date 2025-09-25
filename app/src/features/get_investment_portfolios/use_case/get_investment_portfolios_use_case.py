@@ -2,7 +2,7 @@ import os
 from dataclasses import dataclass
 from typing import Any
 
-from app.src.features.cross.utils.log_utils import setup_logger
+from app.src.features.cross.utils.log import LogUtils
 from app.src.features.get_investment_portfolios.domain.interfaces.investment_portfolio_adapter_interface import (
     IInvestmentPortfolioAdapter
 )
@@ -12,7 +12,7 @@ from app.src.features.get_investment_portfolios.domain.interfaces.database_repos
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
 
 
-logger = setup_logger(name=__name__)
+logger = LogUtils.setup_logger(name=__name__)
 
 
 @dataclass(frozen=True)
@@ -27,6 +27,7 @@ class GetInvestmentPortfolioUseCase:
 
     investment_portfolio_adapter: IInvestmentPortfolioAdapter
     database_repository: IDatabaseRepository
+
 
     def execute(self) -> Any:
         """

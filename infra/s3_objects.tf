@@ -1,26 +1,25 @@
 /* -----------------------------------------------------------------------------
   FILE: s3_objects.tf
+  PROJECT: b3stocks
 
   DESCRIPTION:
-    This Terraform file provisions all S3 objects required by all app features
-    on b3stocks project.
+    This Terraform file uploads required objects to S3 buckets for the
+    b3stocks project. These objects include configuration files and
+    reference data used by Lambda functions during processing.
 
-  RESOURCES:
-    - aws_s3_bucket.artifacts:
-        Creates an S3 bucket for storing artifacts on b3stocks project
-
-    - aws_s3_bucket_public_access_block.artifacts_bucket_public_access_block:
-        Blocks all public access to the artifacts S3 bucket.
+  OBJECTS:
+    - investment_portfolios/*.yaml: User investment portfolio configuration files
 ----------------------------------------------------------------------------- */
 
 
 /* --------------------------------------------------------
-   S3 OBJECT(S): B3 Investment Portfolio
-   Uploads a CSV file containing B3 investment portfolio
-   data to the artifacts S3 bucket.
+   S3 OBJECT(S): Investment Portfolio Files
+   Uploads all YAML investment portfolio configuration files
+   from local assets directory to S3 artifacts bucket.
+   Files are used by Lambda functions to process user portfolios.
 -------------------------------------------------------- */
 
-# Uploading all local portfolio files to S3
+# Upload all portfolio YAML files to S3 with proper content type
 resource "aws_s3_object" "investment_portfolios" {
   for_each = toset(local.portfolios_files)
   bucket   = aws_s3_bucket.artifacts.id

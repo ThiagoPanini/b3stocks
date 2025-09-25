@@ -1,0 +1,37 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "SQSAccess",
+            "Effect": "Allow",
+            "Action": [
+                "sqs:ReceiveMessage",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes"
+            ],
+            "Resource": "arn:aws:sqs:${region_name}:${account_id}:${sqs_fundamentus_eod_stock_metrics_queue_name}"
+        },
+        {
+            "Sid": "DynamoDBTableAccess",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:DescribeTable",
+                "dynamodb:PutItem",
+                "dynamodb:BatchWriteItem"
+            ],
+            "Resource": "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_fundamentus_eod_stock_metrics_table_name}"
+        },
+        {
+            "Sid": "DynamoDBBatchProcessControlTableAccess",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DescribeTable"
+            ],
+            "Resource": "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_batch_process_control_table_name}"
+        }
+    ]
+}

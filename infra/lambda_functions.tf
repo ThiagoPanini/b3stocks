@@ -1,28 +1,32 @@
 /* -----------------------------------------------------------------------------
-FILE: lambda.tf
+FILE: lambda_functions.tf
+PROJECT: b3stocks
 
 DESCRIPTION:
-  This Terraform configuration uses a remote module to provision an AWS Lambda
-  function for processing B3 active tickers. The function's name, runtime,
-  handler, and environment variables are parameterized via input variables for
-  flexible deployments.
+  This Terraform configuration defines AWS Lambda functions for the core
+  b3stocks project features. Each function is configured with appropriate
+  runtime environment, IAM roles, layers, and EventBridge triggers for
+  scheduled execution.
 
-RESOURCES:
-  - module.aws_lambda_function:
-    Deploys a Lambda function using the tfbox module with configurable properties
-    such as name, runtime, handler, and environment variables.
+FUNCTIONS:
+  - b3stocks-get-investment-portfolios: Retrieves and processes user investment portfolios
+  - b3stocks-get-active-stocks: Collects active stock data from B3 sources
+  - b3stocks-get-fundamentus-eod-stock-metrics: Fetches end-of-day stock metrics from Fundamentus
 ----------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------
    LAMBDA FUNCTION: get-investment-portfolios
-   Defines the AWS Lambda Function for getting data from
-   an user's investment portfolio source
+   Retrieves investment portfolio data from S3, processes
+   it, and stores the results in DynamoDB. Scheduled to
+   run daily at 21:00 UTC via EventBridge.
 -------------------------------------------------------- */
 
+/*
 module "aws_lambda_function_get_investment_portfolios" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-get-investment-portfolios"
+  description = "Retrieves investment portfolio data from S3 and stores it in DynamoDB"
   runtime       = "python3.12"
   timeout       = 180
 
@@ -50,70 +54,20 @@ module "aws_lambda_function_get_investment_portfolios" {
     module.aws_iam_roles
   ]
 }
-
-
-/* --------------------------------------------------------
-   LAMBDA FUNCTION: stream-investment-portfolios
-   Processes CDC stream batches and lands JSON lines
-   in S3 partitioned by event_date for lambda function
-   get-investment-portfolio
--------------------------------------------------------- */
-
-module "aws_lambda_function_stream_investment_portfolios" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
-
-  function_name = "b3stocks-stream-investment-portfolios"
-  runtime       = var.lambda_function_common_runtime
-  timeout       = 60
-
-  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-investment-portfolios"]
-
-  source_code_path = "../app"
-  lambda_handler   = "app.src.features.store_dynamodb_streams_data.presentation.store_dynamodb_streams_data_presentation.handler"
-
-  environment_variables = {
-    S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_analytics_cdc_bucket_name_prefix
-    S3_ANALYTICS_SOR_BUCKET_NAME_PREFIX = var.s3_analytics_sor_bucket_name_prefix
-    DATA_CATALOG_CDC_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_cdc.name
-    DATA_CATALOG_SOR_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_sor.name
-  }
-
-  layers_arns = [
-    "arn:aws:lambda:${local.region_name}:336392948345:layer:AWSSDKPandas-Python312:18"
-  ]
-
-  tags = var.tags
-
-  depends_on = [
-    module.aws_lambda_layers,
-    module.aws_iam_roles
-  ]
-}
-
-resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_investment_portfolios" {
-  event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio.stream_arn
-  function_name          = module.aws_lambda_function_stream_investment_portfolios.function_name
-  starting_position      = "LATEST"
-  batch_size             = 100
-  maximum_retry_attempts = 1
-
-  depends_on = [
-    module.aws_lambda_function_stream_investment_portfolios,
-    module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio
-  ]
-}
-
+*/
 
 /* --------------------------------------------------------
    LAMBDA FUNCTION: get-active-stocks
-   Defines the AWS Lambda Function for getting active stocks
-   data from a source website defined by user.
+   Scrapes active stock data from B3 sources, processes
+   the information, and stores it in DynamoDB. Publishes
+   notifications to SNS. Scheduled daily at 21:00 UTC.
 -------------------------------------------------------- */
 
 module "aws_lambda_function_get_active_stocks" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-get-active-stocks"
+  description   = "Scrapes active stock data from an investment website"
   runtime       = "python3.12"
   timeout       = 180
 
@@ -124,6 +78,7 @@ module "aws_lambda_function_get_active_stocks" {
 
   environment_variables = {
     DYNAMODB_ACTIVE_STOCKS_TABLE_NAME = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.table_name
+    SNS_ACTIVE_STOCKS_TOPIC_NAME      = module.sns_topic_active_stocks.topic_name
   }
 
   layers_arns = [
@@ -142,52 +97,56 @@ module "aws_lambda_function_get_active_stocks" {
 
 
 /* --------------------------------------------------------
-   LAMBDA FUNCTION: stream-active-stocks
-   Processes CDC stream batches and lands JSON lines
-   in S3 partitioned by event_date for lambda function
-   get-active-stocks
+   LAMBDA FUNCTION: get-fundamentus-eod-stock-metrics
+   Fetches end-of-day stock metrics from Fundamentus website,
+   processes financial data, and stores it in S3. Triggered
+   by SQS messages from active stocks SNS topic.
 -------------------------------------------------------- */
 
-module "aws_lambda_function_stream_active_stocks" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+module "aws_lambda_function_get_fundamentus_eod_stock_metrics" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
-  function_name = "b3stocks-stream-active-stocks"
-  runtime       = var.lambda_function_common_runtime
-  timeout       = 300
+  function_name = "b3stocks-get-fundamentus-eod-stock-metrics"
+  description   = "Fetches end-of-day different stock metrics from Fundamentus website"
+  runtime       = "python3.12"
+  timeout       = 180
 
-  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-active-stocks"]
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-get-fundamentus-eod-stock-metrics"]
 
   source_code_path = "../app"
-  lambda_handler   = "app.src.features.store_dynamodb_streams_data.presentation.store_dynamodb_streams_data_presentation.handler"
+  lambda_handler   = "app.src.features.get_fundamentus_eod_stock_metrics.presentation.get_fundamentus_eod_stock_metrics_presentation.handler"
 
   environment_variables = {
-    S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_analytics_cdc_bucket_name_prefix
-    S3_ANALYTICS_SOR_BUCKET_NAME_PREFIX = var.s3_analytics_sor_bucket_name_prefix
-    DATA_CATALOG_CDC_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_cdc.name
-    DATA_CATALOG_SOR_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_sor.name
+    DYNAMODB_FUNDAMENTUS_EOD_STOCK_METRICS_TABLE_NAME = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.table_name
+    DYNAMODB_BATCH_PROCESS_CONTROL_TABLE_NAME         = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.table_name
   }
 
   layers_arns = [
+    module.aws_lambda_layers.layers_arns["b3stocks-deps"],
     "arn:aws:lambda:${local.region_name}:336392948345:layer:AWSSDKPandas-Python312:18"
   ]
 
   tags = var.tags
 
   depends_on = [
-    module.aws_lambda_layers,
     module.aws_iam_roles
   ]
 }
 
-resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_active_stocks" {
-  event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.stream_arn
-  function_name          = module.aws_lambda_function_stream_active_stocks.function_name
-  starting_position      = "LATEST"
-  batch_size             = 100
-  maximum_retry_attempts = 1
+# Trigger the Lambda from SQS Queue
+resource "aws_lambda_event_source_mapping" "queue-fundamentus-eod-stock-metrics" {
+  function_name    = module.aws_lambda_function_get_fundamentus_eod_stock_metrics.function_name
+  event_source_arn = module.sqs_queue_fundamentus_eod_stock_metrics.queue_arn
+
+  batch_size                         = 100
+  maximum_batching_window_in_seconds = 10
+
+  scaling_config {
+    maximum_concurrency = 3
+  }
 
   depends_on = [
-    module.aws_lambda_function_stream_active_stocks,
-    module.aws_dynamodb_table_tbl_b3stocks_active_stocks
+    module.aws_lambda_function_get_fundamentus_eod_stock_metrics,
+    module.sqs_queue_fundamentus_eod_stock_metrics
   ]
 }
