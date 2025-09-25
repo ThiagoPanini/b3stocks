@@ -9,7 +9,7 @@ from app.src.features.get_active_stocks.domain.interfaces.database_repository_in
 from app.src.features.get_active_stocks.domain.interfaces.topic_adapter_interface import ITopicAdapter
 
 from app.src.features.get_active_stocks.domain.entities.stock import Stock
-from app.src.features.cross.domain.entities.stock_message import StockMessage
+from app.src.features.cross.domain.entities.stock_message_envelop import StockMessageEnvelop
 
 from app.src.features.cross.domain.interfaces.http_client_adapter import IHTTPClientAdapter
 from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
@@ -76,7 +76,13 @@ class GetActiveStocksUseCase:
             self.database_repository.batch_insert_items(items=stocks)
 
             logger.info(f"Publishing {len(stocks)} active stocks data to a topic service")
-            messages = [StockMessage(code=stock.code) for stock in stocks]
+            messages = [
+                StockMessageEnvelop(
+                    code=stock.code,
+                    total_expected_messages=len(stocks)
+                )
+                for stock in stocks
+            ]
             self.topic_adapter.batch_publish_messages(messages=messages)
 
         except Exception:

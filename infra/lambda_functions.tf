@@ -21,10 +21,12 @@ FUNCTIONS:
    run daily at 21:00 UTC via EventBridge.
 -------------------------------------------------------- */
 
+/*
 module "aws_lambda_function_get_investment_portfolios" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-get-investment-portfolios"
+  description = "Retrieves investment portfolio data from S3 and stores it in DynamoDB"
   runtime       = "python3.12"
   timeout       = 180
 
@@ -52,7 +54,7 @@ module "aws_lambda_function_get_investment_portfolios" {
     module.aws_iam_roles
   ]
 }
-
+*/
 
 /* --------------------------------------------------------
    LAMBDA FUNCTION: get-active-stocks
@@ -62,9 +64,10 @@ module "aws_lambda_function_get_investment_portfolios" {
 -------------------------------------------------------- */
 
 module "aws_lambda_function_get_active_stocks" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-get-active-stocks"
+  description   = "Scrapes active stock data from an investment website"
   runtime       = "python3.12"
   timeout       = 180
 
@@ -101,9 +104,10 @@ module "aws_lambda_function_get_active_stocks" {
 -------------------------------------------------------- */
 
 module "aws_lambda_function_get_fundamentus_eod_stock_metrics" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-get-fundamentus-eod-stock-metrics"
+  description   = "Fetches end-of-day different stock metrics from Fundamentus website"
   runtime       = "python3.12"
   timeout       = 180
 

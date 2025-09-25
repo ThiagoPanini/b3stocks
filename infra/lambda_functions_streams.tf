@@ -23,11 +23,12 @@ EVENT SOURCE MAPPINGS:
    portfolio DynamoDB table and stores JSON records in S3
    partitioned by event_date for analytics processing.
 -------------------------------------------------------- */
-
+/*
 module "aws_lambda_function_stream_investment_portfolios" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-stream-investment-portfolios"
+  description = 
   runtime       = var.lambda_function_common_runtime
   timeout       = 300
 
@@ -67,7 +68,7 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_investm
     module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio
   ]
 }
-
+*/
 
 /* --------------------------------------------------------
    LAMBDA FUNCTION: stream-active-stocks
@@ -77,9 +78,10 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_investm
 -------------------------------------------------------- */
 
 module "aws_lambda_function_stream_active_stocks" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-stream-active-stocks"
+  description   = "Process CDC events from table tbl_b3stocks_active_stocks through DynamoDB Streams"
   runtime       = var.lambda_function_common_runtime
   timeout       = 300
 
@@ -129,9 +131,10 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_active_
 -------------------------------------------------------- */
 
 module "aws_lambda_function_stream_fundamentus_eod_stock_metrics" {
-  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.6.0"
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-stream-fundamentus-eod-stock-metrics"
+  description   = "Process CDC events from table tbl_b3stocks_fundamentus_eod_stock_metrics through DynamoDB Streams"
   runtime       = var.lambda_function_common_runtime
   timeout       = 600
 

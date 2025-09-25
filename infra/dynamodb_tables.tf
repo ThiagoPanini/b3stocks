@@ -89,3 +89,30 @@ module "aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics" {
   ]
 }
 
+
+/* --------------------------------------------------------
+   DYNAMODB TABLE: tbl_b3stocks_batch_process_control
+   Stores records of batch processes for tracking and
+   monitoring. Uses process name as partition key.
+-------------------------------------------------------- */
+
+module "aws_dynamodb_table_tbl_b3stocks_batch_process_control" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/dynamodb-table/v0.4.0"
+
+  name             = "tbl_b3stocks_batch_process_control"
+  hash_key         = "process_name"
+  range_key        = "execution_date"
+  stream_enabled   = false
+  stream_view_type = "NEW_AND_OLD_IMAGES"
+
+  attributes = [
+    {
+      name = "process_name"
+      type = "S"
+    },
+    {
+      name = "execution_date"
+      type = "S"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from app.src.features.cross.domain.entities.stock_message import StockMessage
+from app.src.features.cross.domain.entities.stock_message_envelop import StockMessageEnvelop
 
 
 class ITopicAdapter(ABC):
@@ -10,10 +10,10 @@ class ITopicAdapter(ABC):
     """
     
     @abstractmethod
-    def batch_publish_messages(self, messages: list[StockMessage]) -> None:
+    def batch_publish_messages(self, messages: list[StockMessageEnvelop]) -> None:
         """
         Publishes a batch of messages to a topic service.
 
         Args:
-            messages (list[StockMessage]): A list of messages to publish.
+            messages (list[StockMessageEnvelop]): A list of messages to publish.
         """

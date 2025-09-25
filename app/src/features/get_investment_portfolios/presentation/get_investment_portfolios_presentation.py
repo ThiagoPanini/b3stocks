@@ -16,12 +16,12 @@ from app.src.features.cross.infra.mappers.http_response_mapper import HTTPRespon
 investment_portfolio_adapter = S3InvestmentPortfolioAdapter()
 database_repository = DynamoDBDatabaseRepository()
 
-
 # Initializing use case
 use_case = GetInvestmentPortfolioUseCase(
     investment_portfolio_adapter=investment_portfolio_adapter,
     database_repository=database_repository
 )
+
 
 # Defining a handler function for executing the use case in AWS Lambda
 def handler(event: dict[str, Any], context: Any = None) -> dict:

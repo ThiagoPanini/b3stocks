@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.fundamentus_stock_metrics import (
     FundamentusStockMetrics
 )
@@ -17,4 +18,4 @@ class IDatabaseRepository(ABC):
         Args:
             stock_metrics_list (list[FundamentusStockMetrics]): List of stock metrics to save.
         """
-        pass
+

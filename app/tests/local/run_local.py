@@ -62,4 +62,3 @@ DESCRIPTION:
 response = get_fundamentus_eod_stock_metrics_handler(event=MOCKED_SQS_EVENT, context=None)
 # print(response)
 
-# TODO: Take a look at the __parse_float_cols method on the HTML parser adapter to handle

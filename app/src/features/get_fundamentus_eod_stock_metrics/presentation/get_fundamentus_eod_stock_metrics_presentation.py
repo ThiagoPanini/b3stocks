@@ -15,6 +15,9 @@ from app.src.features.get_fundamentus_eod_stock_metrics.use_case.get_fundamentus
 
 from app.src.features.cross.infra.adapters.requests_http_client_adapter import RequestsHTTPClientAdapter
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
+from app.src.features.cross.infra.repositories.dynamodb_batch_control_database_repository import (
+    DynamoDBBatchControlDatabaseRepository
+)
 
 
 # Initializing mappers, adapters and repositories
@@ -22,13 +25,14 @@ event_mapper = SQSMessagesLambdaEventMapper()
 http_client_adapter = RequestsHTTPClientAdapter()
 html_parser_adapter = FundamentusHTMLParserAdapter()
 database_repository = DynamoDBDatabaseRepository()
-
+batch_control_database_repository = DynamoDBBatchControlDatabaseRepository()
 
 # Initializing use case
 use_case = GetFundamentusEodStockMetricsUseCase(
     http_client_adapter=http_client_adapter,
     html_parser_adapter=html_parser_adapter,
-    database_repository=database_repository
+    database_repository=database_repository,
+    batch_control_database_repository=batch_control_database_repository
 )
 
 

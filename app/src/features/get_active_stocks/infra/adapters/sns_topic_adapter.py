@@ -6,7 +6,7 @@ import boto3
 
 from app.src.features.get_active_stocks.domain.interfaces.topic_adapter_interface import ITopicAdapter
 
-from app.src.features.cross.domain.entities.stock_message import StockMessage
+from app.src.features.cross.domain.entities.stock_message_envelop import StockMessageEnvelop
 from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.utils.serialization import SerializationUtils
 from app.src.features.cross.utils.decorators import timing_decorator
@@ -39,12 +39,12 @@ class SNSTopicAdapter(ITopicAdapter):
 
     
     @timing_decorator
-    def batch_publish_messages(self, messages: list[StockMessage]) -> None:
+    def batch_publish_messages(self, messages: list[StockMessageEnvelop]) -> None:
         """
         Publishes a batch of messages to a SNS topic.
 
         Args:
-            messages (list[StockMessage]): A list of messages to publish.
+            messages (list[StockMessageEnvelop]): A list of messages to publish.
         """
         
         # Preparing messages to be sent in batches
@@ -52,7 +52,7 @@ class SNSTopicAdapter(ITopicAdapter):
             entries = [
                 {
                     "Id": str(uuid4()),
-                    "Message": json.dumps(SerializationUtils.json_serialize(message))
+                    "Message": json.dumps(SerializationUtils.json_serialize(message)),
                 }
                 for message in messages
             ]

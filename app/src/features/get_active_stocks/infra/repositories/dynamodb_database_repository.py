@@ -7,14 +7,14 @@ from pynamodb.attributes import (
     MapAttribute
 )
 
-from app.src.features.cross.utils.log import LogUtils
-from app.src.features.cross.utils.decorators import timing_decorator
-from app.src.features.cross.utils.serialization import SerializationUtils
-
 from app.src.features.get_active_stocks.domain.interfaces.database_repository_interface import (
     IDatabaseRepository
 )
 from app.src.features.get_active_stocks.domain.entities.stock import Stock
+
+from app.src.features.cross.utils.decorators import timing_decorator
+from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.utils.serialization import SerializationUtils
 
 
 class StockModel(Model):

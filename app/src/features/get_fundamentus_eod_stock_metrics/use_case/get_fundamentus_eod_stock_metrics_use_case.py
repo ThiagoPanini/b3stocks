@@ -14,12 +14,17 @@ from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.fundamen
     FundamentusStockMetrics
 )
 
+from app.src.features.cross.domain.interfaces.batch_control_database_repository_interface import (
+    IBatchControlDatabaseRepository
+)
 from app.src.features.cross.domain.interfaces.http_client_adapter import IHTTPClientAdapter
 from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
 from app.src.features.cross.domain.entities.http_client_retry_config import HTTPClientRetryConfig
 from app.src.features.cross.domain.entities.http_client_response import HTTPClientResponse
+from app.src.features.cross.domain.entities.batch_process import BatchProcess
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
 from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.value_objects import BatchProcessName
 
 
 logger = LogUtils.setup_logger(name=__name__)
@@ -34,6 +39,7 @@ class GetFundamentusEodStockMetricsUseCase:
     http_client_adapter: IHTTPClientAdapter
     html_parser_adapter: IHTMLParserAdapter
     database_repository: IDatabaseRepository
+    batch_control_database_repository: IBatchControlDatabaseRepository
 
 
     def execute(self, input_dto: StockMessagesInputDTO) -> OutputDTO:
@@ -53,6 +59,7 @@ class GetFundamentusEodStockMetricsUseCase:
             stock_codes = [message.code for message in input_dto.messages]
             logger.info(f"Getting and parsing metrics for the following {len(stock_codes)} "
                         f"stock codes: {', '.join(stock_codes)}")
+
             for stock_code in stock_codes:
                 # Building a request config object to handle HTTP requests
                 request_config = HTTPClientRequestConfig(
@@ -82,7 +89,6 @@ class GetFundamentusEodStockMetricsUseCase:
                 )
 
                 stock_metrics_list.append(stock_metrics)
-    
         except Exception:
             logger.exception(f"Error collecting and parsing stock metrics")
             raise
@@ -90,10 +96,22 @@ class GetFundamentusEodStockMetricsUseCase:
         try:
             logger.info(f"Saving {len(stock_metrics_list)} stock metrics to the database table")
             self.database_repository.batch_save_stock_metrics(stock_metrics_list)
-
         except Exception:
             logger.exception(f"Error saving stock metrics to the database repository")
             raise
+
+        try:
+            logger.info("Updating the batch process control table with the processed items count")
+            batch_process = BatchProcess(
+                process_name=BatchProcessName.PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS,
+                total_items=int(input_dto.messages[0].total_expected_messages),
+                processed_items=len(stock_metrics_list),
+            )
+            self.batch_control_database_repository.update_batch_process_control(batch_process)
+            self.batch_control_database_repository.check_batch_process_completion(batch_process)
+        except Exception:
+            logger.exception("Error updating the batch process control record")
+            raise        
 
         return OutputDTO.ok(
             data={
