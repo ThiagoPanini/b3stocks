@@ -81,7 +81,7 @@ module "aws_lambda_function_stream_active_stocks" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-stream-active-stocks"
-  description   = "Process CDC events from table tbl_b3stocks_active_stocks through DynamoDB Streams"
+  description   = "Processes CDC events from table tbl_b3stocks_active_stocks through DynamoDB Streams"
   runtime       = var.lambda_function_common_runtime
   timeout       = 300
 
@@ -134,7 +134,7 @@ module "aws_lambda_function_stream_fundamentus_eod_stock_metrics" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-stream-fundamentus-eod-stock-metrics"
-  description   = "Process CDC events from table tbl_b3stocks_fundamentus_eod_stock_metrics through DynamoDB Streams"
+  description   = "Processes CDC events from table tbl_b3stocks_fundamentus_eod_stock_metrics through DynamoDB Streams"
   runtime       = var.lambda_function_common_runtime
   timeout       = 600
 
@@ -187,7 +187,7 @@ module "aws_lambda_function_stream_batch_process_control" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
   function_name = "b3stocks-stream-batch-process-control"
-  description   = "Process CDC events from table tbl_b3stocks_batch_process_control through DynamoDB Streams"
+  description   = "Processes CDC events from table tbl_b3stocks_batch_process_control through DynamoDB Streams"
   runtime       = var.lambda_function_common_runtime
   timeout       = 600
 
