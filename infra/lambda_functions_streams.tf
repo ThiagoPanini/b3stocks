@@ -73,8 +73,8 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_investm
 /* --------------------------------------------------------
    LAMBDA FUNCTION: stream-active-stocks
    Processes Change Data Capture events from active stocks
-   DynamoDB table and stores JSON records in S3 partitioned
-   by event_date for analytics processing.
+   DynamoDB table and feeds tables for CDC and SOR
+   analytical processing.
 -------------------------------------------------------- */
 
 module "aws_lambda_function_stream_active_stocks" {
@@ -124,10 +124,10 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_active_
 
 
 /* --------------------------------------------------------
-   LAMBDA FUNCTION: stream-active-stocks
+   LAMBDA FUNCTION: stream-fundamentus-eod-stock-metrics
    Processes Change Data Capture events from stock metrics
-   DynamoDB table and stores JSON records in S3 partitioned
-   by event_date for analytics processing.
+   DynamoDB table and feeds tables for CDC and SOR
+   analytical processing.
 -------------------------------------------------------- */
 
 module "aws_lambda_function_stream_fundamentus_eod_stock_metrics" {
@@ -165,6 +165,59 @@ module "aws_lambda_function_stream_fundamentus_eod_stock_metrics" {
 resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_fundamentus_eod_stock_metrics" {
   event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.stream_arn
   function_name          = module.aws_lambda_function_stream_fundamentus_eod_stock_metrics.function_name
+  starting_position      = "LATEST"
+  batch_size             = 100
+  maximum_retry_attempts = 1
+
+  depends_on = [
+    module.aws_lambda_function_stream_fundamentus_eod_stock_metrics,
+    module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics
+  ]
+}
+
+
+/* --------------------------------------------------------
+   LAMBDA FUNCTION: stream-batch-process-control
+   Processes Change Data Capture events from batch process
+   control DynamoDB table and feeds tables for CDC and SOR
+   analytical processing.
+-------------------------------------------------------- */
+
+module "aws_lambda_function_stream_batch_process_control" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
+
+  function_name = "b3stocks-stream-batch-process-control"
+  description   = "Process CDC events from table tbl_b3stocks_batch_process_control through DynamoDB Streams"
+  runtime       = var.lambda_function_common_runtime
+  timeout       = 600
+
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-batch-process-control"]
+
+  source_code_path = "../app"
+  lambda_handler   = "app.src.features.store_dynamodb_streams_data.presentation.store_dynamodb_streams_data_presentation.handler"
+
+  environment_variables = {
+    S3_ANALYTICS_CDC_BUCKET_NAME_PREFIX = var.s3_analytics_cdc_bucket_name_prefix
+    S3_ANALYTICS_SOR_BUCKET_NAME_PREFIX = var.s3_analytics_sor_bucket_name_prefix
+    DATA_CATALOG_CDC_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_cdc.name
+    DATA_CATALOG_SOR_DATABASE_NAME      = aws_glue_catalog_database.b3stocks_analytics_sor.name
+  }
+
+  layers_arns = [
+    "arn:aws:lambda:${local.region_name}:336392948345:layer:AWSSDKPandas-Python312:18"
+  ]
+
+  tags = var.tags
+
+  depends_on = [
+    module.aws_lambda_layers,
+    module.aws_iam_roles
+  ]
+}
+
+resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_batch_process_control" {
+  event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.stream_arn
+  function_name          = module.aws_lambda_function_stream_batch_process_control.function_name
   starting_position      = "LATEST"
   batch_size             = 100
   maximum_retry_attempts = 1

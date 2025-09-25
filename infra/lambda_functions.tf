@@ -118,6 +118,7 @@ module "aws_lambda_function_get_fundamentus_eod_stock_metrics" {
 
   environment_variables = {
     DYNAMODB_FUNDAMENTUS_EOD_STOCK_METRICS_TABLE_NAME = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.table_name
+    DYNAMODB_BATCH_PROCESS_CONTROL_TABLE_NAME         = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.table_name
   }
 
   layers_arns = [

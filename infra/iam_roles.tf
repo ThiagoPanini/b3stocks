@@ -31,6 +31,7 @@ module "aws_iam_roles" {
       "dynamodb_investment_portfolio_table_name"          = module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio.table_name
       "dynamodb_active_stocks_table_name"                 = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.table_name
       "dynamodb_fundamentus_eod_stock_metrics_table_name" = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.table_name
+      "dynamodb_batch_process_control_table_name"         = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.table_name
       "sns_active_stocks_topic_name"                      = module.sns_topic_active_stocks.topic_name
       "sqs_fundamentus_eod_stock_metrics_queue_name"      = module.sqs_queue_fundamentus_eod_stock_metrics.queue_name
       "data_catalog_cdc_database_name"                    = aws_glue_catalog_database.b3stocks_analytics_cdc.name
@@ -85,6 +86,14 @@ module "aws_iam_roles" {
       policies_arns = [
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-fundamentus-eod-stock-metrics",
+      ]
+    },
+    {
+      role_name             = "role-b3stocks-lambda-stream-batch-process-control"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-stream-batch-process-control",
       ]
     }
   ]

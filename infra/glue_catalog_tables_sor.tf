@@ -568,3 +568,86 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_fundamentus_eod_stock_metric
     comment = "Date partition in YYYY-MM-DD format for efficient querying"
   }
 }
+
+
+/* --------------------------------------------------------
+   GLUE TABLE: sor_tbl_b3stocks_batch_process_control
+   System of Record table for batch process control data
+   stored in Parquet format. Contains comprehensive
+   metadata about batch processes and their execution status.
+-------------------------------------------------------- */
+
+resource "aws_glue_catalog_table" "sor_tbl_b3stocks_batch_process_control" {
+  name          = "sor_tbl_b3stocks_batch_process_control"
+  database_name = aws_glue_catalog_database.b3stocks_analytics_sor.name
+  description   = "System of Record table for batch process control data"
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    classification = "parquet"
+  }
+
+  storage_descriptor {
+    location      = "s3://${aws_s3_bucket.analytics_sor.bucket}/sor_tbl_b3stocks_batch_process_control/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "parquet"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    columns {
+      name    = "process_name"
+      type    = "string"
+      comment = "An identifier name of the batch process given by a Enum class in the application codebase"
+    }
+
+    columns {
+      name    = "process_status"
+      type    = "string"
+      comment = "The status of the batch process execution. Accepted values are: PENDING, IN_PROGRESS, COMPLETED and FAILED"
+    }
+
+    columns {
+      name    = "total_items"
+      type    = "integer"
+      comment = "The total number of items that should be processed across all batches"
+    }
+
+    columns {
+      name    = "processed_items"
+      type    = "integer"
+      comment = "The total number of items that have been processed across all batches"
+    }
+
+    columns {
+      name    = "created_at"
+      type    = "timestamp"
+      comment = "The timestamp when the first batch process record was created"
+    }
+
+    columns {
+      name    = "updated_at"
+      type    = "timestamp"
+      comment = "The timestamp when the batch process record was last updated"
+    }
+
+    columns {
+      name    = "finished_at"
+      type    = "timestamp"
+      comment = "The timestamp when the batch process record was finished. It means that processed_items is equal to total_items"
+    }
+  }
+
+  partition_keys {
+    name    = "execution_date"
+    type    = "string"
+    comment = "The process execution date in YYYY-MM-DD format"
+  }
+}
