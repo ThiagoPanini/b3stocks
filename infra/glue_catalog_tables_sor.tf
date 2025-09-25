@@ -643,6 +643,12 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_batch_process_control" {
       type    = "timestamp"
       comment = "The timestamp when the batch process record was finished. It means that processed_items is equal to total_items"
     }
+
+    columns {
+      name    = "execution_timestamp"
+      type    = "timestamp"
+      comment = "Execution timestamp when the data was extracted and processed"
+    }
   }
 
   partition_keys {
