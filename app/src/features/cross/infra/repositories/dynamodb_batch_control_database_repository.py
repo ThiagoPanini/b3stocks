@@ -72,6 +72,7 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
                     actions=[
                         BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
                         BatchProcessControlModel.processed_items.set(0),
+                        BatchProcessControlModel.total_items.set(serialized_item["total_items"]),
                         BatchProcessControlModel.created_at.set(serialized_item["created_at"]),
                         BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
                         BatchProcessControlModel.finished_at.set(None),
