@@ -16,7 +16,6 @@ class IBatchControlDatabaseRepository(ABC):
         Args:
             batch_process (BatchProcess): The batch process details to update.
         """
-    
 
     @abstractmethod
     def check_batch_process_completion(self, batch_process: BatchProcess) -> None:

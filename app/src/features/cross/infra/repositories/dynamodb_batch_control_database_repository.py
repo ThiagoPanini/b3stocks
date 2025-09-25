@@ -15,7 +15,10 @@ from app.src.features.cross.domain.entities.batch_process import BatchProcess
 from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
 from app.src.features.cross.utils.serialization import SerializationUtils
 from app.src.features.cross.utils.log import LogUtils
-from app.src.features.cross.value_objects import Timezone
+from app.src.features.cross.value_objects import (
+    Timezone,
+    ProcessStatus
+)
 
 
 class BatchProcessControlModel(Model):
@@ -44,10 +47,11 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
     """
     Implementation of the batch process control repository using DynamoDB.
     """
+
     def __init__(self):
         self.logger = LogUtils.setup_logger(name=__name__)
 
-
+    
     def update_batch_process_control(self, batch_process: BatchProcess) -> None:
         """
         Updates the batch process control record in the repository.
@@ -62,14 +66,26 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
                 serialized_item["execution_date"]
             )
 
-            # Updates the batch record
-            current_batch_process.update(
-                actions=[
-                    BatchProcessControlModel.processed_items.add(int(serialized_item["processed_items"])),
-                    BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
-                    # BatchProcessControlModel.total_items.set(6)  # TODO: Remove this line after testing
-                ]
-            )
+            # If there is a completed process with the same name and date, reset it
+            if current_batch_process.process_status == ProcessStatus.COMPLETED.value:
+                current_batch_process.update(
+                    actions=[
+                        BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
+                        BatchProcessControlModel.processed_items.set(0),
+                        BatchProcessControlModel.created_at.set(serialized_item["created_at"]),
+                        BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
+                        BatchProcessControlModel.finished_at.set(None),
+                    ]
+                )
+            else:
+                # Updates the batch record with the new processed items count and updated timestamp
+                current_batch_process.update(
+                    actions=[
+                        BatchProcessControlModel.processed_items.add(int(serialized_item["processed_items"])),
+                        BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
+                        # BatchProcessControlModel.total_items.set(6)  # TODO: Remove this line after testing
+                    ]
+                )
 
         except DoesNotExist:
             # If item does not exist, create a new one  
