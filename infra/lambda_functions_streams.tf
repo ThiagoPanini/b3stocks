@@ -83,7 +83,7 @@ module "aws_lambda_function_stream_active_stocks" {
   function_name = "b3stocks-stream-active-stocks"
   description   = "Processes CDC events from table tbl_b3stocks_active_stocks through DynamoDB Streams"
   runtime       = var.lambda_function_common_runtime
-  timeout       = 300
+  timeout       = 600
 
   role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-stream-active-stocks"]
 
@@ -113,8 +113,8 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_active_
   event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.stream_arn
   function_name          = module.aws_lambda_function_stream_active_stocks.function_name
   starting_position      = "LATEST"
-  batch_size             = 100
-  maximum_retry_attempts = 1
+  batch_size             = 50
+  maximum_retry_attempts = 2
 
   depends_on = [
     module.aws_lambda_function_stream_active_stocks,
@@ -166,8 +166,8 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_fundame
   event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.stream_arn
   function_name          = module.aws_lambda_function_stream_fundamentus_eod_stock_metrics.function_name
   starting_position      = "LATEST"
-  batch_size             = 100
-  maximum_retry_attempts = 1
+  batch_size             = 50
+  maximum_retry_attempts = 2
 
   depends_on = [
     module.aws_lambda_function_stream_fundamentus_eod_stock_metrics,
@@ -219,8 +219,8 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_tbl_b3stocks_batch_p
   event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.stream_arn
   function_name          = module.aws_lambda_function_stream_batch_process_control.function_name
   starting_position      = "LATEST"
-  batch_size             = 100
-  maximum_retry_attempts = 1
+  batch_size             = 10
+  maximum_retry_attempts = 2
 
   depends_on = [
     module.aws_lambda_function_stream_fundamentus_eod_stock_metrics,
