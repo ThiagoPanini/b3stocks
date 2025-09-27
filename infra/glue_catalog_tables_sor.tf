@@ -150,13 +150,13 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_active_stocks" {
 
     columns {
       name    = "created_at"
-      type    = "string"
+      type    = "timestamp"
       comment = "Timestamp when the stock record was first created"
     }
 
     columns {
       name    = "updated_at"
-      type    = "string"
+      type    = "timestamp"
       comment = "Timestamp when the stock record was last updated"
     }
 
@@ -169,7 +169,7 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_active_stocks" {
 
   partition_keys {
     name    = "execution_date"
-    type    = "string"
+    type    = "date"
     comment = "Date partition in YYYY-MM-DD format for efficient querying"
   }
 }
@@ -564,7 +564,7 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_fundamentus_eod_stock_metric
 
   partition_keys {
     name    = "execution_date"
-    type    = "string"
+    type    = "date"
     comment = "Date partition in YYYY-MM-DD format for efficient querying"
   }
 }
@@ -653,7 +653,7 @@ resource "aws_glue_catalog_table" "sor_tbl_b3stocks_batch_process_control" {
 
   partition_keys {
     name    = "execution_date"
-    type    = "string"
+    type    = "date"
     comment = "The process execution date in YYYY-MM-DD format"
   }
 }

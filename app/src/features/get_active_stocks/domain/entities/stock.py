@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime, UTC
+from datetime import datetime
 
 from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
 from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
@@ -16,10 +16,16 @@ class Stock:
     company_name: str
     request_config: HTTPClientRequestConfig
     created_at: datetime = field(
-        default_factory=lambda: DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+        default_factory=lambda: DateAndTimeUtils.now(
+            output_type="datetime",
+            timezone=Timezone.SAO_PAULO,
+        )
     )
     updated_at: datetime = field(
-        default_factory=lambda: DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+        default_factory=lambda: DateAndTimeUtils.now(
+            output_type="datetime",
+            timezone=Timezone.SAO_PAULO,
+        )
     )
 
     def __post_init__(self):

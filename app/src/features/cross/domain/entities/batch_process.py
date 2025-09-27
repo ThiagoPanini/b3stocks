@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import date, datetime
 
 from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
 from app.src.features.cross.value_objects import (
@@ -16,22 +16,22 @@ class BatchProcess:
     total_items: int
     processed_items: int = 0
     process_status: ProcessStatus = ProcessStatus.IN_PROGRESS
-    execution_date: str = field(
-        default_factory=lambda: DateAndTimeUtils.datetime_now_str(
+    execution_date: date = field(
+        default_factory=lambda: DateAndTimeUtils.now(
+            output_type="date",
             timezone=Timezone.SAO_PAULO,
-            format=DateFormat.DATE
         )
     )
-    created_at: str = field(
-        default_factory=lambda: DateAndTimeUtils.datetime_now_str(
+    created_at: datetime = field(
+        default_factory=lambda: DateAndTimeUtils.now(
+            output_type="datetime",
             timezone=Timezone.SAO_PAULO,
-            format=DateFormat.DATE_AND_TIME
         )
     )
-    updated_at: str = field(
-        default_factory=lambda: DateAndTimeUtils.datetime_now_str(
+    updated_at: datetime = field(
+        default_factory=lambda: DateAndTimeUtils.now(
+            output_type="datetime",
             timezone=Timezone.SAO_PAULO,
-            format=DateFormat.DATE_AND_TIME
         )
     )
     finished_at: datetime = None

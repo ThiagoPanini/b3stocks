@@ -1,5 +1,5 @@
 from dataclasses import is_dataclass, asdict
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from enum import Enum
 from typing import Any
@@ -42,8 +42,8 @@ class SerializationUtils:
         if isinstance(value, Enum):
             return value.value
 
-        # datetime
-        if isinstance(value, datetime):
+        # date or datetime
+        if isinstance(value, datetime) or isinstance(value, date):
             return value.isoformat()
 
         # Decimal (DynamoDB compatibility)
