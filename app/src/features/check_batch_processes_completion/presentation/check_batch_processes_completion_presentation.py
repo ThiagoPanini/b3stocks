@@ -3,7 +3,15 @@ from typing import Any
 from app.src.features.check_batch_processes_completion.use_case.check_batch_processes_completion_use_case import (
     CheckBatchProcessesCompletionUseCase
 )
+from app.src.features.cross.infra.mappers.dynamodb_streams_lambda_event_mapper import (
+    DynamoDBStreamsLambdaEventMapper
+)
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
+
+
+
+# Initialize mappers, adapters and repositories
+event_mapper = DynamoDBStreamsLambdaEventMapper()
 
 
 # Initializing use case
@@ -23,6 +31,7 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
         dict: The result of the use case execution, typically a B3InvestmentPortfolioRequest instance.
     """
 
-    output_dto = use_case.execute(input_dto=event)
+    input_dto = event_mapper.map_event_to_input_dto(event=event)
+    output_dto = use_case.execute(input_dto=input_dto)
 
     return HTTPResponseMapper.map(output_dto)

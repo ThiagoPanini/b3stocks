@@ -71,7 +71,7 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
                 current_batch_process.update(
                     actions=[
                         BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
-                        BatchProcessControlModel.processed_items.set(0),
+                        BatchProcessControlModel.processed_items.set(int(serialized_item["processed_items"])),
                         BatchProcessControlModel.total_items.set(serialized_item["total_items"]),
                         BatchProcessControlModel.created_at.set(serialized_item["created_at"]),
                         BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
@@ -82,9 +82,9 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
                 # Updates the batch record with the new processed items count and updated timestamp
                 current_batch_process.update(
                     actions=[
+                        BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
                         BatchProcessControlModel.processed_items.add(int(serialized_item["processed_items"])),
                         BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
-                        # BatchProcessControlModel.total_items.set(6)  # TODO: Remove this line after testing
                     ]
                 )
 

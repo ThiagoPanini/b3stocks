@@ -4,10 +4,12 @@ from app.src.features.get_investment_portfolios.presentation import get_investme
 from app.src.features.store_dynamodb_streams_data.presentation import store_dynamodb_streams_data_presentation
 from app.src.features.get_active_stocks.presentation import get_active_stocks_presentation
 from app.src.features.get_fundamentus_eod_stock_metrics.presentation import get_fundamentus_eod_stock_metrics_presentation
+from app.src.features.check_batch_processes_completion.presentation import check_batch_processes_completion_presentation
 
 from app.tests.mocks.mocked_input_events import (
-    MOCKED_DYNAMODB_STREAMS_EVENT,
-    MOCKED_SQS_EVENT
+    MOCKED_DYNAMODB_STREAMS_EVENT_FOR_INVESTMENT_PORTFOLIO_TABLE,
+    MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE,
+    MOCKED_SQS_EVENT_FOR_ACTIVE_STOCKS_QUEUE
 )
 
 
@@ -19,6 +21,8 @@ get_investment_portfolios_handler = get_investment_portfolios_presentation.handl
 store_dynamodb_streams_data_handler = store_dynamodb_streams_data_presentation.handler
 get_active_stocks_handler = get_active_stocks_presentation.handler
 get_fundamentus_eod_stock_metrics_handler = get_fundamentus_eod_stock_metrics_presentation.handler
+check_batch_processes_completion_handler = check_batch_processes_completion_presentation.handler
+
 
 """
 FEATURE: Get Investment Portfolio
@@ -37,7 +41,10 @@ FEATURE: Store DynamoDB Streams Data
 DESCRIPTION:
     This feature provides functionality to stream data from DynamoDB and process it in real-time.
 """
-# response = store_dynamodb_streams_data_handler(event=MOCKED_DYNAMODB_STREAMS_EVENT, context=None)
+# response = store_dynamodb_streams_data_handler(
+#   event=MOCKED_DYNAMODB_STREAMS_EVENT_FOR_INVESTMENT_PORTFOLIO_TABLE,
+#   context=None
+# )
 # print(response)
 
 
@@ -59,6 +66,22 @@ DESCRIPTION:
     This feature provides functionality to scrape and retrieve end-of-day stock metrics from
     the Fundamentus investment website and process it for further use.
 """
-response = get_fundamentus_eod_stock_metrics_handler(event=MOCKED_SQS_EVENT, context=None)
+# response = get_fundamentus_eod_stock_metrics_handler(
+#     event=MOCKED_SQS_EVENT_FOR_ACTIVE_STOCKS_QUEUE,
+#     context=None
+# )
 # print(response)
 
+
+"""
+FEATURE: Check Batch Processes Completion
+
+DESCRIPTION:
+    This feature provides functionality to receive stream data from a batch process control
+    DynamoDB table and check the completion status of batch processes.
+"""
+response = check_batch_processes_completion_handler(
+    event=MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE,
+    context=None
+)
+print(response)

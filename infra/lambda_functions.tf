@@ -183,7 +183,7 @@ module "aws_lambda_function_check_batch_processes_completion" {
 }
 
 resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processes_completion" {
-  event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.stream_arn
+  event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.stream_arn
   function_name          = module.aws_lambda_function_check_batch_processes_completion.function_name
   starting_position      = "LATEST"
   batch_size             = 5
@@ -191,6 +191,6 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processe
 
   depends_on = [
     module.aws_lambda_function_check_batch_processes_completion,
-    module.aws_dynamodb_table_tbl_b3stocks_active_stocks
+    module.aws_dynamodb_table_tbl_b3stocks_batch_process_control
   ]
 }

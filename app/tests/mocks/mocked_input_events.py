@@ -1,5 +1,5 @@
 # Input event for streaming DynamoDB data
-MOCKED_DYNAMODB_STREAMS_EVENT = {
+MOCKED_DYNAMODB_STREAMS_EVENT_FOR_INVESTMENT_PORTFOLIO_TABLE = {
     "Records": [
         {
             "eventID": "5fdc13396c35cc4306767ecf8920e014",
@@ -64,7 +64,7 @@ MOCKED_DYNAMODB_STREAMS_EVENT = {
 }
 
 # Input event for SQS messages
-MOCKED_SQS_EVENT = {
+MOCKED_SQS_EVENT_FOR_ACTIVE_STOCKS_QUEUE = {
     "Records": [
         {
             "messageId": "e17c9ead-b344-4ccc-b3b9-6ffb364f08d1",
@@ -104,3 +104,84 @@ MOCKED_SQS_EVENT = {
         }
     ]
 }
+
+# Input event for streaming DynamoDB data
+MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE = {
+   "Records":[
+      {
+         "eventID":"4c961926dd63a1dafe6a49dcbf1c956e",
+         "eventName":"MODIFY",
+         "eventVersion":"1.1",
+         "eventSource":"aws:dynamodb",
+         "awsRegion":"sa-east-1",
+         "dynamodb":{
+            "ApproximateCreationDateTime":1758839339.0,
+            "Keys":{
+               "process_name":{
+                  "S":"PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS"
+               },
+               "execution_date":{
+                  "S":"2025-09-25"
+               }
+            },
+            "NewImage":{
+               "finished_at":{
+                  "NULL":"true"
+               },
+               "processed_items":{
+                  "N":"0"
+               },
+               "updated_at":{
+                  "S":"2025-09-25T19:28:57.728243-03:00"
+               },
+               "execution_date":{
+                  "S":"2025-09-25"
+               },
+               "process_name":{
+                  "S":"PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS"
+               },
+               "process_status":{
+                  "S":"COMPLETED"
+               },
+               "created_at":{
+                  "S":"2025-09-25T19:28:57.728242-03:00"
+               },
+               "total_items":{
+                  "N":"991"
+               }
+            },
+            "OldImage":{
+               "finished_at":{
+                  "S":"2025-09-25T18:42:43.909507-03:00"
+               },
+               "processed_items":{
+                  "N":"991"
+               },
+               "updated_at":{
+                  "S":"2025-09-25T18:42:43.789892-03:00"
+               },
+               "execution_date":{
+                  "S":"2025-09-25"
+               },
+               "process_name":{
+                  "S":"PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS"
+               },
+               "process_status":{
+                  "S":"COMPLETED"
+               },
+               "created_at":{
+                  "S":"2025-09-25T18:36:32.968172-03:00"
+               },
+               "total_items":{
+                  "N":"991"
+               }
+            },
+            "SequenceNumber":"4392400001347320812525114",
+            "SizeBytes":552,
+            "StreamViewType":"NEW_AND_OLD_IMAGES"
+         },
+         "eventSourceARN":"arn:aws:dynamodb:sa-east-1:596533897380:table/tbl_b3stocks_batch_process_control/stream/2025-09-25T16:44:53.750"
+      }
+   ]
+}
+
