@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import boto3
 from pynamodb.models import Model
@@ -114,10 +115,13 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
 
         if int(current_batch_process.processed_items) >= int(current_batch_process.total_items):
             # Marks the process as completed
-            finished_at = DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+            finished_at: datetime = DateAndTimeUtils.now(
+                output_type="datetime",
+                timezone=Timezone.SAO_PAULO
+            )
             current_batch_process.update(
                 actions=[
-                    BatchProcessControlModel.process_status.set("COMPLETED"),
+                    BatchProcessControlModel.process_status.set(ProcessStatus.COMPLETED.value),
                     BatchProcessControlModel.finished_at.set(finished_at.isoformat()),
                     BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
                 ]

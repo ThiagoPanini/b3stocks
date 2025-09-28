@@ -34,6 +34,7 @@ module "aws_iam_roles" {
       "dynamodb_fundamentus_eod_stock_metrics_table_name" = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.table_name
       "dynamodb_batch_process_control_table_name"         = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.table_name
       "sns_active_stocks_topic_name"                      = module.sns_topic_active_stocks.topic_name
+      "sns_batch_processes_completion_topic_name"         = module.sns_topic_batch_processes_completion.topic_name
       "sqs_fundamentus_eod_stock_metrics_queue_name"      = module.sqs_queue_fundamentus_eod_stock_metrics.queue_name
       "data_catalog_cdc_database_name"                    = aws_glue_catalog_database.b3stocks_analytics_cdc.name
       "data_catalog_sor_database_name"                    = aws_glue_catalog_database.b3stocks_analytics_sor.name
