@@ -109,6 +109,14 @@ module "aws_iam_roles" {
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
         "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-check-batch-processes-completion",
       ]
+    },
+    {
+      role_name             = "role-b3stocks-lambda-send-batch-processes-completion-mails"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-send-batch-processes-completion-mails",
+      ]
     }
   ]
 }

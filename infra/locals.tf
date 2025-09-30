@@ -27,4 +27,7 @@ locals {
 
   # Investment portfolio files from local assets for S3 upload
   portfolios_files = fileset("${path.module}/assets/investment_portfolios", "*.yaml")
+
+  # Email template files from local assets for S3 upload
+  email_template_files = fileset("${path.module}/assets/email_templates", "*.html")
 }

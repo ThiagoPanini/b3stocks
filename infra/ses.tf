@@ -186,28 +186,11 @@ resource "aws_iam_role_policy_attachment" "lambda_batch_completion_ses" {
 */
 
 /* --------------------------------------------------------
-   OUTPUTS: SES Resource Information
-   Export important SES resource details for use in
-   other Terraform modules or for reference.
--------------------------------------------------------- */
-
-output "ses_configuration_set_name" {
-  description = "Name of the SES configuration set"
-  value       = aws_ses_configuration_set.b3stocks.name
-}
-
-output "ses_verified_emails" {
-  description = "List of verified email addresses"
-  value       = var.ses_verified_emails
-}
-
-
-/* --------------------------------------------------------
    LOCAL VALUES: SES Environment Variables
    Define environment variables that should be added to
    Lambda functions that need to send emails.
 -------------------------------------------------------- */
-
+/*
 locals {
   ses_environment_variables = {
     SES_CONFIGURATION_SET_NAME = aws_ses_configuration_set.b3stocks.name
@@ -215,6 +198,7 @@ locals {
     SES_REGION                 = data.aws_region.current.name
   }
 }
+*/
 
 /* --------------------------------------------------------
    NOTES FOR SETUP AND TESTING:

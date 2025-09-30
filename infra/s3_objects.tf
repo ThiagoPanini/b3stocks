@@ -37,3 +37,30 @@ resource "aws_s3_object" "investment_portfolios" {
   ]
 
 }
+
+
+/* --------------------------------------------------------
+   S3 Object(s): Email HTML Templates
+   Uploads all HTML email template files from local assets
+   directory to S3 artifacts bucket. Files are used by Lambda
+   functions to send email notifications.
+-------------------------------------------------------- */
+
+# Upload all email HTML template files to S3 with proper content type
+resource "aws_s3_object" "email_templates" {
+  for_each = toset(local.email_template_files)
+  bucket   = aws_s3_bucket.artifacts.id
+  key      = "email_templates/${each.value}"
+  source   = "${path.module}/assets/email_templates/${each.value}"
+  etag     = filemd5("${path.module}/assets/email_templates/${each.value}")
+
+  content_type = "text/html"
+
+  tags = var.tags
+
+  depends_on = [
+    aws_s3_bucket.artifacts,
+    aws_s3_bucket_public_access_block.artifacts_bucket_public_access_block
+  ]
+
+}

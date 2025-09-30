@@ -194,3 +194,35 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processe
     module.aws_dynamodb_table_tbl_b3stocks_batch_process_control
   ]
 }
+
+
+/* --------------------------------------------------------
+   LAMBDA FUNCTION: send-batch-processes-completion-mails
+   Receives notification from SNS topic and sends emails
+   about batch processes completion using SES.
+-------------------------------------------------------- */
+
+module "aws_lambda_function_send_batch_processes_completion_mails" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
+
+  function_name = "b3stocks-send-batch-processes-completion-mails"
+  description   = "Sends emails about batch processes completion"
+  runtime       = "python3.12"
+  timeout       = 180
+
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-send-batch-processes-completion-mails"]
+
+  source_code_path = "../app"
+  lambda_handler   = "app.src.features.send_batch_processes_completion_mails.presentation.send_batch_processes_completion_mails_presentation.handler"
+
+  layers_arns = [
+    module.aws_lambda_layers.layers_arns["b3stocks-deps"]
+  ]
+
+  tags = var.tags
+
+  depends_on = [
+    module.aws_iam_roles
+  ]
+}
+

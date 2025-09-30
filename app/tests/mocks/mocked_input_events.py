@@ -114,10 +114,10 @@ MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE = {
             },
             "NewImage":{
                "finished_at":{
-                  "NULL":"true"
+                  "NULL":"2025-09-25T18:42:43.909507-03:00"
                },
                "processed_items":{
-                  "N":"0"
+                  "N":"991"
                },
                "updated_at":{
                   "S":"2025-09-25T19:28:57.728243-03:00"
@@ -173,3 +173,28 @@ MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE = {
    ]
 }
 
+# Input event for receiving messages from SNS topic
+MOCKED_SNS_EVENT_FOR_BATCH_COMPLETION_TOPIC = {
+   "Records":[
+      {
+         "EventSource":"aws:sns",
+         "EventVersion":"1.0",
+         "EventSubscriptionArn":"arn:aws:sns:sa-east-1:596533897380:b3stocks-batch-processes-completion:e76f5c53-0947-4ec8-a651-9f67927b2a98",
+         "Sns":{
+            "Type":"Notification",
+            "MessageId":"60e7606d-0d96-51cd-a2a0-013ec7c8149c",
+            "TopicArn":"arn:aws:sns:sa-east-1:596533897380:b3stocks-batch-processes-completion",
+            "Message":"{\"process_name\": \"PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS\", \"total_items\": 991, \"processed_items\": 0, \"process_status\": \"COMPLETED\", \"execution_date\": \"2025-09-25\", \"created_at\": \"2025-09-25T19:28:57.728242-03:00\", \"updated_at\": \"2025-09-25T19:28:57.728243-03:00\", \"finished_at\": null}",
+            "Timestamp":"2025-09-28T23:43:26.912Z",
+            "SignatureVersion":"1",
+            "Signature":"HEeT9iGG1jbxATAaFcWr9gx403uxoUj7KJN9jn4pXmSA2CDDtN69hUECIgN9h+OqAEj+xQCps4URLE1/mDFUNYQINzdspMFu178rkF+XE7mTuTTIvx3ZTa6JHQ+3eYfGPM5qXhHZ5xhh/hg8ENmlmemWe8EsIe/lGbrbuegF+fBEV8Hbwr9bEYpWztYNqwJfhPh0HHlA9pImHly2BK509ZzoKyoil1iCK5OV1wPIHRicxzP/zZHjtnh7v2E/I4fgCl8oyes8FaTe29iL7FN7azmVCEChaBSv5gy7yeXR/6yJ22YPg2CsbPdKrXKE+ZLSFpJFsEewwx1tJzLDq1a5Zg==",
+            "SigningCertUrl":"https://sns.sa-east-1.amazonaws.com/SimpleNotificationService-6209c161c6221fdf56ec1eb5c821d112.pem",
+            "Subject":"None",
+            "UnsubscribeUrl":"https://sns.sa-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:sa-east-1:596533897380:b3stocks-batch-processes-completion:e76f5c53-0947-4ec8-a651-9f67927b2a98",
+            "MessageAttributes":{
+               
+            }
+         }
+      }
+   ]
+}
