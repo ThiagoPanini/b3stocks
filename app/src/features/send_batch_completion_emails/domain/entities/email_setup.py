@@ -10,11 +10,11 @@ class EmailSetup:
 
     Args:
         sender (str): The email address of the sender.
-        recipient (str): The email address of the recipient.
+        recipients (list[str]): The email addresses of the recipients.
         subject (str): The subject of the email.
         body (Optional[EmailBodyTemplate]): The body of the email, which can be an HTML template.
     """
     sender: str
-    recipient: str
+    recipients: list[str]
     subject: str
     body: Optional[EmailBody] = None
