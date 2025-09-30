@@ -1,0 +1,27 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "DynamoDBStreamRead",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:ListStreams"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:${region_name}:${account_id}:table/${dynamodb_batch_process_control_table_name}/stream/*"
+            ]
+        },
+        {
+            "Sid": "SNSTopicAccess",
+            "Effect": "Allow",
+            "Action": [
+                "sns:ListTopics",
+                "sns:Publish"
+            ],
+            "Resource": "arn:aws:sns:${region_name}:${account_id}:${sns_batch_processes_completion_topic_name}"
+        }
+    ]
+}

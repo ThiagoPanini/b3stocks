@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import date, datetime
+from typing import Literal
 
 from app.src.features.cross.value_objects import (
     Timezone,
@@ -86,3 +87,47 @@ class DateAndTimeUtils:
             dt=DateAndTimeUtils.datetime_now(timezone=timezone),
             format=format
         )
+
+
+    @staticmethod
+    def datetime_now_date(timezone: Timezone) -> date:
+        """
+        Returns the current date in the specified timezone.
+
+        Args:
+            timezone (Timezone): The timezone to use for the current date.
+
+        Returns:
+            date: Current date in the specified timezone
+        """
+        return DateAndTimeUtils.datetime_now(timezone=timezone).date()
+
+
+    @staticmethod
+    def now(
+        output_type: Literal["datetime", "date", "str"],
+        timezone: Timezone,
+        str_format: DateFormat = None
+    ) -> date | datetime | str:
+        """
+        Returns the current date/time in the specified timezone and type.
+
+        Args:
+            timezone (Timezone): The timezone to use for the current date/time.
+            output_type (Literal["datetime", "date", "str"]): The type of output desired.
+            str_format (DateFormat, optional): The format to use if output_type is "str".
+        
+        Returns:
+            date | datetime | str: Current date/time in the specified type and format.
+        """
+        now = datetime.now(timezone.value)
+
+        if output_type == "datetime":
+            return now
+        elif output_type == "date":
+            return now.date()
+        elif output_type == "str":
+            return now.strftime(str_format.value) if str_format else now.isoformat()
+        else:
+            raise ValueError("Invalid output_type specified. Choose between 'date', 'datetime', "
+                             "or 'str'.")

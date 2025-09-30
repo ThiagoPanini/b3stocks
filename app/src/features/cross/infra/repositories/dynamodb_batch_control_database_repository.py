@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import boto3
 from pynamodb.models import Model
@@ -71,7 +72,7 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
                 current_batch_process.update(
                     actions=[
                         BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
-                        BatchProcessControlModel.processed_items.set(0),
+                        BatchProcessControlModel.processed_items.set(int(serialized_item["processed_items"])),
                         BatchProcessControlModel.total_items.set(serialized_item["total_items"]),
                         BatchProcessControlModel.created_at.set(serialized_item["created_at"]),
                         BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
@@ -82,9 +83,9 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
                 # Updates the batch record with the new processed items count and updated timestamp
                 current_batch_process.update(
                     actions=[
+                        BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
                         BatchProcessControlModel.processed_items.add(int(serialized_item["processed_items"])),
                         BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
-                        # BatchProcessControlModel.total_items.set(6)  # TODO: Remove this line after testing
                     ]
                 )
 
@@ -114,10 +115,13 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
 
         if int(current_batch_process.processed_items) >= int(current_batch_process.total_items):
             # Marks the process as completed
-            finished_at = DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+            finished_at: datetime = DateAndTimeUtils.now(
+                output_type="datetime",
+                timezone=Timezone.SAO_PAULO
+            )
             current_batch_process.update(
                 actions=[
-                    BatchProcessControlModel.process_status.set("COMPLETED"),
+                    BatchProcessControlModel.process_status.set(ProcessStatus.COMPLETED.value),
                     BatchProcessControlModel.finished_at.set(finished_at.isoformat()),
                     BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
                 ]

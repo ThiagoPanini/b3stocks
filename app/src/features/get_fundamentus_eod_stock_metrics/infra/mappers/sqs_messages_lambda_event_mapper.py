@@ -9,7 +9,7 @@ from app.src.features.cross.domain.entities.stock_message_envelop import StockMe
 
 class SQSMessagesLambdaEventMapper:
     """
-    Maps an SQS Lambda event dict to a input Data Transfer Object (DTO) class
+    Maps a SQS Lambda event dict to a input Data Transfer Object (DTO) class
     """
 
     def map_event_to_input_dto(self, event: dict[str, Any]) -> StockMessagesInputDTO:
@@ -18,6 +18,9 @@ class SQSMessagesLambdaEventMapper:
 
         Args:
             event (dict[str, Any]): The AWS Lambda event dict received from SQS.
+        
+        Returns:
+            InputDTO: The mapped input Data Transfer Object.
         """
         messages = event.get("Records", [])
         if not messages:

@@ -1,0 +1,31 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "SNSAccess",
+            "Effect": "Allow",
+            "Action": [
+                "sns:Subscribe",
+                "sns:Unsubscribe",
+                "sns:Receive"
+            ],
+            "Resource": [
+                "arn:aws:sns:${region_name}:${account_id}:${sns_batch_processes_completion_topic_name}"
+            ]
+        },
+        {
+            "Sid": "SESAccess",
+            "Effect": "Allow",
+            "Action": [
+                "ses:SendEmail",
+                "ses:SendRawEmail",
+                "ses:SendBulkTemplatedEmail",
+                "ses:SendTemplatedEmail"
+            ],
+            "Resource": [
+                "arn:aws:ses:${region_name}:${account_id}:identity/*",
+                "arn:aws:ses:${region_name}:${account_id}:configuration-set/*"
+            ]
+        }
+    ]
+}

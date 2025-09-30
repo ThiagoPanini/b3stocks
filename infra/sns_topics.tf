@@ -13,9 +13,8 @@
 
 /* --------------------------------------------------------
    SNS TOPIC: b3stocks-active-stocks
-   Publishes active stock events to enable downstream processing.
-   Configured with AWS managed KMS encryption and subscribes
-   to SQS queue for Fundamentus stock metrics processing.
+   Publishes active stock events to enable downstream
+   processing.
 -------------------------------------------------------- */
 
 module "sns_topic_active_stocks" {
@@ -68,9 +67,51 @@ module "sns_topic_active_stocks" {
   ]
 }
 
-/*
-ToDo:
-  - Refine topic policy to restrict access to specific AWS accounts or services, such as:
-    - Only allow publishing from the Lambda function's role.
-    - Only allow subscriptions from specific SQS queues.
-*/
+
+/* --------------------------------------------------------
+   SNS TOPIC: b3stocks-batch-processes-completion
+   Publishes batch completion events to enable downstream
+   processing.
+-------------------------------------------------------- */
+
+module "sns_topic_batch_processes_completion" {
+  source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/sns-topic/v0.0.1"
+
+  name         = "b3stocks-batch-processes-completion"
+  display_name = "Batch Processes Completion"
+
+  kms_master_key_id = data.aws_kms_key.sns.id
+
+  create_topic_policy = true
+  topic_policy = jsonencode(
+    {
+      "Version" : "2008-10-17",
+      "Statement" : [
+        {
+          "Sid" : "SNSTopicPolicy",
+          "Effect" : "Allow",
+          "Principal" : {
+            "AWS" : "*"
+          },
+          "Action" : [
+            "SNS:GetTopicAttributes",
+            "SNS:SetTopicAttributes",
+            "SNS:AddPermission",
+            "SNS:RemovePermission",
+            "SNS:DeleteTopic",
+            "SNS:Subscribe",
+            "SNS:ListSubscriptionsByTopic",
+            "SNS:Publish"
+          ],
+          "Resource" : "arn:aws:sns:${local.region_name}:${local.account_id}:b3stocks-batch-processes-completion",
+          "Condition" : {
+            "StringEquals" : {
+              "AWS:SourceOwner" : "${local.account_id}"
+            }
+          }
+        }
+      ]
+    }
+  )
+}
+

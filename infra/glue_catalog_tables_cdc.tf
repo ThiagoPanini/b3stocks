@@ -20,7 +20,7 @@
    captured from DynamoDB Streams and stored in S3 as JSON.
    Partitioned by event_date for efficient querying.
 -------------------------------------------------------- */
-
+/*
 resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
   name          = "cdc_tbl_b3stocks_investment_portfolio"
   database_name = aws_glue_catalog_database.b3stocks_analytics_cdc.name
@@ -127,7 +127,7 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_investment_portfolio" {
     comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }
-
+*/
 
 /* --------------------------------------------------------
    GLUE TABLE: cdc_tbl_b3stocks_active_stocks
@@ -238,7 +238,7 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_active_stocks" {
 
   partition_keys {
     name    = "event_date"
-    type    = "string"
+    type    = "date"
     comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }
@@ -353,7 +353,7 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_fundamentus_eod_stock_metric
 
   partition_keys {
     name    = "event_date"
-    type    = "string"
+    type    = "date"
     comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }
@@ -468,7 +468,7 @@ resource "aws_glue_catalog_table" "cdc_tbl_b3stocks_batch_process_control" {
 
   partition_keys {
     name    = "event_date"
-    type    = "string"
+    type    = "date"
     comment = "Date partition in YYYY-MM-DD ISO 8601 format for efficient querying"
   }
 }

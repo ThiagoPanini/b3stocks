@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Optional
 import re
 
@@ -27,10 +27,16 @@ class InvestmentPortfolio:
     stocks: list[StockVariationControl]
     source_url: Optional[str] = None
     created_at: datetime = field(
-        default_factory=lambda: DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+        default_factory=lambda: DateAndTimeUtils.now(
+            output_type="datetime",
+            timezone=Timezone.SAO_PAULO,
+        )
     )
     updated_at: datetime = field(
-        default_factory=lambda: DateAndTimeUtils.datetime_now(timezone=Timezone.SAO_PAULO)
+        default_factory=lambda: DateAndTimeUtils.now(
+            output_type="datetime",
+            timezone=Timezone.SAO_PAULO,
+        )
     )
 
     def __post_init__(self):
