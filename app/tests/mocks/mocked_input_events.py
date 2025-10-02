@@ -184,7 +184,7 @@ MOCKED_SNS_EVENT_FOR_BATCH_COMPLETION_TOPIC = {
             "Type":"Notification",
             "MessageId":"60e7606d-0d96-51cd-a2a0-013ec7c8149c",
             "TopicArn":"arn:aws:sns:sa-east-1:596533897380:b3stocks-batch-processes-completion",
-            "Message":"{\"process_name\": \"PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS\", \"total_items\": 991, \"processed_items\": 0, \"process_status\": \"COMPLETED\", \"execution_date\": \"2025-09-25\", \"created_at\": \"2025-09-25T19:28:57.728242-03:00\", \"updated_at\": \"2025-09-25T19:28:57.728243-03:00\", \"finished_at\": null}",
+            "Message":"{\"process_name\": \"PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS\", \"total_items\": 991, \"processed_items\": 0, \"process_status\": \"COMPLETED\", \"execution_date\": \"2025-09-25\", \"created_at\": \"2025-09-25T19:28:57.728242-03:00\", \"updated_at\": \"2025-09-25T19:28:57.728243-03:00\", \"finished_at\": \"2025-09-25T19:28:57.728243-03:00\"}",
             "Timestamp":"2025-09-28T23:43:26.912Z",
             "SignatureVersion":"1",
             "Signature":"HEeT9iGG1jbxATAaFcWr9gx403uxoUj7KJN9jn4pXmSA2CDDtN69hUECIgN9h+OqAEj+xQCps4URLE1/mDFUNYQINzdspMFu178rkF+XE7mTuTTIvx3ZTa6JHQ+3eYfGPM5qXhHZ5xhh/hg8ENmlmemWe8EsIe/lGbrbuegF+fBEV8Hbwr9bEYpWztYNqwJfhPh0HHlA9pImHly2BK509ZzoKyoil1iCK5OV1wPIHRicxzP/zZHjtnh7v2E/I4fgCl8oyes8FaTe29iL7FN7azmVCEChaBSv5gy7yeXR/6yJ22YPg2CsbPdKrXKE+ZLSFpJFsEewwx1tJzLDq1a5Zg==",

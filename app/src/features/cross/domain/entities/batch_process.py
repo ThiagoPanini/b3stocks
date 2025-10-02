@@ -5,8 +5,7 @@ from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
 from app.src.features.cross.value_objects import (
     BatchProcessName,
     ProcessStatus,
-    Timezone,
-    DateFormat
+    Timezone
 )
 
 
