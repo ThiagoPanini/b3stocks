@@ -182,6 +182,7 @@ module "aws_lambda_function_check_batch_processes_completion" {
   ]
 }
 
+# Trigger Lambda from DynamoDB Streams
 resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processes_completion" {
   event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.stream_arn
   function_name          = module.aws_lambda_function_check_batch_processes_completion.function_name
@@ -226,3 +227,16 @@ module "aws_lambda_function_send_batch_processes_completion_mails" {
   ]
 }
 
+# Trigger Lambda from SNS Topic
+resource "aws_lambda_event_source_mapping" "sns_topic_send_batch_processes_completion_mails" {
+  event_source_arn       = module.sns_topic_batch_processes_completion.topic_arn
+  function_name          = module.aws_lambda_function_send_batch_processes_completion_mails.function_name
+  starting_position      = "LATEST"
+  batch_size             = 5
+  maximum_retry_attempts = 1
+
+  depends_on = [
+    module.aws_lambda_function_send_batch_processes_completion_mails,
+    module.sns_topic_batch_processes_completion
+  ]
+}
