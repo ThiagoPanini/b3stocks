@@ -29,6 +29,7 @@ module "aws_iam_roles" {
       "s3_analytics_cdc_bucket_name"                      = local.s3_analytics_cdc_bucket_name
       "s3_analytics_sor_bucket_name"                      = local.s3_analytics_sor_bucket_name
       "s3_investment_portfolios_key_prefix"               = var.s3_investment_portfolios_key_prefix
+      "s3_email_templates_folder_prefix"                  = var.s3_email_templates_folder_prefix
       "dynamodb_investment_portfolio_table_name"          = module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio.table_name
       "dynamodb_active_stocks_table_name"                 = module.aws_dynamodb_table_tbl_b3stocks_active_stocks.table_name
       "dynamodb_fundamentus_eod_stock_metrics_table_name" = module.aws_dynamodb_table_tbl_b3stocks_fundamentus_eod_stock_metrics.table_name
