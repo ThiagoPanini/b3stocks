@@ -198,27 +198,23 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processe
 
 
 /* --------------------------------------------------------
-   LAMBDA FUNCTION: send-batch-processes-completion-mails
+   LAMBDA FUNCTION: send-batch-completion-emails
    Receives notification from SNS topic and sends emails
    about batch processes completion using SES.
 -------------------------------------------------------- */
 
-module "aws_lambda_function_send_batch_processes_completion_mails" {
+module "aws_lambda_function_send_batch_completion_emails" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
-  function_name = "b3stocks-send-batch-processes-completion-mails"
+  function_name = "b3stocks-send-batch-completion-emails"
   description   = "Sends emails about batch processes completion"
   runtime       = "python3.12"
   timeout       = 180
 
-  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-send-batch-processes-completion-mails"]
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-send-batch-completion-emails"]
 
   source_code_path = "../app"
-  lambda_handler   = "app.src.features.send_batch_processes_completion_mails.presentation.send_batch_processes_completion_mails_presentation.handler"
-
-  layers_arns = [
-    module.aws_lambda_layers.layers_arns["b3stocks-deps"]
-  ]
+  lambda_handler   = "app.src.features.send_batch_completion_emails.presentation.send_batch_completion_emails_presentation.handler"
 
   tags = var.tags
 
@@ -231,12 +227,12 @@ module "aws_lambda_function_send_batch_processes_completion_mails" {
 resource "aws_lambda_permission" "allow_sns_batch_completion" {
   statement_id  = "AllowExecutionFromSNS"
   action        = "lambda:InvokeFunction"
-  function_name = module.aws_lambda_function_send_batch_processes_completion_mails.function_name
+  function_name = module.aws_lambda_function_send_batch_completion_emails.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = module.sns_topic_batch_processes_completion.topic_arn
 
   depends_on = [
-    module.aws_lambda_function_send_batch_processes_completion_mails,
+    module.aws_lambda_function_send_batch_completion_emails,
     module.sns_topic_batch_processes_completion
   ]
 }
