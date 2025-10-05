@@ -113,5 +113,14 @@ module "sns_topic_batch_processes_completion" {
       ]
     }
   )
+
+  subscriptions = [
+    {
+      protocol               = "lambda"
+      endpoint               = "arn:aws:lambda:${local.region_name}:${local.account_id}:function:b3stocks-send-batch-processes-completion-mails"
+      endpoint_auto_confirms = true
+      raw_message_delivery   = false
+    }
+  ]
 }
 

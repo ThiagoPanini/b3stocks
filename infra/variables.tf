@@ -64,6 +64,17 @@ variable "s3_investment_portfolios_key_prefix" {
   }
 }
 
+variable "s3_email_templates_folder_prefix" {
+  description = "The S3 object key (path) where the batch processes email body template is stored within the artifacts bucket."
+  type        = string
+  default     = "email_templates"
+
+  validation {
+    condition     = !endswith(var.s3_email_templates_folder_prefix, "/")
+    error_message = "The prefix key must not end with a slash ('/') as the internal Terraform code adds it to the string."
+  }
+}
+
 
 /* --------------------------------------------------------
    VARIABLES: Lambda Function Configuration

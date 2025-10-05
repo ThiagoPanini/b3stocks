@@ -227,13 +227,13 @@ module "aws_lambda_function_send_batch_processes_completion_mails" {
   ]
 }
 
-# Trigger Lambda from SNS Topic
-resource "aws_lambda_event_source_mapping" "sns_topic_send_batch_processes_completion_mails" {
-  event_source_arn       = module.sns_topic_batch_processes_completion.topic_arn
-  function_name          = module.aws_lambda_function_send_batch_processes_completion_mails.function_name
-  starting_position      = "LATEST"
-  batch_size             = 5
-  maximum_retry_attempts = 1
+# Allow SNS to invoke the Lambda function
+resource "aws_lambda_permission" "allow_sns_batch_completion" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = module.aws_lambda_function_send_batch_processes_completion_mails.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = module.sns_topic_batch_processes_completion.topic_arn
 
   depends_on = [
     module.aws_lambda_function_send_batch_processes_completion_mails,
