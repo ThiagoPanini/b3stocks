@@ -13,6 +13,7 @@ from app.src.features.send_batch_completion_emails.use_case.send_batch_processes
     SendBatchCompletionEMailsUseCase
 )
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
+from app.src.features.cross.utils.env import EnvironmentVarsUtils
 
 
 # Initializing mappers, adapters and repositories
@@ -40,6 +41,15 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     Returns:
         dict: The result of the use case execution, typically a B3InvestmentPortfolioRequest instance.
     """
+
+    EnvironmentVarsUtils.check_required_env_vars(
+        required_env_vars=[
+            "S3_ARTIFACTS_BUCKET_NAME_PREFIX",
+            "S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY",
+            "SES_SENDER_EMAIL",
+            "SES_RECIPIENT_EMAILS"
+        ]
+    )
 
     input_dto = event_mapper.map_event_to_input_dto(event=event)
     output_dto = use_case.execute(input_dto=input_dto)

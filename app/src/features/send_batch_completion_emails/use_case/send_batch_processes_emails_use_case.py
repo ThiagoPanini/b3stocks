@@ -31,23 +31,6 @@ class SendBatchCompletionEMailsUseCase:
     email_body_template_request_adapter: IEMailBodyTemplateRequestAdapter
     email_service_adapter: IEmailServiceAdapter
 
-
-    def __check_env_variables(self) -> None:
-        """
-        Checks if the required environment variables are set.
-
-        Raises:
-            EnvironmentError: If any required environment variable is missing.
-        """
-        required_env_vars = [
-            "SES_SENDER_EMAIL",
-            "SES_RECIPIENT_EMAILS"
-        ]
-
-        missing_vars = [var for var in required_env_vars if not os.getenv(var)]
-        if missing_vars:
-            raise EnvironmentError(f"Missing required environment variables: {', '.join(missing_vars)}")
-    
     
     def execute(self, input_dto: InputDTO) -> OutputDTO:
         """
@@ -59,7 +42,6 @@ class SendBatchCompletionEMailsUseCase:
         Returns:
             OutputDTO: An instance of OutputDTO containing the result of the operation.
         """
-        self.__check_env_variables()
 
         batch_process: BatchProcess = input_dto.batch_process
         try:

@@ -50,14 +50,9 @@ class SNSEventLambdaMapper:
             InputDTO: The mapped input Data Transfer Object.
         """
 
-        # Checking if environment variables exists and if not, raise an error
+        # Getting environment variables
         bucket_name_prefix = os.getenv("S3_ARTIFACTS_BUCKET_NAME_PREFIX") 
         object_key = os.getenv("S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY")
-        if not bucket_name_prefix or not object_key:
-            raise EnvironmentError(
-                "Required environment variables are missing: 'S3_ARTIFACTS_BUCKET_NAME_PREFIX' "
-                "and 'S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY'"
-            )
 
         records = event.get("Records", [])
         if not records:
