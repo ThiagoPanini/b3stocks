@@ -107,6 +107,26 @@ variable "lambda_function_common_timeout_seconds" {
 
 
 /* --------------------------------------------------------
+   VARIABLES: SES Configuration
+   Common settings applied to SES email sending
+-------------------------------------------------------- */
+
+variable "ses_sender_email" {
+  description = "The verified SES sender email address used to send emails."
+  type        = string
+  default     = "panini.development@gmail.com"
+}
+
+variable "ses_recipient_emails" {
+  description = "A list of verified SES recipient email addresses to receive emails."
+  type        = list(string)
+  default = [
+    "panini.development@gmail.com"
+  ]
+}
+
+
+/* --------------------------------------------------------
    VARIABLES: Resource Tagging
    Default tags applied to all infrastructure resources
    for consistent labeling and cost tracking.

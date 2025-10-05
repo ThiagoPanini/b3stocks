@@ -216,11 +216,22 @@ module "aws_lambda_function_send_batch_completion_emails" {
   source_code_path = "../app"
   lambda_handler   = "app.src.features.send_batch_completion_emails.presentation.send_batch_completion_emails_presentation.handler"
 
+  environment_variables = {
+    S3_ARTIFACTS_BUCKET_NAME_PREFIX                   = var.s3_artifacts_bucket_name_prefix
+    S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY = "${var.s3_email_templates_folder_prefix}/batch_completion_template.html"
+    SES_SENDER_EMAIL                                  = var.ses_sender_email
+    SES_RECIPIENT_EMAILS                              = "[\"${join("\",\"", var.ses_recipient_emails)}\"]"
+  }
+
   tags = var.tags
 
   depends_on = [
     module.aws_iam_roles
   ]
+}
+
+output "teste" {
+  value = "[\"${join("\",\"", var.ses_recipient_emails)}\"]"
 }
 
 # Allow SNS to invoke the Lambda function
