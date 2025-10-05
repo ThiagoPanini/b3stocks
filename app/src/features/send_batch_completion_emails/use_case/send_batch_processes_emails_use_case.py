@@ -73,10 +73,10 @@ class SendBatchCompletionEMailsUseCase:
             raise
 
         try:
-            process_name: str = batch_process.process_name.value.replace("_", " ").capitalize()
+            process_name: str = " ".join(word.capitalize() for word in batch_process.process_name.value.split("_"))
             process_status: str = batch_process.process_status.value.replace(" ", "_").capitalize()
             email_setup: EmailSetup = EmailSetup(
-                subject=f"🏦 b3stocks | Batch Process '{process_name}' | {process_status}",
+                subject=f"💰 b3stocks | {process_status} {process_name}",
                 sender=os.getenv("SES_SENDER_EMAIL"),
                 recipients=json.loads(os.getenv("SES_RECIPIENT_EMAILS")),
                 body=email_body
