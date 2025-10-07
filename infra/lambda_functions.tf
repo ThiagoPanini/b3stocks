@@ -171,6 +171,10 @@ module "aws_lambda_function_check_batch_processes_completion" {
   source_code_path = "../app"
   lambda_handler   = "app.src.features.check_batch_processes_completion.presentation.check_batch_processes_completion_presentation.handler"
 
+  environment_variables = {
+    SNS_BATCH_PROCESSES_COMPLETION_TOPIC_NAME = module.sns_topic_batch_processes_completion.topic_name
+  }
+
   layers_arns = [
     module.aws_lambda_layers.layers_arns["b3stocks-deps"]
   ]
@@ -228,10 +232,6 @@ module "aws_lambda_function_send_batch_completion_emails" {
   depends_on = [
     module.aws_iam_roles
   ]
-}
-
-output "teste" {
-  value = "[\"${join("\",\"", var.ses_recipient_emails)}\"]"
 }
 
 # Allow SNS to invoke the Lambda function

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>B3Stocks - Batch Process Failure</title>
+    <style>
+        /* CSS Reset for email compatibility */
+        body, table, td, p, div, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; display: block; outline: none; text-decoration: none; }
+
+        /* Dark theme + error palette */
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-accent: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+            --text-muted: #8a8a8a;
+            --error-primary: #e74c3c;
+            --error-secondary: #c0392b;
+            --warning-accent: #f39c12;
+            --border-color: #404040;
+            --info-accent: #3498db;
+        }
+
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: var(--bg-primary) !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: var(--bg-primary); }
+
+        .header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            padding: 40px 30px; text-align: center; border-bottom: 3px solid var(--error-primary); position: relative;
+        }
+        .header::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--error-primary) 0%, var(--error-secondary) 60%, var(--warning-accent) 100%);
+        }
+
+        .brand-section { margin-bottom: 20px; }
+        .logo-placeholder {
+            width: 80px; height: 80px; background: linear-gradient(135deg, var(--error-primary), var(--error-secondary));
+            border-radius: 16px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 26px; font-weight: bold; color: #fff;
+        }
+        .brand-title { font-size: 32px; font-weight: 700; color: #fff; margin: 0 0 8px 0; letter-spacing: -0.5px; }
+        .brand-subtitle { font-size: 16px; color: var(--text-secondary); margin: 0; font-weight: 300; }
+
+        .error-badge {
+            display: inline-flex; align-items: center; background: linear-gradient(135deg, var(--error-primary), var(--error-secondary));
+            color: #ffffff; padding: 12px 24px; border-radius: 25px; font-weight: 600; font-size: 16px; margin-top: 20px;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.35);
+        }
+        .error-icon { margin-right: 10px; font-size: 20px; }
+
+        .content { background-color: var(--bg-secondary); padding: 40px 30px; }
+        .process-title { font-size: 24px; font-weight: 600; color: #fff; margin: 0 0 18px 0; text-align: center; }
+        .process-description { font-size: 15px; color: var(--text-secondary); text-align: center; margin: 0 0 26px 0; line-height: 1.5; }
+
+        /* KPI Cards */
+        .kpi-grid { display: flex; flex-wrap: wrap; gap: 16px; margin: 24px 0 10px; justify-content: space-between; }
+        .kpi-card {
+            background: linear-gradient(135deg, #3a3a3a, #2d2d2d); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 18px; flex: 1; min-width: 140px; text-align: center;
+        }
+        .kpi-value { font-size: 26px; font-weight: 700; color: var(--error-primary); margin: 0 0 6px 0; }
+        .kpi-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
+        .kpi-value-positive { color: #00d4aa; }
+
+        /* Alert / Error Summary */
+        .error-summary {
+            background: #3a2624; border: 1px solid var(--error-secondary); padding: 18px 20px; border-radius: 10px; margin: 30px 0 10px;
+        }
+        .error-summary-title { margin: 0 0 10px 0; font-size: 16px; font-weight: 600; color: var(--error-primary); }
+        .error-line { font-size: 13px; margin: 6px 0; color: var(--text-secondary); }
+        .error-key { color: var(--text-muted); font-weight: 500; margin-right: 6px; }
+        .error-message { color: #ffd7d2; font-weight: 600; }
+
+        /* Metrics table */
+        .section-title { font-size: 18px; font-weight: 600; color: #ffffff; margin: 40px 0 16px 0; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .metrics-table { width: 100%; border-collapse: collapse; background: #3a3a3a; border-radius: 8px; overflow: hidden; }
+        .metrics-table th { background: linear-gradient(135deg, #444, #383838); color: #fff; padding: 14px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metrics-table td { padding: 14px; border-bottom: 1px solid var(--border-color); color: var(--text-secondary); font-size: 13px; }
+        .metrics-table tr:last-child td { border-bottom: none; }
+        .metric-highlight { color: var(--error-primary); font-weight: 600; }
+        .metric-ok { color: #00d4aa; font-weight: 600; }
+        .status-failed { color: var(--error-primary); font-weight: 600; }
+        .status-partial { color: var(--warning-accent); font-weight: 600; }
+
+        /* Processing details */
+        .processing-details { background: #3a3a3a; border-left: 4px solid var(--error-primary); padding: 20px; margin: 34px 0 24px; border-radius: 0 8px 8px 0; }
+        .detail-item { display: flex; justify-content: space-between; margin: 8px 0; font-size: 13px; }
+        .detail-label { color: var(--text-muted); font-weight: 500; padding-right: 10px; }
+        .detail-value { color: #ffffff; font-weight: 600; text-align: right; }
+
+        /* Recommended actions */
+        .actions-box { background: #2b2b2b; border: 1px solid var(--border-color); padding: 18px 20px; border-radius: 10px; margin: 35px 0 10px; }
+        .actions-title { margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: var(--warning-accent); }
+        .action-item { font-size: 13px; margin: 6px 0; color: var(--text-secondary); line-height: 1.4; }
+        .action-bullet { color: var(--warning-accent); font-weight: 700; margin-right: 6px; }
+
+        /* Footer */
+        .footer { background-color: var(--bg-primary); padding: 28px 30px 36px; text-align: center; border-top: 1px solid var(--border-color); }
+        .footer-content { color: var(--text-muted); font-size: 11px; line-height: 1.6; }
+        .footer-brand { color: #ffffff; font-weight: 600; margin-bottom: 8px; font-size: 13px; }
+
+        /* Responsive */
+        @media only screen and (max-width: 480px) {
+            .email-container { width: 100% !important; }
+            .header, .content, .footer { padding: 22px !important; }
+            .kpi-grid { flex-direction: column; }
+            .kpi-card { min-width: auto; }
+            .brand-title { font-size: 26px !important; }
+            .metrics-table th, .metrics-table td { padding: 10px 8px !important; font-size: 11px !important; }
+            .process-title { font-size: 20px !important; }
+        }
+
+        @media (prefers-color-scheme: dark) { .email-container { background-color: var(--bg-primary) !important; } }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="brand-section">
+                <div class="logo-placeholder">B3</div>
+                <h1 class="brand-title">B3Stocks</h1>
+                <p class="brand-subtitle">Brazilian Stock Market Analytics</p>
+            </div>
+            <div class="error-badge">
+                <span class="error-icon">⚠</span>
+                Process Failed
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <h2 class="process-title">{{feature_name}}</h2>
+            <p class="process-description">
+                The {{feature_name}} is originally designed to {{feature description}} but
+                encountered one or more errors and did not complete successfully. Details of the failure,
+                affected metrics, and recommended next steps are provided below.
+            </p>
+
+            <!-- Error Summary -->
+            <div class="error-summary">
+                <h3 class="error-summary-title">Error Summary</h3>
+                <p class="error-line"><span class="error-key">Primary Error:</span><span class="error-message">{{error_message}}</span></p>
+                <p class="error-line"><span class="error-key">Error Code:</span><span class="metric-highlight">{{error_code}}</span></p>
+                <p class="error-line"><span class="error-key">Root Cause Candidate:</span>{{root_cause_hint}}</p>
+                <p class="error-line"><span class="error-key">First Failure:</span>{{first_failure_time}}</p>
+                <p class="error-line"><span class="error-key">Last Attempt:</span>{{last_attempt_time}}</p>
+                <p class="error-line"><span class="error-key">Retry Attempts:</span>{{retry_attempts}}</p>
+                <p class="error-line"><span class="error-key">Next Retry Scheduled:</span>{{next_retry_time}}</p>
+            </div>
+
+            <!-- Metrics / Technical Breakdown -->
+            <h3 class="section-title">Processing Breakdown</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Value</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Stock Symbols Targeted</td>
+                        <td class="metric-highlight">{{symbols_targeted}}</td>
+                        <td class="status-partial">Partial</td>
+                    </tr>
+                    <tr>
+                        <td>Successful Symbols</td>
+                        <td class="metric-ok">{{symbols_succeeded}}</td>
+                        <td class="metric-ok">OK</td>
+                    </tr>
+                    <tr>
+                        <td>Failed Symbols</td>
+                        <td class="metric-highlight">{{symbols_failed}}</td>
+                        <td class="status-failed">Failed</td>
+                    </tr>
+                    <tr>
+                        <td>Metrics Extracted</td>
+                        <td class="metric-ok">{{metrics_extracted}}</td>
+                        <td>{{metrics_extraction_status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Validation Pass Rate</td>
+                        <td class="metric-highlight">{{validation_rate}}%</td>
+                        <td>{{validation_status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Database Writes</td>
+                        <td class="metric-highlight">{{db_writes_successful}} / {{db_writes_attempted}}</td>
+                        <td>{{db_write_status}}</td>
+                    </tr>
+                    <tr>
+                        <td>API Requests</td>
+                        <td class="metric-highlight">{{api_requests}}</td>
+                        <td>{{api_status}}</td>
+                    </tr>
+                    <tr>
+                        <td>Last Successful Stage</td>
+                        <td class="metric-highlight">{{last_success_stage}}</td>
+                        <td>{{stage_status}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Processing / Context Details -->
+            <div class="processing-details">
+                <div class="detail-item"><span class="detail-label">Process ID:</span><span class="detail-value">{{process_id}}</span></div>
+                <div class="detail-item"><span class="detail-label">Process Version:</span><span class="detail-value">{{process_version}}</span></div>
+                <div class="detail-item"><span class="detail-label">Environment:</span><span class="detail-value">{{environment}}</span></div>
+                <div class="detail-item"><span class="detail-label">Process Started:</span><span class="detail-value">{{process_start_time}}</span></div>
+                <div class="detail-item"><span class="detail-label">Failure Detected:</span><span class="detail-value">{{failure_detected_time}}</span></div>
+                <div class="detail-item"><span class="detail-label">Notification Generated:</span><span class="detail-value">{{current_timestamp}}</span></div>
+                <div class="detail-item"><span class="detail-label">Target Database:</span><span class="detail-value">{{dynamodb_table_name}}</span></div>
+                <div class="detail-item"><span class="detail-label">Data Source:</span><span class="detail-value">Fundamentus.com.br</span></div>
+            </div>
+
+            <!-- Recommended / Automated Actions -->
+            <div class="actions-box">
+                <h3 class="actions-title">Recommended Actions</h3>
+                <p class="action-item"><span class="action-bullet">•</span>{{action_hint_1}}</p>
+                <p class="action-item"><span class="action-bullet">•</span>{{action_hint_2}}</p>
+                <p class="action-item"><span class="action-bullet">•</span>{{action_hint_3}}</p>
+                <p class="action-item" style="color: var(--info-accent);"><span class="action-bullet">•</span>Trace ID: {{trace_id}}</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">B3Stocks Platform</div>
+                <p>This automated alert reports a failed batch process execution.</p>
+                <p>Generated on {{current_timestamp}} | Process ID: {{process_id}}</p>
+                <p>© 2025 B3Stocks - Brazilian Stock Market Analytics</p>
+                <p style="margin-top: 18px; font-size: 10px;">
+                    This is an automated message. Do not reply.<br />
+                    Escalate to the engineering on-call if repeated failures occur or SLA thresholds are at risk.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
