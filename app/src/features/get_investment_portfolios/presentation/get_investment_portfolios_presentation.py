@@ -10,6 +10,7 @@ from app.src.features.get_investment_portfolios.use_case.get_investment_portfoli
     GetInvestmentPortfolioUseCase
 )
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
+from app.src.features.cross.utils.env import EnvironmentVarsUtils
 
 
 # Initializing mappers, adapters and repositories
@@ -35,6 +36,14 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     Returns:
         dict: The result of the use case execution, typically a B3InvestmentPortfolioRequest instance.
     """
+
+    EnvironmentVarsUtils.check_required_env_vars(
+        required_env_vars=[
+            "S3_ARTIFACTS_BUCKET_NAME_PREFIX",
+            "S3_INVESTMENT_PORTFOLIOS_KEY_PREFIX",
+            "DYNAMODB_INVESTMENT_PORTFOLIO_TABLE_NAME"
+        ]
+    )
 
     output_dto = use_case.execute()
 

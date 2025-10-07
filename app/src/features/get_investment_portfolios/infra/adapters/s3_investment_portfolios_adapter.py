@@ -49,9 +49,6 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
                 A list of InvestmentPortfolio instances containing, each one, an individual
                 portfolio data.
         """
-        if not self.bucket_name_prefix or not self.portfolios_key_prefix:
-            raise ValueError("Environment variables S3_ARTIFACTS_BUCKET_NAME_PREFIX and "
-                             "S3_INVESTMENT_PORTFOLIOS_KEY_PREFIX must be set")
 
         # List all objects under the portfolios key prefix
         try:

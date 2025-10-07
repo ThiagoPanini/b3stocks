@@ -64,6 +64,17 @@ variable "s3_investment_portfolios_key_prefix" {
   }
 }
 
+variable "s3_email_templates_folder_prefix" {
+  description = "The S3 object key (path) where the batch processes email body template is stored within the artifacts bucket."
+  type        = string
+  default     = "email_templates"
+
+  validation {
+    condition     = !endswith(var.s3_email_templates_folder_prefix, "/")
+    error_message = "The prefix key must not end with a slash ('/') as the internal Terraform code adds it to the string."
+  }
+}
+
 
 /* --------------------------------------------------------
    VARIABLES: Lambda Function Configuration
@@ -92,6 +103,26 @@ variable "lambda_function_common_timeout_seconds" {
     condition     = var.lambda_function_common_timeout_seconds >= 1 && var.lambda_function_common_timeout_seconds <= 900
     error_message = "Timeout must be between 1 second and 900 seconds (15 minutes)."
   }
+}
+
+
+/* --------------------------------------------------------
+   VARIABLES: SES Configuration
+   Common settings applied to SES email sending
+-------------------------------------------------------- */
+
+variable "ses_sender_email" {
+  description = "The verified SES sender email address used to send emails."
+  type        = string
+  default     = "panini.development@gmail.com"
+}
+
+variable "ses_recipient_emails" {
+  description = "A list of verified SES recipient email addresses to receive emails."
+  type        = list(string)
+  default = [
+    "panini.development@gmail.com"
+  ]
 }
 
 

@@ -18,6 +18,7 @@ from app.src.features.cross.infra.mappers.http_response_mapper import HTTPRespon
 from app.src.features.cross.infra.repositories.dynamodb_batch_control_database_repository import (
     DynamoDBBatchControlDatabaseRepository
 )
+from app.src.features.cross.utils.env import EnvironmentVarsUtils
 
 
 # Initializing mappers, adapters and repositories
@@ -48,6 +49,13 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     Returns:
         dict: The result of the use case execution.
     """
+
+    EnvironmentVarsUtils.check_required_env_vars(
+        required_env_vars=[
+            "DYNAMODB_FUNDAMENTUS_EOD_STOCK_METRICS_TABLE_NAME",
+            "DYNAMODB_BATCH_PROCESS_CONTROL_TABLE_NAME"
+        ]
+    )
 
     input_dto = event_mapper.map_event_to_input_dto(event=event)
     output_dto = use_case.execute(input_dto=input_dto)
