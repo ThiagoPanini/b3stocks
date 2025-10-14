@@ -114,7 +114,7 @@ MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE = {
             },
             "NewImage":{
                "finished_at":{
-                  "NULL":"2025-09-25T18:42:43.909507-03:00"
+                  "S":"2025-09-25T18:42:43.909507-03:00"
                },
                "processed_items":{
                   "N":"991"
@@ -191,6 +191,59 @@ MOCKED_SNS_EVENT_FOR_BATCH_COMPLETION_TOPIC = {
             "SigningCertUrl":"https://sns.sa-east-1.amazonaws.com/SimpleNotificationService-6209c161c6221fdf56ec1eb5c821d112.pem",
             "Subject":"None",
             "UnsubscribeUrl":"https://sns.sa-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:sa-east-1:596533897380:b3stocks-batch-processes-completion:e76f5c53-0947-4ec8-a651-9f67927b2a98",
+            "MessageAttributes":{
+               
+            }
+         }
+      }
+   ]
+}
+
+
+# Input event for SNS notification email - SUCCESS
+MOCKED_SNS_EVENT_NOTIFICATION_EMAIL_SUCCESS = {
+   "Records":[
+      {
+         "EventSource":"aws:sns",
+         "EventVersion":"1.0",
+         "EventSubscriptionArn":"arn:aws:sns:sa-east-1:596533897380:b3stocks-notification-emails:a1b2c3d4-5678-90ab-cdef-123456789abc",
+         "Sns":{
+            "Type":"Notification",
+            "MessageId":"7f8e9d6c-3a2b-51cd-b4e5-f6789abcdef0",
+            "TopicArn":"arn:aws:sns:sa-east-1:596533897380:b3stocks-notification-emails",
+            "Message":"{\"notification_type\": \"SUCCESS\", \"feature_name\": \"GET_FUNDAMENTUS_EOD_STOCK_METRICS\", \"template_placeholders\": {\"feature_name\": \"GET_FUNDAMENTUS_EOD_STOCK_METRICS\", \"execution_date\": \"2025-10-07\", \"total_items\": 991, \"processed_items\": 991, \"execution_time\": \"00:45:23\", \"status\": \"SUCCESS\"}}",
+            "Timestamp":"2025-10-07T14:30:15.123Z",
+            "SignatureVersion":"1",
+            "Signature":"fake-signature-success",  # fixed: replaced long signature with placeholder
+            "SigningCertUrl":"https://sns.sa-east-1.amazonaws.com/SimpleNotificationService-6209c161c6221fdf56ec1eb5c821d112.pem",
+            "Subject":"None",
+            "UnsubscribeUrl":"https://sns.sa-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:sa-east-1:596533897380:b3stocks-notification-emails:a1b2c3d4-5678-90ab-cdef-123456789abc",
+            "MessageAttributes":{
+               
+            }
+         }
+      }
+   ]
+}
+
+# Input event for SNS notification email - FAILURE  
+MOCKED_SNS_EVENT_NOTIFICATION_EMAIL_FAILURE = {
+   "Records":[
+      {
+         "EventSource":"aws:sns",
+         "EventVersion":"1.0",
+         "EventSubscriptionArn":"arn:aws:sns:sa-east-1:596533897380:b3stocks-notification-emails:x9y8z7w6-5432-10ba-fedc-987654321xyz",
+         "Sns":{
+            "Type":"Notification",
+            "MessageId":"1a2b3c4d-9e8f-52cd-c5f6-g7890hijklmn",
+            "TopicArn":"arn:aws:sns:sa-east-1:596533897380:b3stocks-notification-emails",
+            "Message":"{\"notification_type\": \"FAILURE\", \"feature_name\": \"GET_INVESTMENT_PORTFOLIOS\", \"template_placeholders\": {\"feature_name\": \"GET_INVESTMENT_PORTFOLIOS\", \"execution_date\": \"2025-10-07\", \"error_message\": \"Connection timeout to external API after 3 retry attempts\", \"failure_time\": \"14:25:30\", \"error_code\": \"CONN_TIMEOUT_001\", \"status\": \"FAILURE\"}}",
+            "Timestamp":"2025-10-07T14:25:45.789Z",
+            "SignatureVersion":"1",
+            "Signature":"fake-signature-failure",  # fixed: replaced long signature with placeholder
+            "SigningCertUrl":"https://sns.sa-east-1.amazonaws.com/SimpleNotificationService-6209c161c6221fdf56ec1eb5c821d112.pem",
+            "Subject":"None",
+            "UnsubscribeUrl":"https://sns.sa-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:sa-east-1:596533897380:b3stocks-notification-emails:x9y8z7w6-5432-10ba-fedc-987654321xyz",
             "MessageAttributes":{
                
             }

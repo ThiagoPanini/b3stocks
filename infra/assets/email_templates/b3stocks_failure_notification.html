@@ -111,6 +111,12 @@
         .footer-content { color: var(--text-muted); font-size: 11px; line-height: 1.6; }
         .footer-brand { color: #ffffff; font-weight: 600; margin-bottom: 8px; font-size: 13px; }
 
+        /* Additional CSS for severity levels */
+        .critical { color: #ff3333; font-weight: 700; text-transform: uppercase; }
+        .high { color: var(--error-primary); font-weight: 600; }
+        .medium { color: var(--warning-accent); font-weight: 600; }
+        .low { color: var(--text-secondary); font-weight: 500; }
+
         /* Responsive */
         @media only screen and (max-width: 480px) {
             .email-container { width: 100% !important; }
@@ -144,7 +150,7 @@
         <div class="content">
             <h2 class="process-title">{{feature_name}}</h2>
             <p class="process-description">
-                The {{feature_name}} is originally designed to {{feature description}} but
+                The {{feature_name}} was originally designed to {{feature_description}} but it
                 encountered one or more errors and did not complete successfully. Details of the failure,
                 affected metrics, and recommended next steps are provided below.
             </p>
@@ -152,88 +158,16 @@
             <!-- Error Summary -->
             <div class="error-summary">
                 <h3 class="error-summary-title">Error Summary</h3>
+                <p class="error-line"><span class="error-key">Exception Type:</span><span class="error-message">{{exception_type}}</span></p>
                 <p class="error-line"><span class="error-key">Primary Error:</span><span class="error-message">{{error_message}}</span></p>
                 <p class="error-line"><span class="error-key">Error Code:</span><span class="metric-highlight">{{error_code}}</span></p>
-                <p class="error-line"><span class="error-key">Root Cause Candidate:</span>{{root_cause_hint}}</p>
+                <p class="error-line"><span class="error-key">Location:</span>{{exception_location}}</p>
+                <p class="error-line"><span class="error-key">Root Cause Hint:</span>{{root_cause_hint}}</p>
+                <p class="error-line"><span class="error-key">Category:</span>{{category}}</p>
                 <p class="error-line"><span class="error-key">First Failure:</span>{{first_failure_time}}</p>
                 <p class="error-line"><span class="error-key">Last Attempt:</span>{{last_attempt_time}}</p>
                 <p class="error-line"><span class="error-key">Retry Attempts:</span>{{retry_attempts}}</p>
                 <p class="error-line"><span class="error-key">Next Retry Scheduled:</span>{{next_retry_time}}</p>
-            </div>
-
-            <!-- Metrics / Technical Breakdown -->
-            <h3 class="section-title">Processing Breakdown</h3>
-            <table class="metrics-table">
-                <thead>
-                    <tr>
-                        <th>Aspect</th>
-                        <th>Value</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Stock Symbols Targeted</td>
-                        <td class="metric-highlight">{{symbols_targeted}}</td>
-                        <td class="status-partial">Partial</td>
-                    </tr>
-                    <tr>
-                        <td>Successful Symbols</td>
-                        <td class="metric-ok">{{symbols_succeeded}}</td>
-                        <td class="metric-ok">OK</td>
-                    </tr>
-                    <tr>
-                        <td>Failed Symbols</td>
-                        <td class="metric-highlight">{{symbols_failed}}</td>
-                        <td class="status-failed">Failed</td>
-                    </tr>
-                    <tr>
-                        <td>Metrics Extracted</td>
-                        <td class="metric-ok">{{metrics_extracted}}</td>
-                        <td>{{metrics_extraction_status}}</td>
-                    </tr>
-                    <tr>
-                        <td>Validation Pass Rate</td>
-                        <td class="metric-highlight">{{validation_rate}}%</td>
-                        <td>{{validation_status}}</td>
-                    </tr>
-                    <tr>
-                        <td>Database Writes</td>
-                        <td class="metric-highlight">{{db_writes_successful}} / {{db_writes_attempted}}</td>
-                        <td>{{db_write_status}}</td>
-                    </tr>
-                    <tr>
-                        <td>API Requests</td>
-                        <td class="metric-highlight">{{api_requests}}</td>
-                        <td>{{api_status}}</td>
-                    </tr>
-                    <tr>
-                        <td>Last Successful Stage</td>
-                        <td class="metric-highlight">{{last_success_stage}}</td>
-                        <td>{{stage_status}}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Processing / Context Details -->
-            <div class="processing-details">
-                <div class="detail-item"><span class="detail-label">Process ID:</span><span class="detail-value">{{process_id}}</span></div>
-                <div class="detail-item"><span class="detail-label">Process Version:</span><span class="detail-value">{{process_version}}</span></div>
-                <div class="detail-item"><span class="detail-label">Environment:</span><span class="detail-value">{{environment}}</span></div>
-                <div class="detail-item"><span class="detail-label">Process Started:</span><span class="detail-value">{{process_start_time}}</span></div>
-                <div class="detail-item"><span class="detail-label">Failure Detected:</span><span class="detail-value">{{failure_detected_time}}</span></div>
-                <div class="detail-item"><span class="detail-label">Notification Generated:</span><span class="detail-value">{{current_timestamp}}</span></div>
-                <div class="detail-item"><span class="detail-label">Target Database:</span><span class="detail-value">{{dynamodb_table_name}}</span></div>
-                <div class="detail-item"><span class="detail-label">Data Source:</span><span class="detail-value">Fundamentus.com.br</span></div>
-            </div>
-
-            <!-- Recommended / Automated Actions -->
-            <div class="actions-box">
-                <h3 class="actions-title">Recommended Actions</h3>
-                <p class="action-item"><span class="action-bullet">•</span>{{action_hint_1}}</p>
-                <p class="action-item"><span class="action-bullet">•</span>{{action_hint_2}}</p>
-                <p class="action-item"><span class="action-bullet">•</span>{{action_hint_3}}</p>
-                <p class="action-item" style="color: var(--info-accent);"><span class="action-bullet">•</span>Trace ID: {{trace_id}}</p>
             </div>
         </div>
 
@@ -252,4 +186,5 @@
         </div>
     </div>
 </body>
+</html>
 </html>

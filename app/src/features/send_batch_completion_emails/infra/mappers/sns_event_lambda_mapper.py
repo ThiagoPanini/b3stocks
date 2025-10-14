@@ -8,8 +8,8 @@ import boto3
 from app.src.features.send_batch_completion_emails.domain.dtos.input_dto import InputDTO
 from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.domain.entities.batch_process import BatchProcess
-from app.src.features.cross.value_objects import DateFormat
-from app.src.features.cross.value_objects import (
+from app.src.features.cross.domain.value_objects import DateFormat
+from app.src.features.cross.domain.value_objects import (
     BatchProcessName,
     ProcessStatus
 )

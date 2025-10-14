@@ -10,8 +10,8 @@ from app.src.features.cross.domain.interfaces.cdc_data_catalog_sync_adapter_inte
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
 from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
-from app.src.features.cross.value_objects import Timezone
-from app.src.features.cross.value_objects import DateFormat
+from app.src.features.cross.domain.value_objects import Timezone
+from app.src.features.cross.domain.value_objects import DateFormat
 
 
 logger = LogUtils.setup_logger(name=__name__)

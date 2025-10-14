@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from typing import Literal
 
-from app.src.features.cross.value_objects import (
+from app.src.features.cross.domain.value_objects import (
     Timezone,
     DateFormat
 )

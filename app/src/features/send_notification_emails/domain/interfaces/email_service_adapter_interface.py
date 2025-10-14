@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from app.src.features.send_notification_emails.domain.entities.email_info import EmailInfo
+from app.src.features.cross.domain.entities.notification_email_info import NotificationEmailInfo
 
 
 class IEmailServiceAdapter(ABC):
@@ -10,12 +10,12 @@ class IEmailServiceAdapter(ABC):
     """
 
     @abstractmethod
-    def fetch_email_html_template(self, endpoint: str) -> str:
+    def fetch_email_html_template(self, template_endpoint: str) -> str:
         """
         Fetches the HTML email template from the given endpoint.
 
         Args:
-            endpoint (str): The endpoint to fetch the HTML template from.
+            template_endpoint (str): The endpoint to fetch the HTML template from.
 
         Returns:
             str: The HTML email template as a string object.
@@ -37,19 +37,10 @@ class IEmailServiceAdapter(ABC):
 
 
     @abstractmethod
-    def send_email(
-        self,
-        email_info: EmailInfo,
-        use_custom_html_template: bool = False,
-        html_template_endpoint_url: str = None,
-        html_template_placeholders: dict[str, Any] = None
-    ) -> None:
+    def send_email(self, email_info: NotificationEmailInfo) -> None:
         """
         Sends an email using the provided email information.
 
         Args:
-            email_info (EmailInfo): The information needed to send the email.
-            use_custom_html_template (bool): Whether to use a custom HTML template for the email body.
-            html_template_endpoint_url (str): The endpoint URL of the custom HTML template.
-            html_template_placeholders (dict[str, Any]): Placeholders to replace in the custom HTML template.
+            email_info (NotificationEmailInfo): The information needed to send the email.
         """

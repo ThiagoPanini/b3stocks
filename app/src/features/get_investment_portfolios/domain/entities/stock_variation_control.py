@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 from .variation_threshold import VariationThreshold
-from app.src.features.cross.value_objects import StockType
+from app.src.features.cross.domain.value_objects import StockType
 
 
 @dataclass

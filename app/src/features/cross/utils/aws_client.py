@@ -36,3 +36,19 @@ class AWSClient:
         Get the AWS region name of the caller.
         """
         return boto3.session.Session().region_name
+    
+
+    @staticmethod
+    def build_bucket_name_from_prefix(bucket_name_prefix: str) -> str:
+        """
+        Constructs the full S3 bucket name using the provided prefix and caller's account ID and region.
+
+        Args:
+            bucket_name_prefix (str): The prefix for the S3 bucket name.
+
+        Returns:
+            str: The full S3 bucket name.
+        """
+        account_id = AWSClient.get_caller_account_id()
+        region_name = AWSClient.get_caller_region_name()
+        return f"{bucket_name_prefix}-{account_id}-{region_name}"
