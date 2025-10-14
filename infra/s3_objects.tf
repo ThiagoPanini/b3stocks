@@ -50,7 +50,7 @@ resource "aws_s3_object" "investment_portfolios" {
 resource "aws_s3_object" "email_templates" {
   for_each = toset(local.email_template_files)
   bucket   = aws_s3_bucket.artifacts.id
-  key      = "email_templates/${each.value}"
+  key      = "${var.s3_email_templates_folder_prefix}/${each.value}"
   source   = "${path.module}/assets/email_templates/${each.value}"
   etag     = filemd5("${path.module}/assets/email_templates/${each.value}")
 
@@ -62,5 +62,4 @@ resource "aws_s3_object" "email_templates" {
     aws_s3_bucket.artifacts,
     aws_s3_bucket_public_access_block.artifacts_bucket_public_access_block
   ]
-
 }

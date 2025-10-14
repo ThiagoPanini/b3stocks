@@ -5,7 +5,7 @@ import re
 
 from app.src.features.get_investment_portfolios.domain.entities import StockVariationControl
 from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
-from app.src.features.cross.value_objects import Timezone
+from app.src.features.cross.domain.value_objects import Timezone
 
 
 @dataclass

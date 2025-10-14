@@ -1,30 +1,25 @@
 from typing import Any
 
-from app.src.features.send_batch_completion_emails.infra.mappers.sns_event_lambda_mapper import (
-    SNSEventLambdaMapper
+from app.src.features.send_notification_emails.infra.mappers.sns_notification_email_event_mapper import (
+    SNSNotificationEmailEventMapper
 )
-from app.src.features.send_batch_completion_emails.infra.adapters.s3_email_body_template_request_adapter import (
-    S3MailBodyTemplateAdapter
+from app.src.features.send_notification_emails.infra.adapters.ses_email_service_adapter import (
+    SESEmailServiceAdapter
 )
-from app.src.features.send_batch_completion_emails.infra.adapters.ses_mail_service_adapter import (
-    SESMailServiceAdapter
-)
-from app.src.features.send_batch_completion_emails.use_case.send_batch_processes_emails_use_case import (
-    SendBatchCompletionEMailsUseCase
+from app.src.features.send_notification_emails.use_case.send_notification_emails_use_case import (
+    SendNotificationEmailsUseCase
 )
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
 from app.src.features.cross.utils.env import EnvironmentVarsUtils
 
 
 # Initializing mappers, adapters and repositories
-event_mapper = SNSEventLambdaMapper()
-email_body_template_request_adapter = S3MailBodyTemplateAdapter()
-email_service_adapter = SESMailServiceAdapter()
+event_mapper = SNSNotificationEmailEventMapper()
+email_service_adapter = SESEmailServiceAdapter()
 
 
 # Initializing use case
-use_case = SendBatchCompletionEMailsUseCase(
-    email_body_template_request_adapter=email_body_template_request_adapter,
+use_case = SendNotificationEmailsUseCase(
     email_service_adapter=email_service_adapter
 )
 
@@ -45,7 +40,7 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     EnvironmentVarsUtils.check_required_env_vars(
         required_env_vars=[
             "S3_ARTIFACTS_BUCKET_NAME_PREFIX",
-            "S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY",
+            "S3_EMAIL_TEMPLATES_FOLDER_PREFIX",
             "SES_SENDER_EMAIL",
             "SES_RECIPIENT_EMAILS"
         ]
