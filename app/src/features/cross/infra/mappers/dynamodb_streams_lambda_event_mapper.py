@@ -2,9 +2,13 @@ from typing import Any
 
 from boto3.dynamodb.types import TypeDeserializer
 
-from app.src.features.cross.domain.entities.dynamodb_streams_record_data import DynamoDBStreamsRecordData
-from app.src.features.cross.domain.entities.dynamodb_streams_event_record import DynamoDBStreamsEventRecord
 from app.src.features.cross.domain.dtos.dynamodb_streams_input_dto import DynamoDBStreamsInputDTO
+from app.src.features.store_dynamodb_streams_data.domain.entities.dynamodb_streams_record_data import (
+    DynamoDBStreamsRecordData
+)
+from app.src.features.store_dynamodb_streams_data.domain.entities.dynamodb_streams_event_record import (
+    DynamoDBStreamsEventRecord
+)
 from app.src.features.cross.utils.serialization import SerializationUtils
 
 

@@ -40,7 +40,6 @@ response = delete_tables_partitions_handler(
     event=None,
     context=None
 )
-print(response)
 
 
 """
@@ -62,10 +61,10 @@ FEATURE: Store DynamoDB Streams Data
 DESCRIPTION:
     This feature provides functionality to stream data from DynamoDB and process it in real-time.
 """
-# response = store_dynamodb_streams_data_handler(
-#   event=MOCKED_DYNAMODB_STREAMS_EVENT_FOR_ACTIVE_STOCKS_TABLE,
-#   context=None
-# )
+response = store_dynamodb_streams_data_handler(
+  event=MOCKED_DYNAMODB_STREAMS_EVENT_FOR_ACTIVE_STOCKS_TABLE,
+  context=None
+)
 
 
 """
