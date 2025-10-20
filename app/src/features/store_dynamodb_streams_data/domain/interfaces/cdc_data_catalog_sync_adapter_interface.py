@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
-from app.src.features.cross.domain.entities.dynamodb_streams_output_data import DynamoDBStreamsOutputData
+from app.src.features.store_dynamodb_streams_data.domain.entities.dynamodb_streams_output_data import (
+    DynamoDBStreamsOutputData
+)
 
 
 class ICDCDataCatalogSyncAdapter(ABC):

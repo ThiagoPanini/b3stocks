@@ -1,14 +1,13 @@
 import os
-from datetime import datetime, UTC
 
 import boto3
 import awswrangler as wr
 import pandas as pd
 
-from app.src.features.cross.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
+from app.src.features.store_dynamodb_streams_data.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
     ICDCDataCatalogSyncAdapter
 )
-from app.src.features.cross.domain.entities.dynamodb_streams_output_data import (
+from app.src.features.store_dynamodb_streams_data.domain.entities.dynamodb_streams_output_data import (
     DynamoDBStreamsOutputData
 )
 
