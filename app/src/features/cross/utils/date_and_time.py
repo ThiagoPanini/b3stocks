@@ -105,7 +105,7 @@ class DateAndTimeUtils:
 
     @staticmethod
     def now(
-        output_type: Literal["datetime", "date", "str"],
+        output_type: Literal["datetime", "date", "string"],
         timezone: Timezone,
         str_format: DateFormat = None
     ) -> date | datetime | str:
@@ -126,8 +126,8 @@ class DateAndTimeUtils:
             return now
         elif output_type == "date":
             return now.date()
-        elif output_type == "str":
+        elif output_type == "string":
             return now.strftime(str_format.value) if str_format else now.isoformat()
         else:
             raise ValueError("Invalid output_type specified. Choose between 'date', 'datetime', "
-                             "or 'str'.")
+                             "or 'string'.")

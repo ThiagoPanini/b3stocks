@@ -1,5 +1,6 @@
 from dotenv import find_dotenv, load_dotenv
 
+from app.src.features.delete_tables_partitions.presentation import delete_tables_partitions_presentation
 from app.src.features.get_active_stocks.presentation import get_active_stocks_presentation
 from app.src.features.store_dynamodb_streams_data.presentation import store_dynamodb_streams_data_presentation
 from app.src.features.get_fundamentus_eod_stock_metrics.presentation import get_fundamentus_eod_stock_metrics_presentation
@@ -19,12 +20,27 @@ from app.tests.mocks.mocked_input_events import (
 _ = load_dotenv(find_dotenv())
 
 # Building handlers
+delete_tables_partitions_handler = delete_tables_partitions_presentation.handler
 get_active_stocks_handler = get_active_stocks_presentation.handler
 store_dynamodb_streams_data_handler = store_dynamodb_streams_data_presentation.handler
 get_fundamentus_eod_stock_metrics_handler = get_fundamentus_eod_stock_metrics_presentation.handler
 check_batch_processes_completion_handler = check_batch_processes_completion_presentation.handler
 send_batch_completion_emails_handler = send_batch_completion_emails_presentation.handler
 send_notification_emails_handler = send_notification_emails_presentation.handler
+
+
+"""
+FEATURE: Delete Tables Partitions
+
+DESCRIPTION:
+    This feature provides functionality to delete partitions from specified tables to let the
+    process idempotent.
+"""
+response = delete_tables_partitions_handler(
+    event=None,
+    context=None
+)
+print(response)
 
 
 """
@@ -97,7 +113,7 @@ FEATURE: Send Notification Emails
 DESCRIPTION:
     This feature provides functionality to send email notifications upon specific events.
 """
-response = send_notification_emails_handler(
-    event=MOCKED_SNS_EVENT_NOTIFICATION_EMAIL_SUCCESS,
-    context=None
-)
+# response = send_notification_emails_handler(
+#     event=MOCKED_SNS_EVENT_NOTIFICATION_EMAIL_SUCCESS,
+#     context=None
+# )
