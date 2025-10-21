@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 import awswrangler as wr
 
-from app.src.features.delete_tables_partitions.domain.entities.table import Table
-from app.src.features.delete_tables_partitions.domain.interfaces.data_catalog_adapter_interface import (
+from app.src.features.delete_already_processed_partitions.domain.entities.table import Table
+from app.src.features.delete_already_processed_partitions.domain.interfaces.data_catalog_adapter_interface import (
     IDataCatalogAdapter
 )
 
@@ -15,7 +15,7 @@ logger = LogUtils.setup_logger(name=__name__)
 
 
 @dataclass
-class DeleteTablesPartitionsUseCase:
+class DeleteAlreadyProcessedPartitionsUseCase:
     """
     Use case for checking and deleting partitions on SoR/bronze layer.
     """
@@ -46,7 +46,8 @@ class DeleteTablesPartitionsUseCase:
                 )
             ]
 
-            self.data_catalog_adapter.delete_partitions(tables=tables_to_cleanup)
+            logger.info(f"Deleting already processed partitions for tables: {tables_to_cleanup}")
+            self.data_catalog_adapter.delete_processed_partitions(tables=tables_to_cleanup)
 
             return OutputDTO.ok(
                 data={

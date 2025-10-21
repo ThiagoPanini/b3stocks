@@ -1,6 +1,6 @@
 from dotenv import find_dotenv, load_dotenv
 
-from app.src.features.delete_tables_partitions.presentation import delete_tables_partitions_presentation
+from app.src.features.delete_already_processed_partitions.presentation import delete_already_processed_partitions_presentation
 from app.src.features.get_active_stocks.presentation import get_active_stocks_presentation
 from app.src.features.store_dynamodb_streams_data.presentation import store_dynamodb_streams_data_presentation
 from app.src.features.get_fundamentus_eod_stock_metrics.presentation import get_fundamentus_eod_stock_metrics_presentation
@@ -20,7 +20,7 @@ from app.tests.mocks.mocked_input_events import (
 _ = load_dotenv(find_dotenv())
 
 # Building handlers
-delete_tables_partitions_handler = delete_tables_partitions_presentation.handler
+delete_already_processed_partitions_handler = delete_already_processed_partitions_presentation.handler
 get_active_stocks_handler = get_active_stocks_presentation.handler
 store_dynamodb_streams_data_handler = store_dynamodb_streams_data_presentation.handler
 get_fundamentus_eod_stock_metrics_handler = get_fundamentus_eod_stock_metrics_presentation.handler
@@ -36,7 +36,7 @@ DESCRIPTION:
     This feature provides functionality to delete partitions from specified tables to let the
     process idempotent.
 """
-response = delete_tables_partitions_handler(
+response = delete_already_processed_partitions_handler(
     event=None,
     context=None
 )
@@ -49,10 +49,10 @@ DESCRIPTION:
     This feature provides functionality to scrape and retrieve active stock data from
     a web site (e.g., Fundamentus) and process it for further use.
 """
-# response = get_active_stocks_handler(
-#     event=None,
-#     context=None
-# )
+response = get_active_stocks_handler(
+    event=None,
+    context=None
+)
 
 
 """

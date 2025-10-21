@@ -1,10 +1,10 @@
 from typing import Any
 
-from app.src.features.delete_tables_partitions.infra.adapters.awsrangler_data_catalog_adapter import (
+from app.src.features.delete_already_processed_partitions.infra.adapters.awsrangler_data_catalog_adapter import (
     AWSRanglerDataCatalogAdapter
 )
-from app.src.features.delete_tables_partitions.use_case.delete_tables_partitions_use_case import (
-    DeleteTablesPartitionsUseCase
+from app.src.features.delete_already_processed_partitions.use_case.delete_already_processed_partitions_use_case import (
+    DeleteAlreadyProcessedPartitionsUseCase
 )
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
 from app.src.features.cross.utils.env import EnvironmentVarsUtils
@@ -13,7 +13,7 @@ from app.src.features.cross.utils.env import EnvironmentVarsUtils
 data_catalog_adapter = AWSRanglerDataCatalogAdapter()
 
 # Initializing the use case
-use_case = DeleteTablesPartitionsUseCase(
+use_case = DeleteAlreadyProcessedPartitionsUseCase(
     data_catalog_adapter=data_catalog_adapter
 )
 
@@ -30,12 +30,6 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     Returns:
         dict: The result of the use case execution, typically a B3InvestmentPortfolioRequest instance.
     """
-    EnvironmentVarsUtils.check_required_env_vars(
-        required_env_vars=[
-            "S3_INVESTMENT_PORTFOLIOS_KEY_PREFIX"
-        ]
-    )
-
     output_dto = use_case.execute()
 
     return HTTPResponseMapper.map(output_dto)

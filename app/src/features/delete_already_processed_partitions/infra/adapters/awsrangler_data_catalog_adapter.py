@@ -2,10 +2,10 @@ from typing import Any
 
 import awswrangler as wr
 
-from app.src.features.delete_tables_partitions.domain.interfaces.data_catalog_adapter_interface import (
+from app.src.features.delete_already_processed_partitions.domain.interfaces.data_catalog_adapter_interface import (
     IDataCatalogAdapter
 )
-from app.src.features.delete_tables_partitions.domain.entities.table import Table
+from app.src.features.delete_already_processed_partitions.domain.entities.table import Table
 from app.src.features.cross.utils.log import LogUtils
 
 
@@ -90,13 +90,13 @@ class AWSRanglerDataCatalogAdapter(IDataCatalogAdapter):
             partition_path (str): The S3 path of the partition to delete.
         """
         try:
-            wr.s3.delete_objects([partition_path])
+            wr.s3.delete_objects(path=partition_path)
         except Exception:
             logger.exception("Error deleting physical partition from storage")
             raise
 
 
-    def delete_partitions(self, tables: list[Table]) -> None:
+    def delete_processed_partitions(self, tables: list[Table]) -> None:
         """
         Deletes both logical and physical partitions for the given tables.
 
@@ -118,6 +118,10 @@ class AWSRanglerDataCatalogAdapter(IDataCatalogAdapter):
                     partition_value_to_delete=partition.partition_value
                 ):
                     # Delete logical partition from data catalog
+                    logger.info(
+                        f"Deleting partition {partition.partition_column}={partition.partition_value} "
+                        f"from table {table.database_name}.{table.table_name}"
+                    )
                     self.delete_logical_partition_from_data_catalog(
                         database_name=table.database_name,
                         table_name=table.table_name,
@@ -128,6 +132,7 @@ class AWSRanglerDataCatalogAdapter(IDataCatalogAdapter):
                     # Delete physical partition from storage
                     partition_path_idx = partitions_values.index(partition.partition_value)
                     partition_path = partitions_paths[partition_path_idx]
+                    logger.info(f"Deleting objects on S3 path {partition_path}")
                     self.delete_physical_partition_from_storage(
                         partition_path=partition_path
                     )

@@ -1,0 +1,65 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "GlueDataCatalogReadAccess",
+            "Effect": "Allow",
+            "Action": [
+                "glue:GetDatabase",
+                "glue:GetTable",
+                "glue:GetPartitions"
+            ],
+            "Resource": [
+                "arn:aws:glue:${region_name}:${account_id}:catalog",
+                "arn:aws:glue:${region_name}:${account_id}:database/db_b3stocks_analytics_sor",
+                "arn:aws:glue:${region_name}:${account_id}:table/db_b3stocks_analytics_sor/sor_tbl_b3stocks_active_stocks",
+                "arn:aws:glue:${region_name}:${account_id}:table/db_b3stocks_analytics_sor/sor_tbl_b3stocks_fundamentus_eod_stock_metrics",
+                "arn:aws:glue:${region_name}:${account_id}:table/db_b3stocks_analytics_sor/sor_tbl_b3stocks_batch_process_control"
+            ]
+        },
+        {
+            "Sid": "GlueDataCatalogDeletePartitions",
+            "Effect": "Allow",
+            "Action": [
+                "glue:BatchDeletePartition"
+            ],
+            "Resource": [
+                "arn:aws:glue:${region_name}:${account_id}:catalog",
+                "arn:aws:glue:${region_name}:${account_id}:database/db_b3stocks_analytics_sor",
+                "arn:aws:glue:${region_name}:${account_id}:table/db_b3stocks_analytics_sor/sor_tbl_b3stocks_active_stocks",
+                "arn:aws:glue:${region_name}:${account_id}:table/db_b3stocks_analytics_sor/sor_tbl_b3stocks_fundamentus_eod_stock_metrics",
+                "arn:aws:glue:${region_name}:${account_id}:table/db_b3stocks_analytics_sor/sor_tbl_b3stocks_batch_process_control"
+            ]
+        },
+        {
+            "Sid": "S3DeleteObjectsFromSoRBucket",
+            "Effect": "Allow",
+            "Action": [
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${s3_analytics_sor_bucket_name}/sor_tbl_b3stocks_active_stocks/*",
+                "arn:aws:s3:::${s3_analytics_sor_bucket_name}/sor_tbl_b3stocks_fundamentus_eod_stock_metrics/*",
+                "arn:aws:s3:::${s3_analytics_sor_bucket_name}/sor_tbl_b3stocks_batch_process_control/*"
+            ]
+        },
+        {
+            "Sid": "S3ListSoRBucket",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${s3_analytics_sor_bucket_name}"
+            ]
+        },
+        {
+            "Sid": "InvokeLambdaFunctions",
+            "Effect": "Allow",
+            "Action": "lambda:InvokeFunction",
+            "Resource": [
+                "arn:aws:lambda:${region_name}:${account_id}:function:b3stocks-get-active-stocks"
+            ]
+        }
+    ]
+}

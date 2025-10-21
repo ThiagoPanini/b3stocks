@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from app.src.features.delete_tables_partitions.domain.entities.table import Table
+from app.src.features.delete_already_processed_partitions.domain.entities.table import Table
 
 
 class IDataCatalogAdapter(ABC):
@@ -65,7 +65,7 @@ class IDataCatalogAdapter(ABC):
         """
 
     @abstractmethod
-    def delete_partitions(self, tables: list[Table]) -> None:
+    def delete_processed_partitions(self, tables: list[Table]) -> None:
         """
         Deletes both logical and physical partitions for the given tables.
 

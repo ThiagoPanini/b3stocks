@@ -43,6 +43,14 @@ module "aws_iam_roles" {
   }
 
   roles_config = [
+    {
+      role_name             = "role-b3stocks-lambda-delete-already-processed-partitions"
+      trust_policy_filepath = "${path.module}/assets/iam/trust_policies/trust-lambda.json"
+      policies_arns = [
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-lambda-cloudwatch-logs",
+        "arn:aws:iam::${local.account_id}:policy/policy-b3stocks-delete-already-processed-partitions",
+      ]
+    },
     /*
     {
       role_name             = "role-b3stocks-lambda-get-investment-portfolios"

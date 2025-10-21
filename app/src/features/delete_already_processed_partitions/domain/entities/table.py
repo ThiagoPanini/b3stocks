@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 
-from app.src.features.delete_tables_partitions.domain.entities.partition_config import PartitionConfig
+from app.src.features.delete_already_processed_partitions.domain.entities.partition_config import (
+    PartitionConfig
+)
 from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
 from app.src.features.cross.domain.value_objects import (
     Timezone,
