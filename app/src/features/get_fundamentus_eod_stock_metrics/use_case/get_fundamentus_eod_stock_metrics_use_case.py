@@ -24,7 +24,7 @@ from app.src.features.cross.domain.entities.http_client_response import HTTPClie
 from app.src.features.cross.domain.entities.batch_process import BatchProcess
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
 from app.src.features.cross.utils.log import LogUtils
-from app.src.features.cross.value_objects import BatchProcessName
+from app.src.features.cross.domain.value_objects import BatchProcessName
 
 
 logger = LogUtils.setup_logger(name=__name__)
@@ -56,12 +56,11 @@ class GetFundamentusEodStockMetricsUseCase:
         stock_metrics_list: list[FundamentusStockMetrics] = []
         
         try:
-            stock_codes = [message.code for message in input_dto.messages]
+            stock_codes: list[str] = [message.code for message in input_dto.messages]
             logger.info(f"Getting and parsing metrics for the following {len(stock_codes)} "
                         f"stock codes: {', '.join(stock_codes)}")
 
             for stock_code in stock_codes:
-                # Building a request config object to handle HTTP requests
                 request_config = HTTPClientRequestConfig(
                     url=f"https://www.fundamentus.com.br/detalhes.php?papel={stock_code}",
                     headers={
@@ -76,12 +75,10 @@ class GetFundamentusEodStockMetricsUseCase:
                     )
                 )
 
-                # Getting the raw HTML content from Fundamentus
                 http_response: HTTPClientResponse = self.http_client_adapter.get(
                     request_config=request_config
                 )
 
-                # Parsing the HTML content to extract stock metrics
                 stock_metrics: FundamentusStockMetrics = self.html_parser_adapter.parse_html_content(
                     html_content=http_response.content,
                     encoding=http_response.encoding,
@@ -89,18 +86,10 @@ class GetFundamentusEodStockMetricsUseCase:
                 )
 
                 stock_metrics_list.append(stock_metrics)
-        except Exception:
-            logger.exception(f"Error collecting and parsing stock metrics")
-            raise
 
-        try:
             logger.info(f"Saving {len(stock_metrics_list)} stock metrics to the database table")
             self.database_repository.batch_save_stock_metrics(stock_metrics_list)
-        except Exception:
-            logger.exception(f"Error saving stock metrics to the database repository")
-            raise
 
-        try:
             logger.info("Updating the batch process control table with the processed items count")
             batch_process = BatchProcess(
                 process_name=BatchProcessName.PROCESS_FUNDAMENTUS_EOD_STOCK_METRICS,
@@ -109,14 +98,15 @@ class GetFundamentusEodStockMetricsUseCase:
             )
             self.batch_control_database_repository.update_batch_process_control(batch_process)
             self.batch_control_database_repository.check_batch_process_completion(batch_process)
+
         except Exception:
-            logger.exception("Error updating the batch process control record")
-            raise        
+            logger.exception("Error fetching and saving Fundamentus end-of-day stock metrics data")
+            raise
 
         return OutputDTO.ok(
             data={
                 "processed_stock_metrics": len(stock_metrics_list),
                 "stock_codes": [stock_metrics.nome_papel for stock_metrics in stock_metrics_list],
-                "dynamodb_table_name": os.getenv("DYNAMODB_FUNDAMENTUS_EOD_STOCK_METRICS_TABLE_NAME")
+                "fundamentus_eod_stock_metrics_table_name": os.getenv("DYNAMODB_FUNDAMENTUS_EOD_STOCK_METRICS_TABLE_NAME")
             }
         )

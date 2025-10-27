@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 
 from app.src.features.get_active_stocks.domain.interfaces.html_parser_adapter_interface import (
@@ -92,7 +93,7 @@ class GetActiveStocksUseCase:
         return OutputDTO.ok(
             data={
                 "total_active_stocks": len(stocks),
-                "active_stocks_table_name": "XPTO",
-                "active_stocks_topic_name": "XPTO"
+                "active_stocks_table_name": os.getenv("DYNAMODB_ACTIVE_STOCKS_TABLE_NAME"),
+                "active_stocks_topic_name": os.getenv("SNS_ACTIVE_STOCKS_TOPIC_NAME")
             }
         )

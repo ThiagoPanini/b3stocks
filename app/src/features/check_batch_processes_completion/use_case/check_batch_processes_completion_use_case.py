@@ -9,7 +9,7 @@ from app.src.features.cross.domain.dtos.dynamodb_streams_input_dto import Dynamo
 from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
 from app.src.features.cross.domain.entities.batch_process import BatchProcess
-from app.src.features.cross.value_objects import (
+from app.src.features.cross.domain.value_objects import (
     BatchProcessName,
     ProcessStatus
 )
@@ -66,7 +66,7 @@ class CheckBatchProcessesCompletionUseCase:
                         f"Current status: {batch_process.process_status.value}."
                     )
         except Exception:
-            logger.exception("Error checking batch processes completion")
+            logger.exception("Error checking batch processes completion and sending a message to SNS topic")
             raise
 
         return OutputDTO.ok(

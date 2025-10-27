@@ -14,6 +14,7 @@ from app.src.features.get_active_stocks.use_case.get_active_stocks_use_case impo
     GetActiveStocksUseCase
 )
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
+from app.src.features.cross.utils.env import EnvironmentVarsUtils
 
 
 # Initializing mappers, adapters and repositories
@@ -43,6 +44,13 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     Returns:
         dict: The result of the use case execution, typically a B3InvestmentPortfolioRequest instance.
     """
+
+    EnvironmentVarsUtils.check_required_env_vars(
+        required_env_vars=[
+            "DYNAMODB_ACTIVE_STOCKS_TABLE_NAME",
+            "SNS_ACTIVE_STOCKS_TOPIC_NAME"
+        ]
+    )
 
     output_dto = use_case.execute()
 

@@ -10,13 +10,12 @@ from app.src.features.check_batch_processes_completion.infra.adapters.sns_topic_
     SNSTopicAdapter
 )
 from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
-
+from app.src.features.cross.utils.env import EnvironmentVarsUtils
 
 
 # Initialize mappers, adapters and repositories
 event_mapper = DynamoDBStreamsLambdaEventMapper()
 topic_adapter = SNSTopicAdapter()
-
 
 # Initializing use case
 use_case = CheckBatchProcessesCompletionUseCase(
@@ -36,6 +35,12 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
     Returns:
         dict: The result of the use case execution.
     """
+
+    EnvironmentVarsUtils.check_required_env_vars(
+        required_env_vars=[
+            "SNS_BATCH_PROCESSES_COMPLETION_TOPIC_NAME"
+        ]
+    )
 
     input_dto = event_mapper.map_event_to_input_dto(event=event)
     output_dto = use_case.execute(input_dto=input_dto)

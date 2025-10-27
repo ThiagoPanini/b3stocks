@@ -13,7 +13,7 @@ from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.fundamen
 )
 from app.src.features.cross.utils.decorators import timing_decorator
 from app.src.features.cross.utils.log import LogUtils
-from app.src.features.cross.value_objects import DateFormat
+from app.src.features.cross.domain.value_objects import DateFormat
 
 
 pd.set_option('future.no_silent_downcasting', True)

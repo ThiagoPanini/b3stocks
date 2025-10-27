@@ -1,12 +1,18 @@
 from typing import Any
 import json
 import os
+from datetime import datetime
 
 import boto3
 
 from app.src.features.send_batch_completion_emails.domain.dtos.input_dto import InputDTO
-from app.src.features.cross.domain.entities.batch_process import BatchProcess
 from app.src.features.cross.utils.log import LogUtils
+from app.src.features.cross.domain.entities.batch_process import BatchProcess
+from app.src.features.cross.domain.value_objects import DateFormat
+from app.src.features.cross.domain.value_objects import (
+    BatchProcessName,
+    ProcessStatus
+)
 
 
 logger = LogUtils.setup_logger(name=__name__)
@@ -44,14 +50,9 @@ class SNSEventLambdaMapper:
             InputDTO: The mapped input Data Transfer Object.
         """
 
-        # Checking if environment variables exists and if not, raise an error
+        # Getting environment variables
         bucket_name_prefix = os.getenv("S3_ARTIFACTS_BUCKET_NAME_PREFIX") 
         object_key = os.getenv("S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY")
-        if not bucket_name_prefix or not object_key:
-            raise EnvironmentError(
-                "Required environment variables are missing: 'S3_ARTIFACTS_BUCKET_NAME_PREFIX' "
-                "and 'S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY'"
-            )
 
         records = event.get("Records", [])
         if not records:
@@ -60,8 +61,18 @@ class SNSEventLambdaMapper:
         try:
             # Taking the record from the event and mapping to BatchProcess entity
             sns_record = records[0].get("Sns", {})
-            message = sns_record.get("Message", "{}")
-            batch_process = BatchProcess(**json.loads(message))
+            message = json.loads(sns_record.get("Message", "{}"))
+            # batch_process = BatchProcess(**json.loads(message))
+            batch_process = BatchProcess(
+                process_name=BatchProcessName(message.get("process_name")),
+                total_items=message.get("total_items"),
+                processed_items=message.get("processed_items"),
+                process_status=ProcessStatus(message.get("process_status")),
+                execution_date=datetime.strptime(message.get("execution_date"), DateFormat.DATE.value).date(),
+                created_at=datetime.fromisoformat(message.get("created_at")),
+                updated_at=datetime.fromisoformat(message.get("updated_at")),
+                finished_at=datetime.fromisoformat(message.get("finished_at")),
+            )
 
             # Constructing InputDTO
             template_endpoint_bucket_name = self.__build_bucket_name_from_prefix(bucket_name_prefix)

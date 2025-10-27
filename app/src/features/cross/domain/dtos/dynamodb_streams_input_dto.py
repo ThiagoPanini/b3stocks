@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 
-from app.src.features.cross.domain.entities.dynamodb_streams_event_record import DynamoDBStreamsEventRecord
+from app.src.features.store_dynamodb_streams_data.domain.entities.dynamodb_streams_event_record import (
+    DynamoDBStreamsEventRecord
+)
 
 
 @dataclass

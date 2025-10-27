@@ -6,6 +6,5 @@ class Timezone(Enum):
     """
     Enum representing different timezones
     """
-
-    UTC: timezone = timezone.utc
-    SAO_PAULO: timezone = timezone(timedelta(hours=-3))
+    UTC = timezone.utc
+    SAO_PAULO = timezone(timedelta(hours=-3))

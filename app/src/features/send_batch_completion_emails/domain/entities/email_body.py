@@ -10,8 +10,6 @@ class EmailBody:
     Args:
         source_endpoint (str): The source endpoint where the template is stored (e.g. S3 URI).
         body_template (bytes): The email body template content in bytes.
-        body_rendered (Optional[bytes]): The rendered email body content in bytes, if applicable.
     """
     source_endpoint: str
     body_template: bytes
-    body_rendered: Optional[bytes] = None

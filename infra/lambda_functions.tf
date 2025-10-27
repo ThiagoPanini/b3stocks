@@ -14,35 +14,30 @@ FUNCTIONS:
   - b3stocks-get-fundamentus-eod-stock-metrics: Fetches end-of-day stock metrics from Fundamentus
 ----------------------------------------------------------------------------- */
 
+
 /* --------------------------------------------------------
-   LAMBDA FUNCTION: get-investment-portfolios
-   Retrieves investment portfolio data from S3, processes
-   it, and stores the results in DynamoDB. Scheduled to
-   run daily at 21:00 UTC via EventBridge.
+   LAMBDA FUNCTION: delete-already-processed-partitions
+   Deletes already processed partitions from SoR tables
+   and prepares them for new data ingestion. Scheduled daily
+   at 21:00 UTC (18:00 BRTGMT-3).
 -------------------------------------------------------- */
 
-/*
-module "aws_lambda_function_get_investment_portfolios" {
+module "aws_lambda_function_delete_already_processed_partitions" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
-  function_name = "b3stocks-get-investment-portfolios"
-  description = "Retrieves investment portfolio data from S3 and stores it in DynamoDB"
+  function_name = "b3stocks-delete-already-processed-partitions"
+  description   = "Deletes already processed partitions from SoR tables"
   runtime       = "python3.12"
-  timeout       = 180
+  timeout       = 600
+  memory_size   = 192
 
-  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-get-investment-portfolios"]
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-delete-already-processed-partitions"]
 
   source_code_path = "../app"
-  lambda_handler   = "app.src.features.get_investment_portfolios.presentation.get_investment_portfolios_presentation.handler"
-
-  environment_variables = {
-    S3_ARTIFACTS_BUCKET_NAME_PREFIX          = var.s3_artifacts_bucket_name_prefix
-    S3_INVESTMENT_PORTFOLIOS_KEY_PREFIX      = var.s3_investment_portfolios_key_prefix
-    DYNAMODB_INVESTMENT_PORTFOLIO_TABLE_NAME = module.aws_dynamodb_table_tbl_b3stocks_investment_portfolio.table_name
-  }
+  lambda_handler   = "app.src.features.delete_already_processed_partitions.presentation.delete_already_processed_partitions_presentation.handler"
 
   layers_arns = [
-    module.aws_lambda_layers.layers_arns["b3stocks-deps"]
+    "arn:aws:lambda:${local.region_name}:336392948345:layer:AWSSDKPandas-Python312:18"
   ]
 
   create_eventbridge_trigger = true
@@ -54,13 +49,13 @@ module "aws_lambda_function_get_investment_portfolios" {
     module.aws_iam_roles
   ]
 }
-*/
+
 
 /* --------------------------------------------------------
    LAMBDA FUNCTION: get-active-stocks
    Scrapes active stock data from B3 sources, processes
    the information, and stores it in DynamoDB. Publishes
-   notifications to SNS. Scheduled daily at 21:00 UTC.
+   notifications to SNS.
 -------------------------------------------------------- */
 
 module "aws_lambda_function_get_active_stocks" {
@@ -85,13 +80,39 @@ module "aws_lambda_function_get_active_stocks" {
     module.aws_lambda_layers.layers_arns["b3stocks-deps"]
   ]
 
-  create_eventbridge_trigger = true
-  cron_expression            = "cron(0 21 * * ? *)"
-
   tags = var.tags
 
   depends_on = [
     module.aws_iam_roles
+  ]
+}
+
+# Adding permission for another Lambda to invoke this one
+resource "aws_lambda_permission" "invoke_permissions_to_get_active_stocks" {
+  statement_id  = "AllowExecutionFromSourceLambda"
+  action        = "lambda:InvokeFunction"
+  function_name = module.aws_lambda_function_get_active_stocks.function_name
+  principal     = "lambda.amazonaws.com"
+  source_arn    = module.aws_lambda_function_delete_already_processed_partitions.function_arn
+
+  depends_on = [
+    module.aws_lambda_function_get_active_stocks,
+    module.aws_lambda_function_delete_already_processed_partitions
+  ]
+}
+
+# Setting up destination configuration to invoke get-active-stocks Lambda
+resource "aws_lambda_function_event_invoke_config" "destination-pynvest-lambda-get-tickers" {
+  function_name = module.aws_lambda_function_delete_already_processed_partitions.function_name
+
+  destination_config {
+    on_success {
+      destination = module.aws_lambda_function_get_active_stocks.function_arn
+    }
+  }
+
+  depends_on = [
+    aws_lambda_permission.invoke_permissions_to_get_active_stocks
   ]
 }
 
@@ -171,6 +192,10 @@ module "aws_lambda_function_check_batch_processes_completion" {
   source_code_path = "../app"
   lambda_handler   = "app.src.features.check_batch_processes_completion.presentation.check_batch_processes_completion_presentation.handler"
 
+  environment_variables = {
+    SNS_BATCH_PROCESSES_COMPLETION_TOPIC_NAME = module.sns_topic_batch_processes_completion.topic_name
+  }
+
   layers_arns = [
     module.aws_lambda_layers.layers_arns["b3stocks-deps"]
   ]
@@ -182,6 +207,7 @@ module "aws_lambda_function_check_batch_processes_completion" {
   ]
 }
 
+# Trigger Lambda from DynamoDB Streams
 resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processes_completion" {
   event_source_arn       = module.aws_dynamodb_table_tbl_b3stocks_batch_process_control.stream_arn
   function_name          = module.aws_lambda_function_check_batch_processes_completion.function_name
@@ -197,27 +223,30 @@ resource "aws_lambda_event_source_mapping" "dynamodb_stream_check_batch_processe
 
 
 /* --------------------------------------------------------
-   LAMBDA FUNCTION: send-batch-processes-completion-mails
+   LAMBDA FUNCTION: send-batch-completion-emails
    Receives notification from SNS topic and sends emails
    about batch processes completion using SES.
 -------------------------------------------------------- */
 
-module "aws_lambda_function_send_batch_processes_completion_mails" {
+module "aws_lambda_function_send_batch_completion_emails" {
   source = "git::https://github.com/ThiagoPanini/tfbox.git?ref=aws/lambda-function/v0.7.0"
 
-  function_name = "b3stocks-send-batch-processes-completion-mails"
+  function_name = "b3stocks-send-batch-completion-emails"
   description   = "Sends emails about batch processes completion"
   runtime       = "python3.12"
   timeout       = 180
 
-  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-send-batch-processes-completion-mails"]
+  role_arn = module.aws_iam_roles.roles_arns["role-b3stocks-lambda-send-batch-completion-emails"]
 
   source_code_path = "../app"
-  lambda_handler   = "app.src.features.send_batch_processes_completion_mails.presentation.send_batch_processes_completion_mails_presentation.handler"
+  lambda_handler   = "app.src.features.send_batch_completion_emails.presentation.send_batch_completion_emails_presentation.handler"
 
-  layers_arns = [
-    module.aws_lambda_layers.layers_arns["b3stocks-deps"]
-  ]
+  environment_variables = {
+    S3_ARTIFACTS_BUCKET_NAME_PREFIX                   = var.s3_artifacts_bucket_name_prefix
+    S3_BATCH_PROCESSES_EMAIL_BODY_TEMPLATE_OBJECT_KEY = "${var.s3_email_templates_folder_prefix}/batch_completion_template.html"
+    SES_SENDER_EMAIL                                  = var.ses_sender_email
+    SES_RECIPIENT_EMAILS                              = "[\"${join("\",\"", var.ses_recipient_emails)}\"]"
+  }
 
   tags = var.tags
 
@@ -226,3 +255,16 @@ module "aws_lambda_function_send_batch_processes_completion_mails" {
   ]
 }
 
+# Allow SNS to invoke the Lambda function
+resource "aws_lambda_permission" "allow_sns_batch_completion" {
+  statement_id  = "AllowExecutionFromSNS"
+  action        = "lambda:InvokeFunction"
+  function_name = module.aws_lambda_function_send_batch_completion_emails.function_name
+  principal     = "sns.amazonaws.com"
+  source_arn    = module.sns_topic_batch_processes_completion.topic_arn
+
+  depends_on = [
+    module.aws_lambda_function_send_batch_completion_emails,
+    module.sns_topic_batch_processes_completion
+  ]
+}

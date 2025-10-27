@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B3Stocks - Batch Process Success</title>
+    <style>
+        /* CSS Reset for email compatibility */
+        body, table, td, p, div, a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        table, td {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            display: block;
+            outline: none;
+            text-decoration: none;
+        }
+
+        /* Dark theme color palette */
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-accent: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+            --text-muted: #8a8a8a;
+            --success-primary: #00d4aa;
+            --success-secondary: #00b894;
+            --accent-gold: #f39c12;
+            --border-color: #404040;
+        }
+
+        /* Base styles */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background-color: #1a1a1a !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #ffffff;
+        }
+
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1a1a1a;
+        }
+
+        /* Header with gradient */
+        .header {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            padding: 40px 30px;
+            text-align: center;
+            border-bottom: 3px solid #00d4aa;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4aa 0%, #00b894 50%, #f39c12 100%);
+        }
+
+        /* Logo/Brand area with placeholder for animated GIF */
+        .brand-section {
+            margin-bottom: 20px;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            border-radius: 16px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            /* This is where an animated GIF or SVG logo would go */
+        }
+
+        .brand-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 8px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-subtitle {
+            font-size: 16px;
+            color: #b8b8b8;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        /* Success indicator */
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #00d4aa, #00b894);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+        }
+
+        .success-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        /* Main content */
+        .content {
+            background-color: #2d2d2d;
+            padding: 40px 30px;
+        }
+
+        .process-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        .process-description {
+            font-size: 16px;
+            color: #b8b8b8;
+            text-align: center;
+            margin: 0 0 30px 0;
+            line-height: 1.5;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 30px 0;
+            justify-content: space-between;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, #3a3a3a, #2d2d2d);
+            border: 1px solid #404040;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00d4aa;
+            margin: 0 0 8px 0;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: #8a8a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        /* Detailed metrics table */
+        .metrics-section {
+            margin: 40px 0;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin: 0 0 20px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #404040;
+        }
+
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #3a3a3a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .metrics-table th {
+            background: linear-gradient(135deg, #404040, #3a3a3a);
+            color: #ffffff;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metrics-table td {
+            padding: 16px;
+            border-bottom: 1px solid #404040;
+            color: #b8b8b8;
+            font-size: 14px;
+        }
+
+        .metrics-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .metric-highlight {
+            color: #00d4aa;
+            font-weight: 600;
+        }
+
+        /* Processing details */
+        .processing-details {
+            background: #3a3a3a;
+            border-left: 4px solid #00d4aa;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            color: #8a8a8a;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        /* Performance summary */
+        .performance-bar {
+            background: #404040;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .performance-fill {
+            background: linear-gradient(90deg, #00d4aa, #00b894);
+            height: 100%;
+            width: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #1a1a1a;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #404040;
+        }
+
+        .footer-content {
+            color: #8a8a8a;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .footer-brand {
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        /* Responsive design */
+        @media only screen and (max-width: 480px) {
+            .email-container {
+                width: 100% !important;
+            }
+            
+            .header,
+            .content,
+            .footer {
+                padding: 20px !important;
+            }
+            
+            .kpi-grid {
+                flex-direction: column;
+            }
+            
+            .kpi-card {
+                min-width: auto;
+            }
+            
+            .brand-title {
+                font-size: 24px !important;
+            }
+            
+            .metrics-table th,
+            .metrics-table td {
+                padding: 12px 8px !important;
+                font-size: 12px !important;
+            }
+        }
+
+        /* Dark mode specific overrides */
+        @media (prefers-color-scheme: dark) {
+            .email-container {
+                background-color: #1a1a1a !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="brand-section">
+                <!-- Placeholder for animated logo/GIF -->
+                <div class="logo-placeholder">
+                    B3
+                </div>
+                <h1 class="brand-title">B3Stocks</h1>
+                <p class="brand-subtitle">Brazilian Stock Market Analytics</p>
+            </div>
+            
+            <div class="success-badge">
+                <span class="success-icon">✓</span>
+                Process Completed Successfully
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <h2 class="process-title">{{batch_process_name}}</h2>
+            <p class="process-description">
+                Your batch process has been completed successfully. All stock metrics have been 
+                processed and stored in the system for further analysis.
+            </p>
+
+            <!-- KPI Overview Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value">{{total_records}}</div>
+                    <div class="kpi-label">Records Processed</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">{{execution_time}}</div>
+                    <div class="kpi-label">Execution Time</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">{{success_rate}}%</div>
+                    <div class="kpi-label">Success Rate</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">{{data_points}}</div>
+                    <div class="kpi-label">Data Points</div>
+                </div>
+            </div>
+
+            <!-- Performance Indicator -->
+            <div class="performance-bar">
+                <div class="performance-fill"></div>
+            </div>
+
+            <!-- Processing Details -->
+            <div class="processing-details">
+                <div class="detail-item">
+                    <span class="detail-label">Process Started:</span>
+                    <span class="detail-value">{{process_start_time}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Process Completed:</span>
+                    <span class="detail-value">{{current_timestamp}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Data Source:</span>
+                    <span class="detail-value">Fundamentus.com.br</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Target Database:</span>
+                    <span class="detail-value">{{dynamodb_table_name}}</span>
+                </div>
+            </div>
+
+            <!-- Detailed Metrics -->
+            <div class="metrics-section">
+                <h3 class="section-title">Processing Summary</h3>
+                <table class="metrics-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Stock Symbols Processed</td>
+                            <td class="metric-highlight">{{unique_stock_count}}</td>
+                            <td>✓ Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Financial Metrics Extracted</td>
+                            <td class="metric-highlight">{{metrics_extracted}}</td>
+                            <td>✓ Complete</td>
+                        </tr>
+                        <tr>
+                            <td>Data Validation</td>
+                            <td class="metric-highlight">{{validation_rate}}%</td>
+                            <td>✓ Passed</td>
+                        </tr>
+                        <tr>
+                            <td>Database Writes</td>
+                            <td class="metric-highlight">{{db_writes}}</td>
+                            <td>✓ Successful</td>
+                        </tr>
+                        <tr>
+                            <td>API Requests</td>
+                            <td class="metric-highlight">{{api_requests}}</td>
+                            <td>✓ No Errors</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Process Information -->
+            <div class="processing-details">
+                <div class="detail-item">
+                    <span class="detail-label">Next Scheduled Run:</span>
+                    <span class="detail-value">{{next_execution_date}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">System Environment:</span>
+                    <span class="detail-value">{{environment}}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Process Version:</span>
+                    <span class="detail-value">{{process_version}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">B3Stocks Platform</div>
+                <p>This automated notification confirms the successful completion of your batch process.</p>
+                <p>Generated on {{current_timestamp}} | Process ID: {{process_id}}</p>
+                <p>© 2025 B3Stocks - Brazilian Stock Market Analytics</p>
+                <p style="margin-top: 20px; font-size: 11px;">
+                    This is an automated message. Please do not reply to this email.<br>
+                    For technical support, contact the development team.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
