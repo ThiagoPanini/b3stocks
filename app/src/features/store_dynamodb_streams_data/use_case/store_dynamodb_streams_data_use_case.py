@@ -110,8 +110,8 @@ class StoreDynamoDBStreamsDataUseCase:
         # Build the output data for each record in the event stream
         streams_output_data: list[DynamoDBStreamsOutputData] = []
 
-        for record in input_dto.records:
-            try:
+        try:
+            for record in input_dto.records:
                 table_record = DynamoDBStreamsOutputData(
                     table_name=self.__get_table_name_from_source_arn(record.event_source_arn),
                     event_id=record.event_id,
@@ -132,26 +132,19 @@ class StoreDynamoDBStreamsDataUseCase:
                 )
 
                 streams_output_data.append(table_record)
-            
-            except Exception:
-                table_name = self.__get_table_name_from_source_arn(record.event_source_arn)
-                logger.exception(f"Error processing record with event ID {record.event_id} of source "
-                                 f"table {table_name}")
-                raise
 
-        try:
-            logger.info("Storing and syncing CDC data from DynamoDB Streams to a CDC table in the data catalog.")
+            logger.info("Storing and syncing CDC data from DynamoDB Streams to a CDC table in the data catalog")
             self.cdc_data_catalog_sync_adapter.store_and_sync_cdc_data(data=streams_output_data)
 
-            logger.info("Storing and syncing SoR data from DynamoDB Streams to a SoR table in the data catalog.")
+            logger.info("Storing and syncing SoR data from DynamoDB Streams to a SoR table in the data catalog")
             self.cdc_data_catalog_sync_adapter.store_and_sync_sor_data(data=streams_output_data)
 
-        except Exception:
-            logger.exception("Error storing and syncing CDC and SoR data to the data catalog.")
-            logger.exception(f"Event: {input_dto}")
-            raise
+            logger.info(f"Successfully stored {len(streams_output_data)} records from DynamoDB Streams")
 
-        logger.info(f"Successfully stored {len(streams_output_data)} records from DynamoDB Streams.")
+        except Exception:
+            logger.exception("Error executing the use case for storing DynamoDB Streams data for the "
+                             f"following input DTO: {input_dto}")
+            raise
 
         return OutputDTO.ok(
             data={

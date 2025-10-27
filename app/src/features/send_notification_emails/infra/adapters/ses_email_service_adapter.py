@@ -63,11 +63,11 @@ class SESEmailServiceAdapter(IEmailServiceAdapter):
         """
         try:
             for key, value in placeholders.items():
-                template = template.replace(f"{{{{{key}}}}}", value)
+                template = template.replace(f"{{{{{key}}}}}", str(value))
             return template
-        except Exception as e:
+        except Exception:
             self.logger.exception("Error replacing placeholders in email HTML template")
-            raise e
+            raise
 
 
     def send_email(self, email_info: NotificationEmailInfo) -> None:

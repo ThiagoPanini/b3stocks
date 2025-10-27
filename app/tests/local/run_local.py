@@ -74,10 +74,10 @@ DESCRIPTION:
     This feature provides functionality to scrape and retrieve end-of-day stock metrics from
     the Fundamentus investment website and process it for further use.
 """
-# response = get_fundamentus_eod_stock_metrics_handler(
-#     event=MOCKED_SQS_EVENT_FOR_ACTIVE_STOCKS_QUEUE,
-#     context=None
-# )
+response = get_fundamentus_eod_stock_metrics_handler(
+    event=MOCKED_SQS_EVENT_FOR_ACTIVE_STOCKS_QUEUE,
+    context=None
+)
 
 
 """
@@ -87,10 +87,10 @@ DESCRIPTION:
     This feature provides functionality to receive stream data from a batch process control
     DynamoDB table and check the completion status of batch processes.
 """
-# response = check_batch_processes_completion_handler(
-#     event=MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE,
-#     context=None
-# )
+response = check_batch_processes_completion_handler(
+    event=MOCKED_DYNAMODB_STREAMS_EVENT_FOR_BATCH_PROCESS_CONTROL_TABLE,
+    context=None
+)
 
 
 """
@@ -100,10 +100,10 @@ DESCRIPTION:
     This feature provides functionality to send email notifications upon the completion of
     batch processes.
 """
-# response = send_batch_completion_emails_handler(
-#     event=MOCKED_SNS_EVENT_FOR_BATCH_COMPLETION_TOPIC,
-#     context=None
-# )
+response = send_batch_completion_emails_handler(
+    event=MOCKED_SNS_EVENT_FOR_BATCH_COMPLETION_TOPIC,
+    context=None
+)
 
 
 """

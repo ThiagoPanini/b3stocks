@@ -46,7 +46,7 @@ class DeleteAlreadyProcessedPartitionsUseCase:
                 )
             ]
 
-            logger.info(f"Deleting already processed partitions for tables: {tables_to_cleanup}")
+            logger.info(f"Deleting already processed partitions for pre-selected tables")
             self.data_catalog_adapter.delete_processed_partitions(tables=tables_to_cleanup)
 
             return OutputDTO.ok(

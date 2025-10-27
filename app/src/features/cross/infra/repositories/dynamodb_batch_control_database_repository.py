@@ -1,4 +1,5 @@
 import os
+from typing import Any
 from datetime import datetime
 
 import boto3
@@ -60,7 +61,7 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
         Args:
             batch_process (BatchProcess): The batch process details to update.
         """
-        serialized_item = SerializationUtils.json_serialize(batch_process)
+        serialized_item: dict[str, Any] = SerializationUtils.json_serialize(batch_process)
         try:
             current_batch_process = BatchProcessControlModel.get(
                 serialized_item["process_name"],
@@ -90,7 +91,7 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
                 )
 
         except DoesNotExist:
-            # If item does not exist, create a new one  
+            # If item does not exist (e.g., during initial processing), creates a new one
             try:
                 item = BatchProcessControlModel(**serialized_item)
                 item.save()

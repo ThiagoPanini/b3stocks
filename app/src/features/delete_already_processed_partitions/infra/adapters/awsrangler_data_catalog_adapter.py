@@ -142,6 +142,6 @@ class AWSRanglerDataCatalogAdapter(IDataCatalogAdapter):
                     )
                 else:
                     logger.info(
-                        f"Partition {partition.partition_value} does not exist in table "
-                        f"{table.database_name}.{table.table_name}"
+                        f"Partition {partition.partition_column}={partition.partition_value} "
+                        f"does not exist in table {table.database_name}.{table.table_name}"
                     )

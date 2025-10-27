@@ -50,24 +50,18 @@ class SendBatchCompletionEMailsUseCase:
                 input_dto.template_endpoint
             )
             logger.info("Successfully fetched email body template")
-        except Exception:
-            logger.exception(f"Error fetching email body template from {input_dto.template_endpoint}")
-            raise
 
-        try:
             process_name: str = " ".join(word.capitalize() for word in batch_process.process_name.value.split("_"))
             process_status: str = batch_process.process_status.value.replace(" ", "_").capitalize()
             email_setup: EmailSetup = EmailSetup(
                 subject=f"💰 b3stocks | {process_status} {process_name}",
                 sender=os.getenv("SES_SENDER_EMAIL"),
-                recipients=json.loads(os.getenv("SES_RECIPIENT_EMAILS")),
+                recipients=[
+                    os.getenv("SES_SENDER_EMAIL")  # The sender also receives the email
+                ],
                 body=email_body
             )
-        except TypeError:
-            logger.exception("Error building email setup entity")
-            raise
 
-        try:
             email_placeholders: dict[str, Any] = {
                 "batch_process_name": batch_process.process_name.value,
                 "completion_status": batch_process.process_status.value,
@@ -82,12 +76,18 @@ class SendBatchCompletionEMailsUseCase:
                 placeholders=email_placeholders
             )
             logger.info(f"Successfully sent completion email to {email_setup.recipients}")
+        
         except TypeError:
-            logger.exception("Error preparing and sending completion email for recipients")
+            logger.exception("Error building email setup or sending email due to type mismatch")
+            raise
+
+        except Exception:
+            logger.exception("Error executing the use case for sending batch completion emails")
             raise
 
         return OutputDTO.ok(
             data={
-                "OK": True
+                "email_sender": email_setup.sender,
+                "email_recipients": email_setup.recipients,
             }
         )

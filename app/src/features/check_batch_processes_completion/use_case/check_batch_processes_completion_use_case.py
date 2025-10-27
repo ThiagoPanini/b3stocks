@@ -66,7 +66,7 @@ class CheckBatchProcessesCompletionUseCase:
                         f"Current status: {batch_process.process_status.value}."
                     )
         except Exception:
-            logger.exception("Error checking batch processes completion")
+            logger.exception("Error checking batch processes completion and sending a message to SNS topic")
             raise
 
         return OutputDTO.ok(

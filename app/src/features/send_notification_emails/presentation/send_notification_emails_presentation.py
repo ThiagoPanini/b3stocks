@@ -41,8 +41,7 @@ def handler(event: dict[str, Any], context: Any = None) -> dict:
         required_env_vars=[
             "S3_ARTIFACTS_BUCKET_NAME_PREFIX",
             "S3_EMAIL_TEMPLATES_FOLDER_PREFIX",
-            "SES_SENDER_EMAIL",
-            "SES_RECIPIENT_EMAILS"
+            "SES_SENDER_EMAIL"
         ]
     )
 

@@ -41,41 +41,29 @@ class SendNotificationEmailsUseCase:
 
         try:
             logger.info(f"Fetching email body template from {template_setup.template_endpoint_url}")
-            email_body_html: str = self.email_service_adapter.fetch_email_html_template(
+            email_body_template: str = self.email_service_adapter.fetch_email_html_template(
                 template_endpoint=template_setup.template_endpoint_url
             )
-            logger.info("Successfully fetched email body template")
-        except Exception:
-            logger.exception(f"Error fetching email body template from {template_setup.template_endpoint_url}")
-            raise
 
-        try:
             logger.info("Replacing email body template placeholders with actual values")
-            email_body_filled: str = self.email_service_adapter.replace_email_html_template_placeholders(
-                template=email_body_html,
+            email_body: str = self.email_service_adapter.replace_email_html_template_placeholders(
+                template=email_body_template,
                 placeholders=template_setup.template_placeholders
             )
-            logger.info("Successfully replaced email body template placeholders with actual values")
-        except Exception:
-            logger.exception("Error replacing email body template placeholders with actual values")
-            raise
 
-        try:
             logger.info(f"Sending notification email to {', '.join(email_info.recipients)}")
             self.email_service_adapter.send_email(
-                subject=email_info.subject,
-                body_html=email_body_filled,
-                sender=email_info.sender,
-                recipients=email_info.recipients,
-                reply_to_addresses=email_info.reply_to_addresses
+                email_info=email_info
             )
             logger.info(f"Successfully sent notification email to {', '.join(email_info.recipients)}")
+
         except Exception:
             logger.exception(f"Error sending notification email to {', '.join(email_info.recipients)}")
             raise
 
         return OutputDTO.ok(
             data={
-                "message": f"Notification email sent to {', '.join(email_info.recipients)}"
+                "email_sender": email_info.sender,
+                "email_recipients": email_info.recipients,
             }
         )

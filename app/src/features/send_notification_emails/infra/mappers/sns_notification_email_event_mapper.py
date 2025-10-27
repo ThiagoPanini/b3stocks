@@ -102,7 +102,9 @@ class SNSNotificationEmailEventMapper:
                 notification_type=notification_type,
                 email_info=NotificationEmailInfo(
                     sender=os.getenv("SES_SENDER_EMAIL"),
-                    recipients=json.loads(os.getenv("SES_RECIPIENT_EMAILS")),
+                    recipients=[
+                        os.getenv("SES_SENDER_EMAIL")  # The sender also receives the email
+                    ],
                     subject=email_subject,
                     template_setup=NotificationEmailTemplateSetup(
                         template_endpoint_url=template_endpoint_url,
