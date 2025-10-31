@@ -49,7 +49,6 @@
     - [🔄 Automated Data Collection](#-automated-data-collection)
     - [📊 Multi-Layer Data Architecture](#-multi-layer-data-architecture)
     - [🚀 Event-Driven Processing](#-event-driven-processing)
-    - [📧 Intelligent Notifications](#-intelligent-notifications)
     - [🏗️ Clean Architecture Implementation](#️-clean-architecture-implementation)
   - [🏛️ Architecture and Code Structure](#️-architecture-and-code-structure)
     - [High-Level Architecture](#high-level-architecture)
@@ -60,19 +59,12 @@
   - [🛠️ Technologies Used](#️-technologies-used)
     - [Core Technologies](#core-technologies)
     - [Python Libraries](#python-libraries)
-    - [AWS Services](#aws-services)
-    - [Why These Technologies?](#why-these-technologies)
   - [🚀 Installation and Execution](#-installation-and-execution)
     - [Prerequisites](#prerequisites)
     - [Local Development Setup](#local-development-setup)
     - [Infrastructure Deployment](#infrastructure-deployment)
     - [Running the Pipeline](#running-the-pipeline)
     - [Local Testing (Optional)](#local-testing-optional)
-  - [🧪 Testing](#-testing)
-    - [Test Structure](#test-structure)
-    - [Running Unit Tests](#running-unit-tests)
-    - [Integration Testing](#integration-testing)
-    - [Testing Batch Completion Emails](#testing-batch-completion-emails)
   - [🏗️ Deployment \& Infrastructure](#️-deployment--infrastructure)
     - [AWS Services Overview](#aws-services-overview)
     - [Infrastructure Components](#infrastructure-components)
@@ -82,8 +74,6 @@
       - [4. **AWS Glue Data Catalog**](#4-aws-glue-data-catalog)
       - [5. **SNS Topics**](#5-sns-topics)
       - [6. **SQS Queues**](#6-sqs-queues)
-    - [Deployment Process](#deployment-process)
-    - [Cost Estimation](#cost-estimation)
   - [🤝 Contributing](#-contributing)
     - [How to Contribute](#how-to-contribute)
     - [Coding Conventions](#coding-conventions)
@@ -125,11 +115,6 @@
 - **SNS/SQS Integration**: Decoupled message-driven architecture for scalable processing
 - **Batch Process Tracking**: Monitors long-running processes and sends completion emails with detailed reports
 
-### 📧 Intelligent Notifications
-
-- **Batch Completion Emails**: Automated HTML emails via AWS SES when batch processes complete
-- **Email Templates**: S3-stored HTML templates with dynamic placeholder replacement
-- **Process Status Tracking**: Real-time tracking of batch processes with completion percentage
 
 ### 🏗️ Clean Architecture Implementation
 
@@ -309,25 +294,6 @@ The codebase strictly follows **Clean Architecture** and **SOLID principles**:
 | **requests** | 2.32.3 | HTTP client for web scraping |
 | **beautifulsoup4** | 4.13.3 | HTML parsing for Fundamentus data extraction |
 | **lxml** | 5.3.1 | Fast XML/HTML parser backend |
-
-### AWS Services
-
-- **AWS EventBridge**: Scheduled cron triggers for daily data collection
-- **AWS SNS (Simple Notification Service)**: Pub/sub messaging for event distribution
-- **AWS SQS (Simple Queue Service)**: Message buffering and controlled Lambda invocation
-- **AWS SES (Simple Email Service)**: Transactional email delivery for batch notifications
-- **AWS CloudWatch**: Logging, monitoring, and observability
-- **AWS IAM**: Fine-grained access control and Lambda execution roles
-- **AWS KMS**: Encryption key management for SNS topics
-
-### Why These Technologies?
-
-- **Serverless Architecture**: No servers to manage, automatic scaling, pay-per-use pricing
-- **Event-Driven Design**: Decoupled components, easier to maintain and extend
-- **Terraform**: Version-controlled infrastructure, reproducible deployments, modularity
-- **Python 3.12**: Modern language features, excellent AWS SDK support, strong data processing ecosystem
-- **DynamoDB**: Single-digit millisecond latency, built-in CDC via Streams, scales automatically
-- **S3 + Glue + Athena**: Cost-effective data lake architecture, SQL queries over Parquet files
 
 ---
 
@@ -530,69 +496,6 @@ print(result)
 
 ---
 
-## 🧪 Testing
-
-### Test Structure
-
-The project includes test infrastructure in the `app/tests/` directory:
-
-```
-app/tests/
-├── local/          # Local development tests
-├── mocks/          # Mock data and fixtures
-└── notebooks/      # Jupyter notebooks for exploratory testing
-```
-
-### Running Unit Tests
-
-Currently, the project is focused on integration testing via deployed Lambda functions. To run local tests:
-
-```bash
-cd app
-python -m pytest tests/
-```
-
-*(Note: Based on the project structure analysis, formal unit tests are still in development. The current approach relies on AWS Lambda execution logs and CloudWatch monitoring.)*
-
-### Integration Testing
-
-Test deployed Lambda functions:
-
-1. **Test via AWS Console**:
-   - Navigate to AWS Lambda Console
-   - Select a function (e.g., `b3stocks-get-active-stocks`)
-   - Click "Test" tab
-   - Create a test event with `{}`
-   - Click "Test" and review execution results
-
-2. **Test via AWS CLI**:
-
-   ```bash
-   aws lambda invoke \
-     --function-name b3stocks-get-active-stocks \
-     --log-type Tail \
-     --query 'LogResult' \
-     --output text \
-     response.json | base64 --decode
-   ```
-
-3. **Monitor CloudWatch Logs**:
-
-   ```bash
-   aws logs tail /aws/lambda/b3stocks-get-active-stocks --follow
-   ```
-
-### Testing Batch Completion Emails
-
-To test email notifications:
-
-1. Ensure SES email is verified
-2. Manually update a batch process in DynamoDB to "COMPLETED" status
-3. DynamoDB Stream will trigger the notification flow
-4. Check your email inbox for the batch completion report
-
----
-
 ## 🏗️ Deployment & Infrastructure
 
 ### AWS Services Overview
@@ -668,41 +571,6 @@ The **b3stocks** platform leverages the following AWS services:
 - `b3stocks-fundamentus-eod-stock-metrics`: Buffers stock codes from SNS
 - `b3stocks-fundamentus-eod-stock-metrics-dlq`: Dead letter queue for failed messages
 
-### Deployment Process
-
-The deployment follows this workflow:
-
-1. **Terraform Init**: Downloads providers and modules
-2. **Terraform Plan**: Generates execution plan
-3. **Terraform Apply**: Creates/updates AWS resources
-   - IAM roles and policies
-   - S3 buckets
-   - DynamoDB tables
-   - Lambda functions (zips source code and uploads)
-   - EventBridge rules
-   - SNS/SQS resources
-   - Glue databases and tables
-   - SES email identities
-
-4. **Post-Deployment**:
-   - Verify SES email address
-   - Upload portfolio YAML files to S3 artifacts bucket (optional)
-   - Monitor first scheduled execution via CloudWatch Logs
-
-### Cost Estimation
-
-For light usage (daily runs processing ~500 stocks):
-
-- **Lambda**: ~$0.50/month (with Free Tier)
-- **DynamoDB**: ~$2/month (with on-demand pricing)
-- **S3**: ~$0.50/month (minimal storage)
-- **Glue Data Catalog**: First million objects free
-- **SNS/SQS**: ~$0.10/month
-- **SES**: First 62,000 emails/month free (from Lambda)
-
-**Estimated Total: ~$3-5/month**
-
-*(Costs may vary based on usage patterns and AWS region)*
 
 ---
 
