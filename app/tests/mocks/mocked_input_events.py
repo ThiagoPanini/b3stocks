@@ -1,10 +1,3 @@
-from app.src.features.cross.utils.date_and_time import DateAndTimeUtils
-from app.src.features.cross.domain.value_objects import (
-   Timezone,
-   DateFormat
-)
-
-
 # Input event for streaming DynamoDB data
 MOCKED_DYNAMODB_STREAMS_EVENT_FOR_ACTIVE_STOCKS_TABLE = {
     "Records": [
@@ -205,7 +198,6 @@ MOCKED_SNS_EVENT_FOR_BATCH_COMPLETION_TOPIC = {
       }
    ]
 }
-
 
 # Input event for SNS notification email - SUCCESS
 MOCKED_SNS_EVENT_NOTIFICATION_EMAIL_SUCCESS = {
