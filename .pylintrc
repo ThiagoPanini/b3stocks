@@ -81,7 +81,7 @@ ignored-modules=
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
-init-hook="import os, sys, pathlib; current = pathlib.Path().resolve(); while current != current.parent: if (current / 'app').exists(): sys.path.insert(0, str(current)); break"
+# init-hook="import sys, pathlib; [sys.path.insert(0, str(p)) for p in pathlib.Path().resolve().parents if (p / 'app').exists()]"
 
 # Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
 # number of processors available to use, and will cap the count on Windows to
