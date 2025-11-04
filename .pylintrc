@@ -12,6 +12,7 @@ disable=
       W0102,  # dangeours-default-value
       W0105,  # pointless-string-statement
       R0902,  # too-many-instance-attributes
+      R0911,  # too-many-return-statements
 
 # Analyse import fallback blocks. This can be used to support both Python 2 and
 # 3 compatible code, which means that the block might have code that exists

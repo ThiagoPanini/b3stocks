@@ -8,7 +8,8 @@ from app.src.features.cross.domain.dtos.dynamodb_streams_input_dto import (
 from app.src.features.store_dynamodb_streams_data.domain.entities.dynamodb_streams_output_data import (
     DynamoDBStreamsOutputData
 )
-from app.src.features.store_dynamodb_streams_data.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
+from app.src.features.store_dynamodb_streams_data.domain.interfaces.\
+    cdc_data_catalog_sync_adapter_interface import (
     ICDCDataCatalogSyncAdapter
 )
 from app.src.features.cross.utils.log import LogUtils
