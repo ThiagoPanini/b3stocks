@@ -62,11 +62,11 @@ jobs:
 
       - name: ▶️ Terraform Init
         run: terraform init
-        working-directory: infra/aws/get-active-tickers
+        working-directory: infra
 
       - name: ⏏️ Terraform Validate
         run: terraform validate
-        working-directory: infra/aws/get-active-tickers
+        working-directory: infra
 
   open-pr-to-main:
     name: 🔓 open-pr-to-main
