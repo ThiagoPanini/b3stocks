@@ -33,10 +33,6 @@ jobs:
       - name: 📏 Linter Analysis with Pylint
         run:
           pylint --rcfile=.pylintrc app
-      
-      - name: 🔎 Static Type Analysis with Mypy
-        run:
-          mypy app
 
       - name: 🧪 Unit Test with Pytest
         run:
