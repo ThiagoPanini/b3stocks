@@ -34,10 +34,10 @@ class SNSTopicAdapter(ITopicAdapter):
         # Getting topic attributes needed to construct the ARN
         account_id = boto3.client("sts").get_caller_identity()["Account"]
         region_name = boto3.session.Session().region_name
-        
+
         return f"arn:aws:sns:{region_name}:{account_id}:{self.topic_name}"
 
-    
+
     @timing_decorator
     def batch_publish_messages(self, messages: list[StockMessageEnvelop]) -> None:
         """
@@ -46,7 +46,7 @@ class SNSTopicAdapter(ITopicAdapter):
         Args:
             messages (list[StockMessageEnvelop]): A list of messages to publish.
         """
-        
+
         # Preparing messages to be sent in batches
         try:
             entries = [
@@ -78,9 +78,8 @@ class SNSTopicAdapter(ITopicAdapter):
                     log_pace=20,
                     log_msg=f"Published {i // 10} batches of 10 messages each to topic"
                 )
+            self.logger.info(f"Successfully published messages to SNS topic {self.topic_arn}")
 
         except Exception:
             self.logger.exception("Error publishing batch messages to SNS")
             raise
-        else:
-            self.logger.info(f"Successfully published messages to SNS topic {self.topic_arn}")

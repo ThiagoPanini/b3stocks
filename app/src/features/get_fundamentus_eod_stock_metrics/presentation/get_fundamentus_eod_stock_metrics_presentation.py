@@ -1,25 +1,34 @@
 from typing import Any
 
-from app.src.features.get_fundamentus_eod_stock_metrics.infra.mappers.sqs_messages_lambda_event_mapper import (
-    SQSMessagesLambdaEventMapper
-)
-from app.src.features.get_fundamentus_eod_stock_metrics.infra.adapters.fundamentus_html_parser_adapter import (
-    FundamentusHTMLParserAdapter
-)
-from app.src.features.get_fundamentus_eod_stock_metrics.infra.repositories.dynamodb_database_repository import (
-    DynamoDBDatabaseRepository
-)
-from app.src.features.get_fundamentus_eod_stock_metrics.use_case.get_fundamentus_eod_stock_metrics_use_case import (
-    GetFundamentusEodStockMetricsUseCase
-)
+from app.src.features.get_fundamentus_eod_stock_metrics.infra.mappers.\
+    sqs_messages_lambda_event_mapper import (
+        SQSMessagesLambdaEventMapper
+    )
+from app.src.features.get_fundamentus_eod_stock_metrics.infra.adapters.\
+    fundamentus_html_parser_adapter import (
+        FundamentusHTMLParserAdapter
+    )
+from app.src.features.get_fundamentus_eod_stock_metrics.infra.repositories.\
+    dynamodb_database_repository import (
+        DynamoDBDatabaseRepository
+    )
+from app.src.features.get_fundamentus_eod_stock_metrics.use_case.\
+    get_fundamentus_eod_stock_metrics_use_case import (
+        GetFundamentusEodStockMetricsUseCase
+    )
 
-from app.src.features.cross.infra.adapters.requests_http_client_adapter import RequestsHTTPClientAdapter
-from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
-from app.src.features.cross.infra.repositories.dynamodb_batch_control_database_repository import (
-    DynamoDBBatchControlDatabaseRepository
+from app.src.features.cross.infra.adapters.\
+    requests_http_client_adapter import (
+        RequestsHTTPClientAdapter
+    )
+from app.src.features.cross.infra.mappers.http_response_mapper import (
+    HTTPResponseMapper
 )
+from app.src.features.cross.infra.repositories.\
+    dynamodb_batch_control_database_repository import (
+        DynamoDBBatchControlDatabaseRepository
+    )
 from app.src.features.cross.utils.env import EnvironmentVarsUtils
-
 
 # Initializing mappers, adapters and repositories
 event_mapper = SQSMessagesLambdaEventMapper()

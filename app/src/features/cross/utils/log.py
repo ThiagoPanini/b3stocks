@@ -25,7 +25,7 @@ class LogUtils:
         # Creating console handler and a standard formatter
         ch = logging.StreamHandler()
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        
+
         # Setting level, formatter and adding handler to the logger
         ch.setLevel(level)
         ch.setFormatter(formatter)

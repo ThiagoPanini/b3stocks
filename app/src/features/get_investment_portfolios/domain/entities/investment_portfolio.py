@@ -45,6 +45,8 @@ class InvestmentPortfolio:
         self.owner_mail = self.owner_mail.strip()
 
         # Simple email regex (not fully RFC compliant but good for validation)
-        email_pattern = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
+        email_pattern = re.compile(
+            r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+        )
         if not email_pattern.match(self.owner_mail):
             raise ValueError(f"Invalid owner_mail format: {self.owner_mail}")

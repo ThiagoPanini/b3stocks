@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
-from app.src.features.get_investment_portfolios.domain.entities import InvestmentPortfolio
+from app.src.features.get_investment_portfolios.domain.entities import (
+    InvestmentPortfolio
+)
 
 
 class IInvestmentPortfolioAdapter(ABC):
@@ -15,6 +17,6 @@ class IInvestmentPortfolioAdapter(ABC):
 
         Returns:
             list[InvestmentPortfolio]:
-                A list of InvestmentPortfolio instances containing, each one, an individual
-                portfolio data.
+                A list of InvestmentPortfolio instances containing, each one,
+                an individual portfolio data.
         """

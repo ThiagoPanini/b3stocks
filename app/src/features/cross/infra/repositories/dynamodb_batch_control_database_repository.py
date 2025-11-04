@@ -44,7 +44,7 @@ class BatchProcessControlModel(Model):
         self.Meta.table_name = os.getenv("DYNAMODB_BATCH_PROCESS_CONTROL_TABLE_NAME")
         super().__init__(*args, **kwargs)
 
-    
+
 class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
     """
     Implementation of the batch process control repository using DynamoDB.
@@ -53,7 +53,7 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
     def __init__(self):
         self.logger = LogUtils.setup_logger(name=__name__)
 
-    
+
     def update_batch_process_control(self, batch_process: BatchProcess) -> None:
         """
         Updates the batch process control record in the repository.
@@ -72,21 +72,37 @@ class DynamoDBBatchControlDatabaseRepository(IBatchControlDatabaseRepository):
             if current_batch_process.process_status == ProcessStatus.COMPLETED.value:
                 current_batch_process.update(
                     actions=[
-                        BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
-                        BatchProcessControlModel.processed_items.set(int(serialized_item["processed_items"])),
-                        BatchProcessControlModel.total_items.set(serialized_item["total_items"]),
-                        BatchProcessControlModel.created_at.set(serialized_item["created_at"]),
-                        BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
+                        BatchProcessControlModel.process_status.set(
+                            ProcessStatus.IN_PROGRESS.value
+                        ),
+                        BatchProcessControlModel.processed_items.set(
+                            int(serialized_item["processed_items"])
+                        ),
+                        BatchProcessControlModel.total_items.set(
+                            serialized_item["total_items"]
+                        ),
+                        BatchProcessControlModel.created_at.set(
+                            serialized_item["created_at"]
+                        ),
+                        BatchProcessControlModel.updated_at.set(
+                            serialized_item["updated_at"]
+                        ),
                         BatchProcessControlModel.finished_at.set(None),
                     ]
                 )
             else:
-                # Updates the batch record with the new processed items count and updated timestamp
+                # Updates the batch record with new processed items count
                 current_batch_process.update(
                     actions=[
-                        BatchProcessControlModel.process_status.set(ProcessStatus.IN_PROGRESS.value),
-                        BatchProcessControlModel.processed_items.add(int(serialized_item["processed_items"])),
-                        BatchProcessControlModel.updated_at.set(serialized_item["updated_at"]),
+                        BatchProcessControlModel.process_status.set(
+                            ProcessStatus.IN_PROGRESS.value
+                        ),
+                        BatchProcessControlModel.processed_items.add(
+                            int(serialized_item["processed_items"])
+                        ),
+                        BatchProcessControlModel.updated_at.set(
+                            serialized_item["updated_at"]
+                        ),
                     ]
                 )
 

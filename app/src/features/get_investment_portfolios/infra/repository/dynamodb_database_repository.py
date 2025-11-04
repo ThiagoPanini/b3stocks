@@ -1,5 +1,4 @@
 import os
-from typing import Any
 
 import boto3
 from pynamodb.models import Model
@@ -9,12 +8,14 @@ from pynamodb.attributes import (
 )
 from pynamodb.exceptions import DoesNotExist
 
-from app.src.features.get_investment_portfolios.domain.interfaces.database_repository_interface import (
-    IDatabaseRepository
-)
-from app.src.features.get_investment_portfolios.domain.entities.investment_portfolio import (
-    InvestmentPortfolio
-)
+from app.src.features.get_investment_portfolios.domain.interfaces.\
+    database_repository_interface import (
+        IDatabaseRepository
+    )
+from app.src.features.get_investment_portfolios.domain.entities.\
+    investment_portfolio import (
+        InvestmentPortfolio
+    )
 
 from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.utils.serialization import SerializationUtils
@@ -78,7 +79,7 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
                 )
 
             except DoesNotExist:
-                # If item does not exist, create a new one    
+                # If item does not exist, create a new one
                 try:
                     InvestmentPortfolioModel(**serialized_item).save()
 

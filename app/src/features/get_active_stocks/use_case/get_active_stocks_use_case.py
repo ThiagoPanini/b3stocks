@@ -64,7 +64,9 @@ class GetActiveStocksUseCase:
             )
 
             logger.info(f"Scrapping active stocks raw content from URL {request_config.url}")
-            http_response: HTTPClientResponse = self.http_client_adapter.get(request_config=request_config)
+            http_response: HTTPClientResponse = self.http_client_adapter.get(
+                request_config=request_config
+            )
 
             logger.info("Parsing raw text from the HTTP response into stocks data")
             stocks: list[Stock] = self.html_parser_adapter.parse_html_content(
@@ -87,7 +89,7 @@ class GetActiveStocksUseCase:
             self.topic_adapter.batch_publish_messages(messages=messages)
 
         except Exception:
-            logger.exception(f"Error fetching and saving active stocks data")
+            logger.exception("Error fetching and saving active stocks data")
             raise
 
         return OutputDTO.ok(

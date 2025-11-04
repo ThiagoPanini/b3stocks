@@ -18,7 +18,7 @@ class SQSMessagesLambdaEventMapper:
 
         Args:
             event (dict[str, Any]): The AWS Lambda event dict received from SQS.
-        
+
         Returns:
             InputDTO: The mapped input Data Transfer Object.
         """
@@ -30,22 +30,25 @@ class SQSMessagesLambdaEventMapper:
         stock_messages: list[StockMessageEnvelop] = []
         for msg in messages:
             msg_body = json.loads(msg.get("body", "{}"))
-            
+
             if "Message" not in msg_body:
                 raise ValueError("Message key not found in SQS message body")
-            else:
-                try:
-                    code = json.loads(msg_body["Message"])["code"]
-                    total_expected_messages = json.loads(msg_body["Message"])["total_expected_messages"]
-                except (json.JSONDecodeError, KeyError) as e:
-                    raise ValueError("Invalid message format. The 'code' or 'total_expected_messages' "
-                                     "keys is missing or malformed.")
 
-                stock_message_envelop = StockMessageEnvelop(
-                    code=code,
-                    total_expected_messages=total_expected_messages
-                )
+            try:
+                message_data = json.loads(msg_body["Message"])
+                code = message_data["code"]
+                total_expected_messages = message_data["total_expected_messages"]
+            except (json.JSONDecodeError, KeyError) as e:
+                raise ValueError(
+                    "Invalid message format. The 'code' or "
+                    "'total_expected_messages' keys is missing or malformed."
+                ) from e
 
-                stock_messages.append(stock_message_envelop)
+            stock_message_envelop = StockMessageEnvelop(
+                code=code,
+                total_expected_messages=total_expected_messages
+            )
+
+            stock_messages.append(stock_message_envelop)
 
         return StockMessagesInputDTO(messages=stock_messages)

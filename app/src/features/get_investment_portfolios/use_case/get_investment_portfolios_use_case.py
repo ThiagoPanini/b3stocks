@@ -3,12 +3,14 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.src.features.cross.utils.log import LogUtils
-from app.src.features.get_investment_portfolios.domain.interfaces.investment_portfolio_adapter_interface import (
-    IInvestmentPortfolioAdapter
-)
-from app.src.features.get_investment_portfolios.domain.interfaces.database_repository_interface import (
-    IDatabaseRepository
-)
+from app.src.features.get_investment_portfolios.domain.interfaces.\
+    investment_portfolio_adapter_interface import (
+        IInvestmentPortfolioAdapter
+    )
+from app.src.features.get_investment_portfolios.domain.interfaces.\
+    database_repository_interface import (
+        IDatabaseRepository
+    )
 from app.src.features.cross.domain.dtos.output_dto import OutputDTO
 
 
@@ -41,11 +43,13 @@ class GetInvestmentPortfolioUseCase:
             logger.info("Fetching investment portfolios data")
             investment_portfolios = self.investment_portfolio_adapter.fetch_portfolio()
 
-            logger.info("Saving investment portfolios to the database repository")
+            logger.info(
+                "Saving investment portfolios to the database repository"
+            )
             self.database_repository.save_items(investment_portfolios)
 
         except Exception:
-            logger.error(f"Error fetching investment portfolio data")
+            logger.error("Error fetching investment portfolio data")
             raise
 
         return OutputDTO.ok(

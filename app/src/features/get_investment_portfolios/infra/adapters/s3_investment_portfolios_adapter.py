@@ -3,9 +3,10 @@ import yaml
 
 import boto3
 
-from app.src.features.get_investment_portfolios.domain.interfaces.investment_portfolio_adapter_interface import (
-    IInvestmentPortfolioAdapter
-)
+from app.src.features.get_investment_portfolios.domain.interfaces.\
+    investment_portfolio_adapter_interface import (
+        IInvestmentPortfolioAdapter
+    )
 from app.src.features.get_investment_portfolios.domain.entities import (
     InvestmentPortfolio,
     StockVariationControl,
@@ -39,7 +40,7 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
 
         return f"{self.bucket_name_prefix}-{account_id}-{region}"
 
-    
+    # pylint: disable=too-many-locals,too-many-branches
     def fetch_portfolio(self) -> list[InvestmentPortfolio]:
         """
         Fetch and parse the investment portfolio YAML stored in S3.
@@ -61,15 +62,17 @@ class S3InvestmentPortfolioAdapter(IInvestmentPortfolioAdapter):
             portfolios_objects_keys = []
             for page in page_iterator:
                 for obj in page.get("Contents", []):
-                    if obj.get("Key").endswith(".yaml") or obj.get("Key").endswith(".yml"):
-                        portfolios_objects_keys.append(obj.get("Key"))
-        
+                    key = obj.get("Key")
+                    if key.endswith(".yaml") or key.endswith(".yml"):
+                        portfolios_objects_keys.append(key)
+
         except self.client.exceptions.NoSuchBucket:
             self.logger.exception(f"S3 bucket {self.bucket_name} does not exist.")
             raise
 
         except Exception:
             self.logger.exception("Error listing portfolio objects in S3")
+
             raise
 
         # Iterate over each portfolio object and fetch/parse it

@@ -14,7 +14,7 @@ class AWSClient:
         Args:
             service_name (str): The name of the AWS service (e.g., 's3', 'ec2', 'sts').
             region_name (str, optional): The AWS region name. Defaults to the current session's region.
-        
+
         Returns:
             boto3.client: A boto3 client for the specified service.
         """
@@ -36,7 +36,7 @@ class AWSClient:
         Get the AWS region name of the caller.
         """
         return boto3.session.Session().region_name
-    
+
 
     @staticmethod
     def build_bucket_name_from_prefix(bucket_name_prefix: str) -> str:

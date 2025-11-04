@@ -1,8 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
-from .variation_threshold import VariationThreshold
 from app.src.features.cross.domain.value_objects import StockType
+from .variation_threshold import VariationThreshold
 
 
 @dataclass
@@ -28,7 +28,7 @@ class StockVariationControl:
         # Basic normalization
         self.company_name = self.company_name.strip().upper()
         self.ticker_code = self.ticker_code.strip().upper()
-        
+
         # Initializing stock_type based on ticker code suffix
         suffix = ''.join(filter(str.isdigit, self.ticker_code))
         self.stock_type = StockType.from_ticker_suffix(suffix)

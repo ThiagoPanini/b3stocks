@@ -16,7 +16,7 @@ class DynamoDBStreamsLambdaEventMapper:
     """
     Maps a DynamoDB Streams Lambda event dict to a input Data Transfer Object (DTO) class
     """
-    
+
     def __init__(self):
         self.__deserializer = TypeDeserializer()
 

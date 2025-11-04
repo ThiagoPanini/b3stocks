@@ -35,7 +35,7 @@ class StockType(Enum):
             "FII": "FIIs — Real Estate Investment Funds",
             "OTHER": "Other types of stocks or assets",
         }
-        
+
         return descriptions[self.value]
 
     @classmethod
@@ -50,10 +50,10 @@ class StockType(Enum):
             "6": cls.PNB,
             "7": cls.PNC,
             "8": cls.PND,
-            "11": cls.UNIT,  # Can be UNIT, ETF or FII — needs to be validated by the asset
+            "11": cls.UNIT,
             "34": cls.BDR,
         }
         try:
             return mapping[suffix]
-        except KeyError:
-            raise ValueError(f"Sufixo de ticker inválido: {suffix}")
+        except KeyError as exc:
+            raise ValueError(f"Sufixo de ticker inválido: {suffix}") from exc

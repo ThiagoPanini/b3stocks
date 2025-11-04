@@ -1,9 +1,8 @@
 import traceback
-import inspect
 import hashlib
 import os
 from datetime import datetime
-from typing import Dict, Any, Optional, Type
+from typing import Dict, Any, Optional
 from ..domain.entities.exception_info import ExceptionInfo, ExceptionCategory
 
 
@@ -11,7 +10,7 @@ class ExceptionUtils:
     """
     Utility class for extracting comprehensive information from exceptions.
     """
-    
+
     # Mapping of exception types to categories
     EXCEPTION_CATEGORY_MAP = {
         'ConnectionError': ExceptionCategory.NETWORK,
@@ -29,7 +28,7 @@ class ExceptionUtils:
         'OSError': ExceptionCategory.SYSTEM,
         'RuntimeError': ExceptionCategory.SYSTEM,
     }
-    
+
     @staticmethod
     def extract_exception_info(
         exception: Exception,
@@ -40,43 +39,43 @@ class ExceptionUtils:
     ) -> ExceptionInfo:
         """
         Extract comprehensive information from an exception.
-        
+
         Args:
             exception: The exception to analyze
             feature_name: Name of the feature/process where exception occurred
             environment: Runtime environment (dev, staging, prod)
             process_version: Version of the process/application
             additional_context: Additional context information
-        
+
         Returns:
             ExceptionInfo object with extracted information
         """
         # Get exception basic info
         exc_type = type(exception).__name__
         exc_message = str(exception)
-        
+
         # Extract stack trace information
         tb = exception.__traceback__
         stack_trace = traceback.format_exception(type(exception), exception, tb)
         stack_trace_str = ''.join(stack_trace)
-        
+
         # Get the frame where exception occurred
         frame_info = ExceptionUtils._get_exception_frame_info(tb)
-        
+
         # Extract local variables (sanitized)
         local_vars = ExceptionUtils._extract_local_variables(tb)
-        
+
         # Generate fingerprint for deduplication
         fingerprint = ExceptionUtils._generate_fingerprint(
             exc_type, exc_message, frame_info['module'], frame_info['function'], frame_info['line']
         )
-        
+
         # Determine category
         category = ExceptionUtils.EXCEPTION_CATEGORY_MAP.get(exc_type, ExceptionCategory.UNKNOWN)
-        
+
         # Generate error code
         error_code = f"{exc_type}_{frame_info['line']}_{fingerprint[:8]}"
-        
+
         return ExceptionInfo(
             exception_type=exc_type,
             exception_message=exc_message,
@@ -94,7 +93,7 @@ class ExceptionUtils:
             fingerprint=fingerprint,
             additional_context=additional_context or {}
         )
-    
+
     @staticmethod
     def _get_exception_frame_info(tb) -> Dict[str, Any]:
         """Extract information from the traceback frame where exception occurred."""
@@ -105,26 +104,26 @@ class ExceptionUtils:
                 'line': 0,
                 'filename': 'unknown'
             }
-        
+
         # Get the last frame (where exception occurred)
         while tb.tb_next:
             tb = tb.tb_next
-        
+
         frame = tb.tb_frame
         filename = frame.f_code.co_filename
         function_name = frame.f_code.co_name
         line_number = tb.tb_lineno
-        
+
         # Extract module name from filename
         module_name = os.path.splitext(os.path.basename(filename))[0]
-        
+
         return {
             'module': module_name,
             'function': function_name,
             'line': line_number,
             'filename': filename
         }
-    
+
     @staticmethod
     def _extract_local_variables(tb, max_vars: int = 10) -> Dict[str, Any]:
         """
@@ -132,22 +131,22 @@ class ExceptionUtils:
         """
         if not tb:
             return {}
-        
+
         # Get the last frame
         while tb.tb_next:
             tb = tb.tb_next
-        
+
         frame = tb.tb_frame
         local_vars = {}
-        
+
         # Get local variables, excluding sensitive ones
         sensitive_keys = {'password', 'token', 'key', 'secret', 'auth', 'credential'}
-        
+
         count = 0
         for var_name, var_value in frame.f_locals.items():
             if count >= max_vars:
                 break
-                
+
             # Skip sensitive variables
             if any(sensitive in var_name.lower() for sensitive in sensitive_keys):
                 local_vars[var_name] = '[REDACTED]'
@@ -158,20 +157,28 @@ class ExceptionUtils:
                         local_vars[var_name] = str(var_value)
                     else:
                         local_vars[var_name] = f"<{type(var_value).__name__}>"
-                except:
+                except Exception:
                     local_vars[var_name] = '<unable_to_serialize>'
-            
+
             count += 1
-        
+
         return local_vars
-    
+
     @staticmethod
-    def _generate_fingerprint(exc_type: str, exc_message: str, module: str, function: str, line: int) -> str:
+    def _generate_fingerprint(
+        exc_type: str,
+        exc_message: str,
+        module: str,
+        function: str,
+        line: int
+    ) -> str:
         """Generate a unique fingerprint for exception deduplication."""
         # Create a hash based on exception characteristics
-        fingerprint_data = f"{exc_type}:{module}:{function}:{line}:{exc_message[:100]}"
+        fingerprint_data = (
+            f"{exc_type}:{module}:{function}:{line}:{exc_message[:100]}"
+        )
         return hashlib.md5(fingerprint_data.encode()).hexdigest()
-    
+
     @staticmethod
     def create_mock_exception_info(
         exception_type: str = "TypeError",
@@ -203,9 +210,10 @@ class ExceptionUtils:
                 "category": ExceptionCategory.VALIDATION
             }
         }
-        
+
         mock_data = mock_exceptions.get(exception_type, mock_exceptions["TypeError"])
-        
+
+        # pylint: disable=unexpected-keyword-arg
         return ExceptionInfo(
             exception_type=exception_type,
             exception_message=mock_data["message"],
@@ -214,7 +222,11 @@ class ExceptionUtils:
             exception_line=mock_data["line"],
             occurred_at=datetime.utcnow(),
             category=mock_data["category"],
-            stack_trace=f"Traceback (most recent call last):\n  File \"{mock_data['module']}.py\", line {mock_data['line']}, in {mock_data['function']}\n{exception_type}: {mock_data['message']}",
+            stack_trace=(
+                f"Traceback (most recent call last):\n"
+                f"  File \"{mock_data['module']}.py\", line {mock_data['line']}, "
+                f"in {mock_data['function']}\n{exception_type}: {mock_data['message']}"
+            ),
             feature_name=feature_name,
             environment="staging",
             process_version="v2.1.0",

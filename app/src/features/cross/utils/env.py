@@ -9,7 +9,7 @@ class EnvironmentVarsUtils:
 
         Args:
             required_vars (list[str]): List of required environment variable names.
-        
+
         Raises:
             EnvironmentError: If any required environment variable is missing.
         """

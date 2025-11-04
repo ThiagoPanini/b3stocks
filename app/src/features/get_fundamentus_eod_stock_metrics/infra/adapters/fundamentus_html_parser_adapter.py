@@ -4,17 +4,19 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import numpy as np
 
-from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
-from app.src.features.get_fundamentus_eod_stock_metrics.domain.interfaces.html_parser_adapter_interface import (
-    IHTMLParserAdapter
+from app.src.features.cross.domain.entities.http_client_request_config import (
+    HTTPClientRequestConfig
 )
-from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.fundamentus_stock_metrics import (
-    FundamentusStockMetrics
-)
-from app.src.features.cross.utils.decorators import timing_decorator
+from app.src.features.get_fundamentus_eod_stock_metrics.domain.interfaces.\
+    html_parser_adapter_interface import (
+        IHTMLParserAdapter
+    )
+from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.\
+    fundamentus_stock_metrics import (
+        FundamentusStockMetrics
+    )
 from app.src.features.cross.utils.log import LogUtils
 from app.src.features.cross.domain.value_objects import DateFormat
-
 
 pd.set_option('future.no_silent_downcasting', True)
 
@@ -148,6 +150,7 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
         return df
 
 
+    # pylint: disable=too-many-locals,too-many-branches,too-many-statements
     def parse_html_content(
         self,
         html_content: bytes,
@@ -160,25 +163,32 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
         Args:
             html_content (bytes): The raw HTML content of the HTTP response.
             encoding (str): The encoding used to decode the HTML content.
-            request_config (HTTPClientRequestConfig): The object containing metadata of the request.
+            request_config (HTTPClientRequestConfig):
+                The object containing metadata of the request.
 
         Returns:
             A list of B3 stocks data extracted and parsed from the request.
         """
 
-        self.logger.debug(f"Decoding HTML content and parsing it using BeautifulSoup")
+        self.logger.debug(
+            "Decoding HTML content and parsing it using BeautifulSoup"
+        )
         try:
             html_text = html_content.decode(encoding)
             html_parsed = BeautifulSoup(html_text, "html.parser")
         except Exception:
-            self.logger.exception(f"Error decoding HTML content and parsing it using BeautifulSoup")
+            self.logger.exception(
+                "Error decoding HTML content and parsing it using BeautifulSoup"
+            )
             raise
 
-        self.logger.debug(f"Extracting stock metrics data from the parsed HTML content")
+        self.logger.debug(
+            "Extracting stock metrics data from the parsed HTML content"
+        )
         try:
             # Getting the all tables that contains the stock metrics data
             tables = html_parsed.find_all("table", attrs={'class': 'w728'})
-            
+
             # Iterating over all tables
             stock_metrics_data_raw = []
             for table in tables:
@@ -188,33 +198,35 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
                 for table_data in table_row:
                     cells_list = table_data.find_all("td")
 
-                    # Getting the headings (cells that contains "?" or are in the variation headings list)
+                    # Getting the headings (cells that contains "?" or are
+                    # in the variation headings list)
                     headings = [
                         cell.text.replace("?", "").strip()
                         for cell in cells_list
                         if "?" in cell.text or cell.text in self.variation_headings
                     ]
 
-                    # Handling duplicated headings by appending a suffix to make them unique
+                    # Handling duplicated headings by appending a suffix to
+                    # make them unique
                     for header in headings:
                         if headings.count(header) > 1:
                             new_header_name = header + "_1"
                             headings[headings.index(header)] = new_header_name
 
-                    # Getting all values (cells that are not "?" and not in the headings list)
+                    # Getting all values (cells that are not "?" and not
+                    # in the headings list)
                     values = [
                         cell.text.strip() for cell in cells_list
                         if ("?" not in cell.text) and (cell.text not in headings)
                     ]
 
-                    # Building a dictionary with headings as keys and values as values
-                    table_data_dict = {
-                        header: value for header, value in zip(headings, values)
-                    }
+                    # Building a dictionary with headings as keys and
+                    # values as values
+                    table_data_dict = dict(zip(headings, values))
 
-                    if table_data_dict != {}:
+                    if table_data_dict:
                         stock_metrics_data_raw.append(table_data_dict)
-            
+
             # Building a consolidated dictionary with all stock metrics data
             stock_metrics_data = {
                 name: value for dictionary in stock_metrics_data_raw
@@ -224,7 +236,7 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
             if not "Papel" in stock_metrics_data:
                 raise ValueError(f"Error parsing stock metrics on URL {request_config.url} because "
                                  "'Papel' key couldn't be found on the parsed data")
-        
+
         except Exception:
             self.logger.exception("Error extracting stock metrics from HTML content")
             raise
@@ -240,16 +252,18 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
 
             dataset_cols = list(self.stock_metrics_mapping.values())
             df_stock_metrics = df_stock_metrics[dataset_cols]
-        
+
         except KeyError:
-            self.logger.debug(f"Error adapting stock metrics to a DataFrame because some expected "
-                              "columns are missing and this is probably due to changes in the HTML "
-                              "structure of the Fundamentus website. Columns that are missing will "
-                              "be filled with None values.")
+            self.logger.debug(
+                "Error adapting stock metrics to a DataFrame because some "
+                "expected columns are missing and this is probably due to "
+                "changes in the HTML structure of the Fundamentus website. "
+                "Columns that are missing will be filled with None values."
+            )
             for col in dataset_cols:
                 if col not in list(df_stock_metrics.columns):
                     df_stock_metrics[col] = None
-        
+
         # Reordering columns and adding the execution date column
         df_stock_metrics = df_stock_metrics[dataset_cols]
         df_stock_metrics.loc[:, ["execution_date"]] = datetime.now().strftime(DateFormat.DATE.value)
@@ -269,12 +283,15 @@ class FundamentusHTMLParserAdapter(IHTMLParserAdapter):
             )
 
             # Then parse remaining float columns (excluding percentage columns)
-            non_percent_float_cols = [col for col in float_cols_to_parse if col not in percent_cols_to_parse]
+            non_percent_float_cols = [
+                col for col in float_cols_to_parse
+                if col not in percent_cols_to_parse
+            ]
             df_stock_metrics_prep = self.__parse_float_cols(
                 df=df_stock_metrics_percent_prep,
                 cols_list=non_percent_float_cols
             )
-        
+
         except Exception:
             self.logger.exception("Error parsing and converting the numeric data types of the "
                                   "DataFrame columns")

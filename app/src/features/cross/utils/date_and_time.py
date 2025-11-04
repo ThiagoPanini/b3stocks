@@ -11,15 +11,15 @@ class DateAndTimeUtils:
     """
     Utility class for handling date and time generation handling timezone.
     """
-    
+
     @staticmethod
     def datetime_now(timezone: Timezone) -> datetime:
         """
         Returns the current datetime in the specified timezone.
-        
+
         Args:
             timezone (Timezone): The timezone to use for the current datetime.
-        
+
         Returns:
             datetime: Current datetime in the specified timezone
         """
@@ -30,7 +30,7 @@ class DateAndTimeUtils:
     def utc_to_timezone(utc_datetime: datetime, timezone: Timezone) -> datetime:
         """
         Converts a UTC datetime to a timezone.
-        
+
         Args:
             utc_datetime (datetime): UTC datetime object
             timezone (Timezone): The target timezone to convert to
@@ -55,37 +55,36 @@ class DateAndTimeUtils:
         """
         return datetime.fromtimestamp(unix_ts, tz=timezone.value)
 
-
     @staticmethod
-    def datetime_to_str(dt: datetime, format: DateFormat) -> str:
+    def datetime_to_str(dt: datetime, date_format: DateFormat) -> str:
         """
         Converts a datetime object to a string based on the provided format.
 
         Args:
             dt (datetime): The datetime object to format
-            format (DateFormat): The format string to use for formatting
+            date_format (DateFormat): The format string to use for formatting
 
         Returns:
             str: Formatted date/time string
         """
-        return dt.strftime(format.value)
-
+        return dt.strftime(date_format.value)
 
     @staticmethod
-    def datetime_now_str(timezone: Timezone, format: DateFormat) -> str:
+    def datetime_now_str(timezone: Timezone, date_format: DateFormat) -> str:
         """
-        Returns the current datetime in the specified timezone in a string format.
-        
+        Returns the current datetime in the specified timezone in a string
+        format.
+
         Args:
             timezone (Timezone): The timezone to use for the current datetime.
-            format (DateFormat): The format string to use for formatting.
+            date_format (DateFormat): The format string to use for formatting.
 
         Returns:
             str: Formatted date/time string
         """
         return DateAndTimeUtils.datetime_to_str(
             dt=DateAndTimeUtils.datetime_now(timezone=timezone),
-            format=format
+            date_format=date_format
         )
 
 
@@ -116,18 +115,27 @@ class DateAndTimeUtils:
             timezone (Timezone): The timezone to use for the current date/time.
             output_type (Literal["datetime", "date", "str"]): The type of output desired.
             str_format (DateFormat, optional): The format to use if output_type is "str".
-        
+
         Returns:
-            date | datetime | str: Current date/time in the specified type and format.
+            date | datetime | str: Current date/time in the specified type and
+                format.
         """
         now = datetime.now(timezone.value)
 
         if output_type == "datetime":
             return now
-        elif output_type == "date":
+
+        if output_type == "date":
             return now.date()
-        elif output_type == "string":
-            return now.strftime(str_format.value) if str_format else now.isoformat()
-        else:
-            raise ValueError("Invalid output_type specified. Choose between 'date', 'datetime', "
-                             "or 'string'.")
+
+        if output_type == "string":
+            return (
+                now.strftime(str_format.value)
+                if str_format
+                else now.isoformat()
+            )
+
+        raise ValueError(
+            "Invalid output_type specified. Choose between 'date', "
+            "'datetime', or 'string'."
+        )

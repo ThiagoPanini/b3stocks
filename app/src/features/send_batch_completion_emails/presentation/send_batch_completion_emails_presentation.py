@@ -1,20 +1,25 @@
 from typing import Any
 
-from app.src.features.send_batch_completion_emails.infra.mappers.sns_event_lambda_mapper import (
-    SNSEventLambdaMapper
+from app.src.features.send_batch_completion_emails.infra.mappers.\
+    sns_event_lambda_mapper import (
+        SNSEventLambdaMapper
+    )
+from app.src.features.send_batch_completion_emails.infra.adapters.\
+    s3_email_body_template_request_adapter import (
+        S3MailBodyTemplateAdapter
+    )
+from app.src.features.send_batch_completion_emails.infra.adapters.\
+    ses_mail_service_adapter import (
+        SESMailServiceAdapter
+    )
+from app.src.features.send_batch_completion_emails.use_case.\
+    send_batch_processes_emails_use_case import (
+        SendBatchCompletionEMailsUseCase
+    )
+from app.src.features.cross.infra.mappers.http_response_mapper import (
+    HTTPResponseMapper
 )
-from app.src.features.send_batch_completion_emails.infra.adapters.s3_email_body_template_request_adapter import (
-    S3MailBodyTemplateAdapter
-)
-from app.src.features.send_batch_completion_emails.infra.adapters.ses_mail_service_adapter import (
-    SESMailServiceAdapter
-)
-from app.src.features.send_batch_completion_emails.use_case.send_batch_processes_emails_use_case import (
-    SendBatchCompletionEMailsUseCase
-)
-from app.src.features.cross.infra.mappers.http_response_mapper import HTTPResponseMapper
 from app.src.features.cross.utils.env import EnvironmentVarsUtils
-
 
 # Initializing mappers, adapters and repositories
 event_mapper = SNSEventLambdaMapper()
