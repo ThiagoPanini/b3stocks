@@ -36,7 +36,7 @@ jobs:
 
       - name: 🧪 Unit Test with Pytest
         run:
-          pytest -vv --color=yes --cov=./ --cov-report=xml
+          python -m pytest -vv --color=yes --cov=./ --cov-report=xml
 
       - name: ☂️ Test Coverage with Codecov
         uses: codecov/codecov-action@v5
