@@ -1,13 +1,12 @@
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Optional, Dict, Any
-import uuid
+from dataclasses import dataclass
+from typing import Optional, Dict
 
 
 @dataclass
 class ExceptionInfo:
     """
-    Comprehensive exception information entity for standardized error handling.
+    Comprehensive exception information entity for standardized error
+    handling.
 
     Attributes:
         exception_type (str): The type of the exception (e.g., ValueError, TypeError).
@@ -37,21 +36,31 @@ class ExceptionInfo:
         """
         Convert exception info to template-friendly dictionary for HTML templates.
         """
+        # pylint: disable=no-member
         return {
             'error_message': self.exception_message,
-            'error_code': self.error_code or f"{self.exception_type}_{self.exception_line}",
+            'error_code': (
+                self.error_code or f"{self.exception_type}_{self.exception_line}"
+            ),
             'root_cause_hint': self._generate_root_cause_hint(),
-            'first_failure_time': self.occurred_at.strftime('%Y-%m-%d %H:%M:%S UTC'),
-            'last_attempt_time': self.occurred_at.strftime('%Y-%m-%d %H:%M:%S UTC'),
+            'first_failure_time': (
+                self.occurred_at.strftime('%Y-%m-%d %H:%M:%S UTC')
+            ),
+            'last_attempt_time': (
+                self.occurred_at.strftime('%Y-%m-%d %H:%M:%S UTC')
+            ),
             'retry_attempts': str(self.retry_count),
             'next_retry_time': 'Manual intervention required',
             'process_id': self.process_id,
             'trace_id': self.fingerprint or self.process_id[:8],
             'exception_type': self.exception_type,
-            'exception_location': f"{self.exception_module}.{self.exception_function}:{self.exception_line}",
+            'exception_location': (
+                f"{self.exception_module}.{self.exception_function}:"
+                f"{self.exception_line}"
+            ),
             'category': self.category.value,
         }
-    
+
     def _generate_root_cause_hint(self) -> str:
         """Generate a human-readable root cause hint based on exception details."""
         hints = {
@@ -64,5 +73,5 @@ class ExceptionInfo:
             'PermissionError': 'Insufficient access rights or authentication issues',
             'AttributeError': 'Object method/property access issues or API changes',
         }
-        
+
         return hints.get(self.exception_type, 'Unknown error type - requires investigation')

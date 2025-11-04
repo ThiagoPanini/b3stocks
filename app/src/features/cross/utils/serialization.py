@@ -29,22 +29,28 @@ class SerializationUtils:
         # Handle NaN values (convert to None for DynamoDB)
         if isinstance(value, float) and math.isnan(value):
             return None
-        
+
         # Handle string representations of NaN
-        if isinstance(value, str) and value.lower().strip() in ('nan', 'n/a', 'null', ''):
+        if isinstance(value, str) and value.lower().strip() in (
+            'nan', 'n/a', 'null', ''
+        ):
             return None
 
         # Dataclass (but avoid treating plain strings etc.)
         if is_dataclass(value):
-            return {k: SerializationUtils.json_serialize(v) for k, v in asdict(value).items()}
+            return {
+                k: SerializationUtils.json_serialize(v)
+                for k, v in asdict(value).items()
+            }
 
         # Enum
         if isinstance(value, Enum):
             return value.value
 
         # date or datetime
-        if isinstance(value, datetime) or isinstance(value, date):
+        if isinstance(value, (datetime, date)):
             return value.isoformat()
+
 
         # Decimal (DynamoDB compatibility)
         if isinstance(value, Decimal):

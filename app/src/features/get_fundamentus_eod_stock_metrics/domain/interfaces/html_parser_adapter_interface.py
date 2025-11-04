@@ -1,9 +1,12 @@
 from abc import ABC, abstractmethod
 
-from app.src.features.cross.domain.entities.http_client_request_config import HTTPClientRequestConfig
-from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.fundamentus_stock_metrics import (
-    FundamentusStockMetrics
+from app.src.features.cross.domain.entities.http_client_request_config import (
+    HTTPClientRequestConfig
 )
+from app.src.features.get_fundamentus_eod_stock_metrics.domain.entities.\
+    fundamentus_stock_metrics import (
+        FundamentusStockMetrics
+    )
 
 
 class IHTMLParserAdapter(ABC):

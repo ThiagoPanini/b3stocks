@@ -1,8 +1,9 @@
 from typing import Any
 
-from app.src.features.check_batch_processes_completion.use_case.check_batch_processes_completion_use_case import (
-    CheckBatchProcessesCompletionUseCase
-)
+from app.src.features.check_batch_processes_completion.use_case.\
+    check_batch_processes_completion_use_case import (
+        CheckBatchProcessesCompletionUseCase
+    )
 from app.src.features.cross.infra.mappers.dynamodb_streams_lambda_event_mapper import (
     DynamoDBStreamsLambdaEventMapper
 )

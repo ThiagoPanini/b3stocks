@@ -39,7 +39,10 @@ class CheckBatchProcessesCompletionUseCase:
         """
 
         try:
-            logger.info("Checking if any records in the stream event indicate a batch process completion")
+            logger.info(
+                "Checking if any records in the stream event indicate a "
+                "batch process completion"
+            )
             for record in input_dto.records:
                 table_new_image = record.record_data.new_image
 
@@ -56,17 +59,22 @@ class CheckBatchProcessesCompletionUseCase:
 
                 if batch_process.process_status == ProcessStatus.COMPLETED:
                     logger.info(
-                        f"Batch process '{batch_process.process_name.value}' has been completed "
-                        f"at {batch_process.finished_at}. Sending to SNS topic for further processing."
+                        f"Batch process '{batch_process.process_name.value}' "
+                        f"has been completed at {batch_process.finished_at}. "
+                        f"Sending to SNS topic for further processing."
                     )
                     self.topic_adapter.publish_message(batch_process)
                 else:
                     logger.info(
-                        f"Batch process '{batch_process.process_name.value}' is not yet completed. "
-                        f"Current status: {batch_process.process_status.value}."
+                        f"Batch process '{batch_process.process_name.value}' "
+                        f"is not yet completed. Current status: "
+                        f"{batch_process.process_status.value}."
                     )
         except Exception:
-            logger.exception("Error checking batch processes completion and sending a message to SNS topic")
+            logger.exception(
+                "Error checking batch processes completion and sending a "
+                "message to SNS topic"
+            )
             raise
 
         return OutputDTO.ok(

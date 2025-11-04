@@ -3,9 +3,10 @@ from typing import Any
 from app.src.features.cross.infra.mappers.dynamodb_streams_lambda_event_mapper import (
     DynamoDBStreamsLambdaEventMapper
 )
-from app.src.features.store_dynamodb_streams_data.infra.adapters.awswrangler_cdc_data_catalog_sync_adapter import (
-    AWSWranglerCDCDataCatalogSyncAdapter
-)
+from app.src.features.store_dynamodb_streams_data.infra.adapters.\
+    awswrangler_cdc_data_catalog_sync_adapter import (
+        AWSWranglerCDCDataCatalogSyncAdapter
+    )
 from app.src.features.store_dynamodb_streams_data.use_case.store_dynamodb_streams_data_use_case import (
     StoreDynamoDBStreamsDataUseCase
 )

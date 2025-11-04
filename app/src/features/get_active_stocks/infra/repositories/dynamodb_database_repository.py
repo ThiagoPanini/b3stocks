@@ -76,6 +76,6 @@ class DynamoDBDatabaseRepository(IDatabaseRepository):
             self.logger.exception("Error saving batch of stocks data on table "
                                   f"{StockModel.Meta.table_name} on stock {stock}")
             raise
-        else:
-            self.logger.info("Successfully inserted items to DynamoDB table "
-                             f"{StockModel.Meta.table_name}")
+
+        self.logger.info("Successfully inserted items to DynamoDB table "
+                         f"{StockModel.Meta.table_name}")

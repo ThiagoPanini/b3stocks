@@ -63,7 +63,7 @@ class HTTPResponseMapper:
         }
 
     @staticmethod
-    def _json_default(obj: Any) -> Any:
+    def _json_default(obj: Any) -> Any:  # pylint: disable=too-many-return-statements
         """
         Best-effort conversion of complex objects to JSON-serializable types.
 
@@ -87,9 +87,11 @@ class HTTPResponseMapper:
         if isinstance(obj, (bytes, bytearray)):
             try:
                 return obj.decode("utf-8")
-            except Exception:
+            except UnicodeDecodeError:
                 return obj.decode("latin-1", errors="replace")
         if isinstance(obj, datetime):
             return obj.isoformat()
         # Let json raise a TypeError for anything else
-        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+        raise TypeError(
+            f"Object of type {type(obj).__name__} is not JSON serializable"
+        )

@@ -112,11 +112,11 @@ class AWSWranglerCDCDataCatalogSyncAdapter(ICDCDataCatalogSyncAdapter):
             )
             df["execution_date"] = DateAndTimeUtils.datetime_now_str(
                 timezone=Timezone.SAO_PAULO,
-                format=DateFormat.DATE
+                date_format=DateFormat.DATE
             )
 
         except Exception:
-            self.logger.exception(f"Error converting new image data to DataFrame")
+            self.logger.exception("Error converting new image data to DataFrame")
             raise
 
         sor_table_name = f"sor_{data[0].table_name}"

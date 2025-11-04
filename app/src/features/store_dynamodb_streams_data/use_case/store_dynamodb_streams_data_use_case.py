@@ -1,12 +1,15 @@
 from dataclasses import dataclass
-from datetime import datetime, UTC
+from datetime import datetime
 import re
 
-from app.src.features.cross.domain.dtos.dynamodb_streams_input_dto import DynamoDBStreamsInputDTO
+from app.src.features.cross.domain.dtos.dynamodb_streams_input_dto import (
+    DynamoDBStreamsInputDTO
+)
 from app.src.features.store_dynamodb_streams_data.domain.entities.dynamodb_streams_output_data import (
     DynamoDBStreamsOutputData
 )
-from app.src.features.store_dynamodb_streams_data.domain.interfaces.cdc_data_catalog_sync_adapter_interface import (
+from app.src.features.store_dynamodb_streams_data.domain.interfaces.\
+    cdc_data_catalog_sync_adapter_interface import (
     ICDCDataCatalogSyncAdapter
 )
 from app.src.features.cross.utils.log import LogUtils
@@ -60,7 +63,10 @@ class StoreDynamoDBStreamsDataUseCase:
             str: The event date in São Paulo timezone formatted as string.
         """
         event_timestamp: datetime = self.__get_event_timestamp(approx_ts=approx_ts)
-        event_date: str = DateAndTimeUtils.datetime_to_str(dt=event_timestamp, format=DateFormat.DATE)
+        event_date: str = DateAndTimeUtils.datetime_to_str(
+            dt=event_timestamp,
+            date_format=DateFormat.DATE
+        )
         return event_date
 
 
@@ -133,13 +139,26 @@ class StoreDynamoDBStreamsDataUseCase:
 
                 streams_output_data.append(table_record)
 
-            logger.info("Storing and syncing CDC data from DynamoDB Streams to a CDC table in the data catalog")
-            self.cdc_data_catalog_sync_adapter.store_and_sync_cdc_data(data=streams_output_data)
+            logger.info(
+                "Storing and syncing CDC data from DynamoDB Streams to a "
+                "CDC table in the data catalog"
+            )
+            self.cdc_data_catalog_sync_adapter.store_and_sync_cdc_data(
+                data=streams_output_data
+            )
 
-            logger.info("Storing and syncing SoR data from DynamoDB Streams to a SoR table in the data catalog")
-            self.cdc_data_catalog_sync_adapter.store_and_sync_sor_data(data=streams_output_data)
+            logger.info(
+                "Storing and syncing SoR data from DynamoDB Streams to a "
+                "SoR table in the data catalog"
+            )
+            self.cdc_data_catalog_sync_adapter.store_and_sync_sor_data(
+                data=streams_output_data
+            )
 
-            logger.info(f"Successfully stored {len(streams_output_data)} records from DynamoDB Streams")
+            logger.info(
+                f"Successfully stored {len(streams_output_data)} records "
+                f"from DynamoDB Streams"
+            )
 
         except Exception:
             logger.exception("Error executing the use case for storing DynamoDB Streams data for the "

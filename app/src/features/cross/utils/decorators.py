@@ -1,4 +1,3 @@
-import os
 import time
 from functools import wraps
 
@@ -11,11 +10,11 @@ logger = LogUtils.setup_logger(name=__name__)
 def timing_decorator(method=None, *, enabled=True):
     """
     Decorator to measure execution time of a method.
-    
+
     Can be used with or without parentheses:
         @timing_decorator
         @timing_decorator(enabled=True)
-    
+
     Args:
         enabled (bool): Whether timing is enabled.
     """
@@ -29,17 +28,19 @@ def timing_decorator(method=None, *, enabled=True):
 
                 class_name = self.__class__.__name__
                 method_name = inner_method.__name__
-                logger.info(f"{class_name}.{method_name} executed in {elapsed_time:.2f} seconds")
-                
+                logger.info(
+                    f"{class_name}.{method_name} executed in "
+                    f"{elapsed_time:.2f} seconds"
+                )
+
                 return result
 
-            else:
-                return inner_method(self, *args, **kwargs)
+            return inner_method(self, *args, **kwargs)
 
         return wrapper
 
     # If method is None, this is being called with parentheses
     if method is None:
         return decorator
-    else:
-        return decorator(method)
+
+    return decorator(method)
